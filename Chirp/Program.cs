@@ -6,10 +6,10 @@ using Chirp.Writers;
 namespace Chirp;
 public static class Program
 {
-    private const string path = "../Data/chirp_cli_db.csv";
-    private static IFileWriter _fileWriter;
-    private static IFileReader _fileReader;
-    private static ChirpCsvParser _chirpCsvParser;
+    private const string Path = "../Data/chirp_cli_db.csv";
+    private static IFileWriter? _fileWriter;
+    private static IFileReader? _fileReader;
+    private static ChirpCsvParser? _chirpCsvParser;
     public static async Task Main(string[] args)
     {
         if (args.Length == 0)
@@ -18,8 +18,8 @@ public static class Program
             return;
         }
 
-        _fileWriter = new FileWriter(path);
-        _fileReader = new FileReader(path);
+        _fileWriter = new FileWriter(Path);
+        _fileReader = new FileReader(Path);
         _chirpCsvParser = new ChirpCsvParser(_fileReader);
         
 
