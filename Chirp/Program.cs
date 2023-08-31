@@ -6,7 +6,7 @@ using Chirp.Writers;
 namespace Chirp;
 public static class Program
 {
-    private const string path = "../data/chirp_cli_db.csv";
+    private const string path = "../Data/chirp_cli_db.csv";
     private static IFileWriter _fileWriter;
     private static IFileReader _fileReader;
     private static ChirpCsvParser _chirpCsvParser;
