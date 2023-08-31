@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Chirp.Shared;
 
 namespace Chirp.Types;
 
@@ -25,9 +26,8 @@ public partial record ChirpMessage : ICsvSerializable
 
         var message = contents[(int)ChirpFormatCsv.Message];
         Author = contents[(int)ChirpFormatCsv.Author];
-        Message = message
-            .Remove(0, 1)
-            .Remove(message.Length - 2, 1);
+        // Removes the quotation marks from a message as it is received as "message"
+        Message = message[1..(message.Length - 1)];
         Timestamp = long.Parse(contents[(int)ChirpFormatCsv.TimeStamp]);
     }
 
@@ -44,14 +44,12 @@ public partial record ChirpMessage : ICsvSerializable
 
     public override string ToString()
     {
-        var start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var now = start.AddSeconds(Timestamp);
+        var now = DateTimeHelper.EpochToDateTime(Timestamp);
         return $"{Author} @ {now:MM/dd/yy hh:mm:ss}: {Message}";
     }
 
     public string ToCsvString()
     {
-        var ts = Timestamp;
-        return $"{Author},\"{Message}\",{ts}";
+        return $"{Author},\"{Message}\",{Timestamp}";
     }
 }

@@ -1,6 +1,46 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Chirp.Parsers;
+using Chirp.Shared;
+using Chirp.Types;
+using Chirp.Writers;
 
-Console.WriteLine("Hello, World!");
+namespace Chirp;
+public static class Program
+{
+    private const string path = "../data/chirp_cli_db.csv";
+    private static IFileWriter _fileWriter;
+    private static IFileReader _fileReader;
+    private static ChirpCsvParser _chirpCsvParser;
+    public static async Task Main(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            Console.WriteLine("I need arguments!!!!");
+            return;
+        }
 
-var start = DateTime.Now - new DateTime(1970, 1, 1);
-var end = (long)start.TotalSeconds;
+        _fileWriter = new FileWriter(path);
+        _fileReader = new FileReader(path);
+        _chirpCsvParser = new ChirpCsvParser(_fileReader);
+        
+
+        switch (args[0])
+        {
+            case "cheep":
+                var message = new ChirpMessage(
+                    Environment.UserName,
+                    args[1],
+                    DateTimeHelper.DateTimeToEpoch(DateTime.Now));
+                _fileWriter.AddLine(message);
+                await _fileWriter.WriteAsync(CancellationToken.None);
+                break;
+            case "read":
+                var chirps = await _chirpCsvParser.ParseAsync(CancellationToken.None);
+                foreach (var chirpMessage in chirps)
+                {
+                    Console.WriteLine(chirpMessage.ToString());
+                }
+                break;
+                
+        }
+    }
+}
