@@ -1,4 +1,5 @@
 using System.Text;
+using Chirp.Types;
 
 namespace Chirp.Writers;
 
@@ -13,9 +14,9 @@ public class FileWriter : IFileWriter
         _linesToWrite = new StringBuilder();
     }
 
-    public void AddLine(string line)
+    public void AddLine(ICsvSerializable serializable)
     {
-        _linesToWrite.AppendLine(line);
+        _linesToWrite.AppendLine(serializable.ToCsvString());
     }
 
     public async Task WriteAsync(CancellationToken cancellationToken)

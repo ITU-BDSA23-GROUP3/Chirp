@@ -20,13 +20,11 @@ public class ChirpCsvParser
     {
         var accumulator = new List<ChirpMessage>();
         var rows = csvString.Split('\n');
-
-        var first = true;
-        foreach (var row in rows)
+        
+        foreach (var row in rows[1..])
         {
-            if (!first && row.Trim() != "")
+            if (row.Trim() != "")
                 accumulator.Add(new ChirpMessage(row));
-            first = false;
         }
 
         return accumulator;
