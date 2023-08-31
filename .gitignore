@@ -3,5 +3,5 @@
 /Chirp/obj/
 .idea/
 /src/obj/
-obj/
+obj
 Chirp/obj/project.nuget.cache
