@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/cave/Other/Uni/BDSA/Chirp/src/src.csproj": {}
+    "/Users/albert/RiderProjects/Chirp/src/src.csproj": {}
   },
   "projects": {
-    "/home/cave/Other/Uni/BDSA/Chirp/src/src.csproj": {
+    "/Users/albert/RiderProjects/Chirp/src/src.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/cave/Other/Uni/BDSA/Chirp/src/src.csproj",
+        "projectUniqueName": "/Users/albert/RiderProjects/Chirp/src/src.csproj",
         "projectName": "src",
-        "projectPath": "/home/cave/Other/Uni/BDSA/Chirp/src/src.csproj",
-        "packagesPath": "/home/cave/.nuget/packages/",
-        "outputPath": "/home/cave/Other/Uni/BDSA/Chirp/src/obj/",
+        "projectPath": "/Users/albert/RiderProjects/Chirp/src/src.csproj",
+        "packagesPath": "/Users/albert/.nuget/packages/",
+        "outputPath": "/Users/albert/RiderProjects/Chirp/src/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/cave/.nuget/NuGet/NuGet.Config"
+          "/Users/albert/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -53,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/216/sdk/7.0.306/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/7.0.100/libexec/sdk/7.0.100/RuntimeIdentifierGraph.json"
         }
       }
     }

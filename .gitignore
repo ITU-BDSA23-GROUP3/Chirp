@@ -1,0 +1,7 @@
+/Chirp/.idea/
+/Chirp/bin/
+/Chirp/obj/
+.idea/
+/src/obj/
+obj/
+Chirp/obj/project.nuget.cache
