@@ -18,7 +18,7 @@ public class ChirpCsvParser
 
     private static List<ChirpMessage> GetChirpsFromCsvString(string csvString)
     {
-        var accumulator = new List<ChirpMessage>();
+        var chirpMessages = new List<ChirpMessage>();
         var rows = csvString.Split('\n');
         
         foreach (var row in rows[1..])
@@ -27,6 +27,6 @@ public class ChirpCsvParser
                 accumulator.Add(new ChirpMessage(row));
         }
 
-        return accumulator;
+        return chirpMessages;
     }
 }
