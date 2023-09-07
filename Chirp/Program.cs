@@ -15,7 +15,6 @@ public static class Program
         }
         
         _csvStorage = CsvStorageProvider<ChirpMessage>.Storage;
-        var tmp = _csvStorage.GetEntities();
         
 
         switch (args[0])
