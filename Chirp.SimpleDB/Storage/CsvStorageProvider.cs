@@ -1,6 +1,4 @@
-using Chirp.Types;
-
-namespace Chirp.Storage;
+namespace Chirp.SimpleDB.Storage;
 
 public abstract class CsvStorageProvider<T> : IStorageProvider<T>
 {

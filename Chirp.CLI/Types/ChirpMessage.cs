@@ -1,7 +1,6 @@
-using System.Text.RegularExpressions;
-using Chirp.Shared;
+using Chirp.CLI.Shared;
 
-namespace Chirp.Types;
+namespace Chirp.CLI.Types;
 
 /// <summary>
 /// A chirp message is a message that contains Author, Message and a Timestamp for when message is sent.

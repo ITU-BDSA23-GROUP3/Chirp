@@ -1,4 +1,4 @@
-namespace Chirp.Storage;
+namespace Chirp.SimpleDB.Storage;
 
 public interface IStorage<T>
 {
