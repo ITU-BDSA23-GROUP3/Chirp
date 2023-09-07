@@ -24,7 +24,7 @@ public class ChirpCsvParser
         foreach (var row in rows[1..])
         {
             if (row.Trim() != "")
-                accumulator.Add(new ChirpMessage(row));
+                chirpMessages.Add(new ChirpMessage(row));
         }
 
         return chirpMessages;
