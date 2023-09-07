@@ -1,0 +1,14 @@
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.deps.json
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.runtimeconfig.json
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.dll
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.pdb
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/Chirp.CLI.GeneratedMSBuildEditorConfig.editorconfig
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/Chirp.CLI.AssemblyInfoInputs.cache
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/Chirp.CLI.AssemblyInfo.cs
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/Chirp.CLI.csproj.CoreCompileInputs.cache
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/Chirp.CLI.dll
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/refint/Chirp.CLI.dll
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/Chirp.CLI.pdb
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/Chirp.CLI.genruntimeconfig.cache
+/Users/natalie.clara.petersen/Desktop/Chirp/Chirp.CLI/obj/Debug/net7.0/ref/Chirp.CLI.dll
