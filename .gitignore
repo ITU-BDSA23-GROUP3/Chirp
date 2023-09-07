@@ -5,3 +5,4 @@
 /src/obj/
 obj
 Chirp/obj/project.nuget.cache
+./vscode

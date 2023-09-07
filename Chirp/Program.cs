@@ -33,7 +33,6 @@ public static class Program
                     Console.WriteLine(chirpMessage.ToString());
                 }
                 break;
-                
         }
     }
 }
