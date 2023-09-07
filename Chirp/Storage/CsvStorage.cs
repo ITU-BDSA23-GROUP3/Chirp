@@ -5,11 +5,11 @@ using CsvHelper.Configuration;
 
 namespace Chirp.Storage;
 
-public class CsvStorage : IStorage<ChirpMessage>
+public class CsvStorage<T> : IStorage<T>
 {
     private readonly string _path;
     private readonly CsvConfiguration _config;
-    public List<ChirpMessage> Records { get; private set; }
+    public List<T> Records { get; private set; }
     
     public CsvStorage(string path)
     {
@@ -20,15 +20,15 @@ public class CsvStorage : IStorage<ChirpMessage>
         _path = path;
     }
     
-    public void StoreEntity(ChirpMessage entity)
+    public void StoreEntity(T entity)
     {
         using var stream = File.Open(_path, FileMode.Append);
         using var writer = new StreamWriter(stream);
         using var csv = new CsvWriter(writer, _config);
-        csv.WriteRecords(new List<ChirpMessage>{entity});
+        csv.WriteRecords(new List<T>{entity});
     }
 
-    public void StoreEntities(List<ChirpMessage> entities)
+    public void StoreEntities(List<T> entities)
     {
         using var stream = File.Open(_path, FileMode.Append);
         using var writer = new StreamWriter(stream);
@@ -36,19 +36,19 @@ public class CsvStorage : IStorage<ChirpMessage>
         csv.WriteRecords(entities);
     }
 
-    public ChirpMessage GetEntity()
+    public T GetEntity()
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<ChirpMessage> GetEntities()
+    public IEnumerable<T> GetEntities()
     {
-        Records = new List<ChirpMessage>();
+        Records = new List<T>();
         using var reader = new StreamReader(_path);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        foreach (var chirpMessage in csv.GetRecords<ChirpMessage>())
+        foreach (var data in csv.GetRecords<T>())
         {
-            Records.Add(chirpMessage);
+            Records.Add(data);
         }
 
         return Records;

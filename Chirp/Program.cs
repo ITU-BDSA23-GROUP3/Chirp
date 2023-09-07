@@ -14,7 +14,7 @@ public static class Program
             return;
         }
         
-        _csvStorage = CsvStorageProvider.Storage;
+        _csvStorage = CsvStorageProvider<ChirpMessage>.Storage;
         var tmp = _csvStorage.GetEntities();
         
 

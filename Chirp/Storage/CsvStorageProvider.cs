@@ -2,7 +2,7 @@ using Chirp.Types;
 
 namespace Chirp.Storage;
 
-public abstract class CsvStorageProvider : IStorageProvider<ChirpMessage>
+public abstract class CsvStorageProvider<T> : IStorageProvider<T>
 {
-    public static IStorage<ChirpMessage> Storage => new CsvStorage("../Data/chirp_cli_db.csv");
+    public static IStorage<T> Storage => new CsvStorage<T>("../Data/chirp_cli_db.csv");
 }
