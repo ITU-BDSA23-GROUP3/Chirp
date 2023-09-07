@@ -5,5 +5,5 @@
 /src/obj/
 obj
 Chirp/obj/project.nuget.cache
-./vscode
+.vscode/
 .DS_Store
