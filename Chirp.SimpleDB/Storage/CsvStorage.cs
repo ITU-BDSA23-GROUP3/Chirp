@@ -1,9 +1,8 @@
 using System.Globalization;
-using Chirp.Types;
 using CsvHelper;
 using CsvHelper.Configuration;
 
-namespace Chirp.Storage;
+namespace Chirp.SimpleDB.Storage;
 
 public class CsvStorage<T> : IStorage<T>
 {

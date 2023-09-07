@@ -1,4 +1,4 @@
-namespace Chirp.Shared;
+namespace Chirp.CLI.Shared;
 
 public class DateTimeHelper
 {

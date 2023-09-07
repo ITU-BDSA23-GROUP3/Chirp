@@ -1,8 +1,8 @@
-﻿using Chirp.Shared;
-using Chirp.Storage;
-using Chirp.Types;
+﻿using Chirp.CLI.Shared;
+using Chirp.CLI.Types;
+using Chirp.SimpleDB.Storage;
 
-namespace Chirp;
+namespace Chirp.CLI;
 public static class Program
 {
     private static IStorage<ChirpMessage>? _csvStorage;

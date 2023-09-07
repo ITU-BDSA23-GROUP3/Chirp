@@ -1,8 +1,9 @@
-/Chirp/.idea/
-/Chirp/bin/
-/Chirp/obj/
+*/.idea/
+*/bin/
+*/obj/
 .idea/
 /src/obj/
 obj
 Chirp/obj/project.nuget.cache
 ./vscode
+.DS_Store
