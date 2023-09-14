@@ -1,4 +1,5 @@
-﻿using Chirp.CLI.Shared;
+using System.Reflection.Metadata;
+using Chirp.CLI.Shared;
 using Chirp.CLI.Types;
 using Chirp.SimpleDB.Storage;
 using DocoptNet;
@@ -46,6 +47,7 @@ Options:
         else if (arguments["--help"].IsTrue)
         {
             Console.WriteLine(usage);
+
         }
     }
 }
