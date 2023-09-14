@@ -41,14 +41,12 @@ Options:
 
             foreach (var chirp in records)
             {
-                Console.WriteLine(chirp.ToString());
+                Console.WriteLine(chirp);
             }
         }
         else if (arguments["--help"].IsTrue)
         {
             Console.WriteLine(usage);
-
         }
     }
 }
-
