@@ -7,7 +7,7 @@ using DocoptNet;
 namespace Chirp.CLI;
 public static class Program
 {
-    private static IStorage<ChirpMessage>? _csvStorage;
+    private static IStorage<ChirpRecord>? _csvStorage;
     public static void Main(string[] args)
     {
 
@@ -22,7 +22,7 @@ Options:
 
         var arguments = new Docopt().Apply(usage, args, exit: true);
 
-        _csvStorage = CsvStorageProvider<ChirpMessage>.Storage;
+        _csvStorage = CsvStorageProvider<ChirpRecord>.Storage;
         
         if (arguments["cheep"].IsTrue)
         {
@@ -30,7 +30,7 @@ Options:
             var message = args[1];
             var timestamp = DateTimeHelper.DateTimeToEpoch(DateTime.Now);
 
-            var chirp = new ChirpMessage(author, message, timestamp); 
+            var chirp = ChirpMessage.CreateChirpRecord(author, message, timestamp); 
 
             _csvStorage.StoreEntity(chirp);
         }
@@ -38,9 +38,9 @@ Options:
         {
             var records = _csvStorage.GetEntities();
 
-            foreach (var chirpMessage in records)
+            foreach (var chirp in records)
             {
-                Console.WriteLine(chirpMessage.ToString());
+                Console.WriteLine(chirp.ToString());
             }
         }
         else if (arguments["--help"].IsTrue)
