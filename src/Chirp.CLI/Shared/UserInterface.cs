@@ -20,7 +20,9 @@ Options:
         }
     }
 
-    public static void Help(){
+    public static void Help()
+    {
         Console.WriteLine(USAGE);
     }
 }
+
