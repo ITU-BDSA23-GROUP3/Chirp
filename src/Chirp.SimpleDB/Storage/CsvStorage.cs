@@ -23,13 +23,17 @@ public class CsvStorage<T> : IStorage<T>
     
     public void StoreEntity(T entity)
     {
-        using var csv = GetCsvWriter();
+        using var stream = File.Open(_path, FileMode.Append);
+        using var writer = new StreamWriter(stream);
+        using var csv = new CsvWriter(writer, _config);
         csv.WriteRecords(new List<T>{entity});
     }
 
     public void StoreEntities(List<T> entities)
     {
-        using var csv = GetCsvWriter();
+        using var stream = File.Open(_path, FileMode.Append);
+        using var writer = new StreamWriter(stream);
+        using var csv = new CsvWriter(writer, _config);
         csv.WriteRecords(entities);
     }
 
@@ -41,24 +45,13 @@ public class CsvStorage<T> : IStorage<T>
     public IEnumerable<T> GetEntities()
     {
         Records = new List<T>();
-        using var csv = GetCsvReader();
+        using var reader = new StreamReader(_path);
+        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
         foreach (var data in csv.GetRecords<T>())
         {
             Records.Add(data);
         }
 
         return Records;
-    }
-
-    private CsvWriter GetCsvWriter()
-    {
-        using var stream = File.Open(_path, FileMode.Append);
-        using var writer = new StreamWriter(stream);
-        return new CsvWriter(writer, _config);
-    }
-    private CsvReader GetCsvReader()
-    {
-        using var reader = new StreamReader(_path);
-        return new CsvReader(reader, CultureInfo.InvariantCulture);
     }
 }
