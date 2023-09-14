@@ -1,6 +1,5 @@
 ﻿using Chirp.CLI.Shared;
 using Chirp.CLI.Types;
-using System.Collections.Generic;
 using Chirp.SimpleDB.Storage;
 using DocoptNet;
 
@@ -27,37 +26,26 @@ Options:
         
         if (arguments["cheep"].IsTrue)
         {
-            var message = CreateChirpMessage(Environment.UserName, args[1]);
+            var author = Environment.UserName;
+            var message = args[1];
+            var timestamp = DateTimeHelper.DateTimeToEpoch(DateTime.Now);
 
-            _csvStorage.StoreEntity(message);
+            var chirp = new ChirpMessage(author, message, timestamp); 
+
+            _csvStorage.StoreEntity(chirp);
         }
         else if(arguments["read"].IsTrue)
         {
             var records = _csvStorage.GetEntities();
 
-            WriteOutChirpMessages(records);
+            foreach (var chirpMessage in records)
+            {
+                Console.WriteLine(chirpMessage.ToString());
+            }
         }
         else if (arguments["--help"].IsTrue)
         {
             Console.WriteLine(usage);
-        }
-    }
-
-    private static ChirpMessage CreateChirpMessage(string author, string message)
-    {
-        var chirp = new ChirpMessage(
-            author,
-            message,
-            DateTimeHelper.DateTimeToEpoch(DateTime.Now));
-
-        return chirp;
-    }
-
-    private static void WriteOutChirpMessages(IEnumerable<ChirpMessage> records)
-    {
-        foreach (var chirpMessage in records)
-        {
-            Console.WriteLine(chirpMessage.ToString());
         }
     }
 }
