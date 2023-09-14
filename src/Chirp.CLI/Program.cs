@@ -1,4 +1,5 @@
 ﻿using Chirp.CLI.Shared;
+using Chirp.CLI.Storage;
 using Chirp.CLI.Types;
 using Chirp.SimpleDB.Storage;
 using DocoptNet;
@@ -22,7 +23,7 @@ Options:
 
         var arguments = new Docopt().Apply(usage, args, exit: true);
 
-        _csvStorage = CsvStorageProvider<ChirpMessage>.Storage;
+        _csvStorage = ChirpStorageProvider.Storage;
         
         if (arguments["cheep"].IsTrue)
         {
