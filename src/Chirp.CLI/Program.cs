@@ -11,17 +11,7 @@ public static class Program
     private static IStorage<ChirpRecord>? _csvStorage;
     public static void Main(string[] args)
     {
-
-        const string usage = @"
-Usage:
-    Chirp.CLI read
-    Chirp.CLI cheep <message>
-
-Options:
-    -h --help     Show this screen.
-";
-
-        var arguments = new Docopt().Apply(usage, args, exit: true);
+        var arguments = new Docopt().Apply(UserInterface.USAGE, args, exit: true);
 
         _csvStorage = CsvStorageProvider<ChirpRecord>.Storage;
         
@@ -37,17 +27,11 @@ Options:
         }
         else if(arguments["read"].IsTrue)
         {
-            var records = _csvStorage.GetEntities();
-
-            foreach (var chirp in records)
-            {
-                Console.WriteLine(chirp.ToString());
-            }
+            UserInterface.Read(_csvStorage.GetEntities());
         }
         else if (arguments["--help"].IsTrue)
         {
-            Console.WriteLine(usage);
-
+            UserInterface.Help();
         }
     }
 }
