@@ -9,4 +9,3 @@ public class ChirpMessage
         return chirp;
     }
 }
-

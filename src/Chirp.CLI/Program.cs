@@ -1,5 +1,5 @@
-using System.Reflection.Metadata;
 using Chirp.CLI.Shared;
+using Chirp.CLI.Storage;
 using Chirp.CLI.Types;
 using Chirp.SimpleDB.Storage;
 using DocoptNet;
@@ -13,8 +13,8 @@ public static class Program
     {
         var arguments = new Docopt().Apply(UserInterface.USAGE, args, exit: true);
 
-        _csvStorage = CsvStorageProvider<ChirpRecord>.Storage;
-        
+        _csvStorage = ChirpStorageProvider.Storage;
+
         if (arguments["cheep"].IsTrue)
         {
             var author = Environment.UserName;
