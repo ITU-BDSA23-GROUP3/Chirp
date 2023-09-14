@@ -1,4 +1,5 @@
-﻿using Chirp.CLI.Shared;
+﻿using System.Reflection.Metadata;
+using Chirp.CLI.Shared;
 using Chirp.CLI.Types;
 using Chirp.SimpleDB.Storage;
 using DocoptNet;
@@ -10,17 +11,7 @@ public static class Program
     private static IStorage<ChirpMessage>? _csvStorage;
     public static void Main(string[] args)
     {
-
-        const string usage = @"
-Usage:
-    Chirp.CLI read
-    Chirp.CLI cheep <message>
-
-Options:
-    -h --help     Show this screen.
-";
-
-        var arguments = new Docopt().Apply(usage, args, exit: true);
+        var arguments = new Docopt().Apply(UserInterface.USAGE, args, exit: true);
 
         _csvStorage = CsvStorageProvider<ChirpMessage>.Storage;
         
@@ -34,15 +25,11 @@ Options:
         }
         else if(arguments["read"].IsTrue)
         {
-            var records = _csvStorage.GetEntities();
-            foreach (var chirpMessage in records)
-            {
-                Console.WriteLine(chirpMessage.ToString());
-            }
+            UserInterface.Read(_csvStorage.GetEntities());
         }
         else if (arguments["--help"].IsTrue)
         {
-            Console.WriteLine(usage);
+            UserInterface.Help();
         }
     }
 }
