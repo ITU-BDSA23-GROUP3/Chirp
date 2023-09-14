@@ -21,7 +21,7 @@ public static class Program
             var message = args[1];
             var timestamp = DateTimeHelper.DateTimeToEpoch(DateTime.Now);
 
-            var chirp = ChirpMessage.CreateChirpRecord(author, message, timestamp); 
+            var chirp = new ChirpRecord(author, message, timestamp); 
 
             _csvStorage.StoreEntity(chirp);
         }
