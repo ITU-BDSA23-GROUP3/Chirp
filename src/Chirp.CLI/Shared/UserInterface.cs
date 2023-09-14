@@ -12,11 +12,11 @@ Options:
     -h --help     Show this screen.
 ";
 
-    public static void Read(IEnumerable<ChirpMessage> records)
+    public static void Read(IEnumerable<ChirpRecord> records)
     {
-        foreach (var chirpMessage in records)
+        foreach (var chirpRecord in records)
         {
-            Console.WriteLine(chirpMessage.ToString());
+            Console.WriteLine(chirpRecord.ToString());
         }
     }
 
