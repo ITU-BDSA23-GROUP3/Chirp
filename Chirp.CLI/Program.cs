@@ -11,16 +11,16 @@ public static class Program
     public static void Main(string[] args)
     {
 
-        const string USAGE = @"
+        const string usage = @"
 Usage:
-    Chirl.CLI read
-    Chirl.CLI cheep <message>
+    Chirp.CLI read
+    Chirp.CLI cheep <message>
 
 Options:
     -h --help     Show this screen.
 ";
 
-        var arguments = new Docopt().Apply(USAGE, args, exit: true);
+        var arguments = new Docopt().Apply(usage, args, exit: true);
 
         _csvStorage = CsvStorageProvider<ChirpMessage>.Storage;
         
@@ -42,7 +42,7 @@ Options:
         }
         else if (arguments["--help"].IsTrue)
         {
-            Console.WriteLine(USAGE);
+            Console.WriteLine(usage);
         }
     }
 }
