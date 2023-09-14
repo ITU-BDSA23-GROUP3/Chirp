@@ -47,6 +47,8 @@ Options:
         else if (arguments["--help"].IsTrue)
         {
             Console.WriteLine(usage);
+
         }
     }
 }
+
