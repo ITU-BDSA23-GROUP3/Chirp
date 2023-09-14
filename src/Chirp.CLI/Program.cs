@@ -1,4 +1,4 @@
-﻿using Chirp.CLI.Shared;
+using Chirp.CLI.Shared;
 using Chirp.CLI.Storage;
 using Chirp.CLI.Types;
 using Chirp.SimpleDB.Storage;
@@ -24,7 +24,7 @@ Options:
         var arguments = new Docopt().Apply(usage, args, exit: true);
 
         _csvStorage = ChirpStorageProvider.Storage;
-        
+
         if (arguments["cheep"].IsTrue)
         {
             var author = Environment.UserName;
