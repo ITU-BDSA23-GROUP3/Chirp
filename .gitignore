@@ -7,3 +7,5 @@ obj
 Chirp/obj/project.nuget.cache
 .vscode/
 .DS_Store
+src/*/bin
+test/*/bin
