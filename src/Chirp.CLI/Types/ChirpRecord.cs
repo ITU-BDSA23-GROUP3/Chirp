@@ -13,3 +13,4 @@ public record ChirpRecord(string Author, string Message, long Timestamp)
         return $"{Author} @ {now:MM/dd/yy hh:mm:ss}: {Message}";
     }
 }
+
