@@ -54,7 +54,7 @@ jobs:
       - name: Create OSX arm Release
         run: |
           dotnet publish -r linux-x64 --self-contained
-          zip -r osx-arm.zip src/Chirp.CLI/bin/Debug/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-arm64/publish/
+          zip -r osx-arm64.zip src/Chirp.CLI/bin/Debug/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-arm64/publish/
 
       - name: Upload Release Artifacts
         uses: softprops/action-gh-release@v1
@@ -63,4 +63,4 @@ jobs:
             linux-x64.zip
             win-x64.zip
             osx-x64.zip
-            osx-arm.zip
+            osx-arm64.zip
