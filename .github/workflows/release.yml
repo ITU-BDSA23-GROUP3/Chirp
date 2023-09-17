@@ -55,7 +55,7 @@ jobs:
           zip -r osx-arm.zip src/Chirp.CLI/bin/Debug/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-arm64/publish/
     
       - name: Upload Release Artifacts
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v1
         with:
           files: |
             linux-x64.zip
