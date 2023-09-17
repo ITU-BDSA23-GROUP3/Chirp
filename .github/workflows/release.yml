@@ -11,7 +11,8 @@ permissions:
 on:
   push:
     branches: [ $default-branch, build-test-branch  ]
-    tags: v*
+    tags: 
+      - v*
 
 jobs:
   build:
