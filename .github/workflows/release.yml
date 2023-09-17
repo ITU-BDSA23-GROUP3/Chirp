@@ -18,44 +18,48 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps: 
-    - uses: actions/checkout@v3
-    - name: Restore dependencies
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v3
+      - name: Restore dependencies
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
 
-  - name: Create Linux Release
-    run: |
-      dotnet publish -r linux-x64 --self-contained Release -o "Linux-x64 Release"
-      zip -r linux-x64.zip src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
-
-  - name: Create Windows Release
-    run: |
-      dotnet publish -r win-x64 --self-contained
-      zip -r win-x64.zip src/Chirp.CLI/bin/Debug/net7.0/win-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/win-x64/publish/
-
-  - name: Create OSX x64 Release
-    run: |
-      dotnet publish -r osx-x64 --self-contained
-      zip -r osx-x64.zip src/Chirp.CLI/bin/Debug/net7.0/osx-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-x64/publish/
-
-  - name: Create OSX arm Release
-    run: |
-      dotnet publish -r linux-x64 --self-contained
-      zip -r osx-arm.zip src/Chirp.CLI/bin/Debug/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-arm64/publish/
-
-  - Release:
-    uses: softprops/action-gh-release@v3
+  create_release:
+    name: Create and Publish Release
+    runs-on: ubuntu-latest
     needs: build
-    with:
-      files: |
-        linux-x64.zip
-        win-x64.zip
-        osx-x64.zip
-        osx-arm.zip
+    steps:
+      - name: Create Linux Release
+        run: |
+          dotnet publish -r linux-x64 --self-contained Release -o "Linux-x64 Release"
+          zip -r linux-x64.zip src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
+      
+      - name: Create Windows Release
+        run: |
+          dotnet publish -r win-x64 --self-contained
+          zip -r win-x64.zip src/Chirp.CLI/bin/Debug/net7.0/win-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/win-x64/publish/
+      
+      - name: Create OSX x64 Release
+        run: |
+          dotnet publish -r osx-x64 --self-contained
+          zip -r osx-x64.zip src/Chirp.CLI/bin/Debug/net7.0/osx-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-x64/publish/
+      
+      - name: Create OSX arm Release
+        run: |
+          dotnet publish -r linux-x64 --self-contained
+          zip -r osx-arm.zip src/Chirp.CLI/bin/Debug/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-arm64/publish/
+    
+      - name: Upload Release Artifacts
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            linux-x64.zip
+            win-x64.zip
+            osx-x64.zip
+            osx-arm.zip
