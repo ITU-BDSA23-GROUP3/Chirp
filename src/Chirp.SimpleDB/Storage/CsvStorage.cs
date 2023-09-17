@@ -8,6 +8,8 @@ public class CsvStorage<T> : IStorage<T>
 {
     private readonly string _path;
     private readonly CsvConfiguration _config;
+    
+    // This loads the entire file into memory, which is fine for now but in the future we should consider using yield with an IEnumerable 
     public List<T> Records { get; private set; }
     
     public CsvStorage(string path)

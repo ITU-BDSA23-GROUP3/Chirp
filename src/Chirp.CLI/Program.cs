@@ -1,4 +1,5 @@
-﻿using Chirp.CLI.Shared;
+using Chirp.CLI.Shared;
+using Chirp.CLI.Storage;
 using Chirp.CLI.Types;
 using Chirp.SimpleDB.Storage;
 using DocoptNet;
@@ -7,42 +8,31 @@ using DocoptNet;
 namespace Chirp.CLI;
 public static class Program
 {
-    private static IStorage<ChirpMessage>? _csvStorage;
+    private static IStorage<ChirpRecord>? _csvStorage;
     public static void Main(string[] args)
     {
+        var arguments = new Docopt().Apply(UserInterface.USAGE, args, exit: true);
 
-        const string usage = @"
-Usage:
-    Chirp.CLI read
-    Chirp.CLI cheep <message>
+        _csvStorage = ChirpStorageProvider.Storage;
 
-Options:
-    -h --help     Show this screen.
-";
-
-        var arguments = new Docopt().Apply(usage, args, exit: true);
-
-        _csvStorage = CsvStorageProvider<ChirpMessage>.Storage;
-        
         if (arguments["cheep"].IsTrue)
         {
-            var message = new ChirpMessage(
-                Environment.UserName,
-                args[1],
-                DateTimeHelper.DateTimeToEpoch(DateTime.Now));
-            _csvStorage.StoreEntity(message);
+            var author = Environment.UserName;
+            var message = args[1];
+            var timestamp = DateTimeHelper.DateTimeToEpoch(DateTime.Now);
+
+            var chirp = new ChirpRecord(author, message, timestamp); 
+
+            _csvStorage.StoreEntity(chirp);
         }
         else if(arguments["read"].IsTrue)
         {
-            var records = _csvStorage.GetEntities();
-            foreach (var chirpMessage in records)
-            {
-                Console.WriteLine(chirpMessage.ToString());
-            }
+            UserInterface.Read(_csvStorage.GetEntities());
         }
         else if (arguments["--help"].IsTrue)
         {
-            Console.WriteLine(usage);
+            UserInterface.Help();
         }
     }
 }
+
