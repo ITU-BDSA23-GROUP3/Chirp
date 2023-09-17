@@ -9,32 +9,36 @@ namespace Chirp.CLI;
 public class ChirpHandler : IChirpHandler
 {
     private readonly IStorage<ChirpRecord> _csvStorage;
-    public ChirpHandler(IStorageProvider<ChirpRecord> csvStorage)
+    private readonly IDictionary<string, ValueObject> _arguments;
+    private readonly string[] _args;
+    private readonly IUserInterface _userInterface;
+    public ChirpHandler(IStorageProvider<ChirpRecord> csvStorage, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
     {
         _csvStorage = csvStorage.Storage;
+        _arguments = argumentsProvider.Arguments;
+        _args = argumentsProvider.ProgramArgs;
+        _userInterface = userInterface;
     }
 
-    public void HandleInput(string[] args)
+    public void HandleInput()
     {
-        var arguments = new Docopt().Apply(UserInterface.USAGE, args, exit: true);
-        
-        if (arguments["cheep"].IsTrue)
+        if (_arguments["cheep"].IsTrue)
         {
             var author = Environment.UserName;
-            var message = args[1];
+            var message = _args[1];
             var timestamp = DateTimeHelper.DateTimeToEpoch(DateTime.Now);
 
             var chirp = new ChirpRecord(author, message, timestamp); 
 
             _csvStorage.StoreEntity(chirp);
         }
-        else if(arguments["read"].IsTrue)
+        else if(_arguments["read"].IsTrue)
         {
-            UserInterface.Read(_csvStorage.GetEntities());
+            _userInterface.Read(_csvStorage.GetEntities());
         }
-        else if (arguments["--help"].IsTrue)
+        else if (_arguments["--help"].IsTrue)
         {
-            UserInterface.Help();
+            _userInterface.Help();
         }
     }
 }
