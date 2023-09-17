@@ -53,7 +53,7 @@ jobs:
 
       - name: Create OSX arm Release
         run: |
-          dotnet publish -r linux-x64 --self-contained
+          dotnet publish -r osx-arm64 --self-contained
           zip -r osx-arm64.zip src/Chirp.CLI/bin/Debug/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-arm64/publish/
 
       - name: Upload Release Artifacts
