@@ -5,29 +5,37 @@ using Chirp.SimpleDB.Storage;
 using DocoptNet;
 
 namespace Chirp.CLI;
-
+using DocoptDictionary = IParser<IDictionary<string, ArgValue>>;
 public class ChirpHandler : IChirpHandler
 {
     private readonly IStorage<ChirpRecord> _csvStorage;
-    private readonly IDictionary<string, ValueObject>? _arguments;
+    private readonly DocoptDictionary parser;
     private readonly string[] _args;
     private readonly IUserInterface _userInterface;
     public ChirpHandler(IStorageProvider<ChirpRecord> csvStorage, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
     {
         _csvStorage = csvStorage.Storage;
-        _arguments = argumentsProvider.Arguments;
+        parser = argumentsProvider.Parser;
         _args = argumentsProvider.ProgramArgs;
         _userInterface = userInterface;
     }
 
-    public void HandleInput()
+    public int HandleInput()
     {
-        if (_arguments == null)
+        return parser.Parse(_args) switch
         {
-            _userInterface.Help();
-            return;
-        }
-        if (_arguments["cheep"].IsTrue)
+            IArgumentsResult<IDictionary<string, ArgValue>> { Arguments: var arguments } => HandleCustomArgs(arguments),
+            IHelpResult => _userInterface.Help(),
+            IVersionResult { Version: var version } => _userInterface.Help(),
+            IInputErrorResult { Usage: var usage } => _userInterface.Help(),
+            var result => throw new System.Runtime.CompilerServices.SwitchExpressionException(result)
+        };
+
+    }
+
+    public int HandleCustomArgs(IDictionary<string, ArgValue> argValues)
+    {
+        if (argValues["cheep"].IsTrue)
         {
             var author = Environment.UserName;
             var message = _args[1];
@@ -37,13 +45,20 @@ public class ChirpHandler : IChirpHandler
 
             _csvStorage.StoreEntity(chirp);
         }
-        else if(_arguments["read"].IsTrue)
+        else if(argValues["read"].IsTrue)
         {
             _userInterface.Read(_csvStorage.GetEntities());
         }
-        else if (_arguments["--help"].IsTrue)
+        else if (argValues["--help"].IsTrue)
         {
             _userInterface.Help();
         }
+
+        return 0;
+    }
+
+    private void ShowHelp(string help)
+    {
+        Console.WriteLine(help);
     }
 }

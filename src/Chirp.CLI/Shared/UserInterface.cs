@@ -10,17 +10,20 @@ public class UserInterface : IUserInterface
     {
         _usage = argumentsProvider.Usage;
     }
-    public void Read(IEnumerable<ChirpRecord> records)
+    public int Read(IEnumerable<ChirpRecord> records)
     {
         foreach (var chirpRecord in records)
         {
             Console.WriteLine(chirpRecord.ToString());
         }
+
+        return 0;
     }
 
-    public void Help()
+    public int Help()
     {
         Console.WriteLine(_usage);
+        return 0;
     }
 }
 

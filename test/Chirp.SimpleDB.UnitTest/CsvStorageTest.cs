@@ -3,7 +3,7 @@ using System.IO.Abstractions.TestingHelpers;
 using Chirp.SimpleDB.Storage;
 using FluentAssertions;
 using Xunit;
-namespace Chirp.SimpleDB.Tests;
+namespace Chirp.SimpleDB.UnitTest;
 
 public class CsvStorageTest
 {

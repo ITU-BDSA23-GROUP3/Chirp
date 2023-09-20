@@ -1,10 +1,11 @@
 using DocoptNet;
 
 namespace Chirp.CLI.Interfaces;
+using DocoptDictionary = IParser<IDictionary<string, ArgValue>>;
 
 public interface IArgumentsProvider
 {
-    public IDictionary<string, ValueObject>? Arguments { get; }
+    public DocoptDictionary Parser { get; }
     public string Usage { get; }
     public string[] ProgramArgs { get; }
 }
