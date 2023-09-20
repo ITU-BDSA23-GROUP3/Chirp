@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace Chirp.CLI.UnitTest;
 
-public class UnitTest1
+public class ChirpHandlerTest
 {
     private readonly IStorageProvider<ChirpRecord> _storage = Substitute.For<IStorageProvider<ChirpRecord>>();
     private readonly IStorage<ChirpRecord> _providedStorage = Substitute.For<IStorage<ChirpRecord>>();
@@ -17,13 +17,13 @@ public class UnitTest1
     private readonly IUserInterface _ui = Substitute.For<IUserInterface>();
     private readonly ChirpHandler _sut;
 
-    public UnitTest1()
+    public ChirpHandlerTest()
     {
         _sut = new ChirpHandler(_storage, _argsProvider,_ui);
     }
 
     [Fact]
-    public void Test1()
+    public void ChirpHandler_ProvidesArgument_ArgumentsReadAndExecuted()
     {
         _storage.Storage.Returns(_providedStorage);
         var argDict = new Dictionary<string, ArgValue>

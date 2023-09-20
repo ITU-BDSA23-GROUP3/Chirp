@@ -56,9 +56,4 @@ public class ChirpHandler : IChirpHandler
 
         return 0;
     }
-
-    private void ShowHelp(string help)
-    {
-        Console.WriteLine(help);
-    }
 }
