@@ -9,7 +9,7 @@ namespace Chirp.CLI;
 public class ChirpHandler : IChirpHandler
 {
     private readonly IStorage<ChirpRecord> _csvStorage;
-    private readonly IDictionary<string, ValueObject> _arguments;
+    private readonly IDictionary<string, ValueObject>? _arguments;
     private readonly string[] _args;
     private readonly IUserInterface _userInterface;
     public ChirpHandler(IStorageProvider<ChirpRecord> csvStorage, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
@@ -22,6 +22,11 @@ public class ChirpHandler : IChirpHandler
 
     public void HandleInput()
     {
+        if (_arguments == null)
+        {
+            _userInterface.Help();
+            return;
+        }
         if (_arguments["cheep"].IsTrue)
         {
             var author = Environment.UserName;
