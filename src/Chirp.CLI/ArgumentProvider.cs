@@ -6,11 +6,13 @@ namespace Chirp.CLI;
 public class ArgumentProvider : IArgumentsProvider
 {
     public IDictionary<string, ValueObject>? Arguments { get; }
+    public string Usage { get; }
     public string[] ProgramArgs { get; }
 
     public ArgumentProvider(string[] args, string usage)
     {
-        Arguments = new Docopt().Apply(usage, args, exit: true);
+        Usage = usage;
+        Arguments = new Docopt().Apply(Usage, args, exit: true);
         ProgramArgs = args;
     }
 }

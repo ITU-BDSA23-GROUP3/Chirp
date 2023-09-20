@@ -6,9 +6,9 @@ public class UserInterface : IUserInterface
 {
     private static string? _usage;
 
-    public UserInterface(string usage)
+    public UserInterface(IArgumentsProvider argumentsProvider)
     {
-        _usage = usage;
+        _usage = argumentsProvider.Usage;
     }
     public void Read(IEnumerable<ChirpRecord> records)
     {

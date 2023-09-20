@@ -20,8 +20,8 @@ Options:
     public static void Main(string[] args)
     {
         var serviceProvider = new ServiceCollection()
-            .AddSingleton<IUserInterface>(new UserInterface(Usage))
             .AddSingleton<IArgumentsProvider>(new ArgumentProvider(args, Usage))
+            .AddSingleton<IUserInterface, UserInterface>()
             .AddSingleton<IStorageProvider<ChirpRecord>, ChirpStorageProvider>()
             .AddSingleton<IChirpHandler, ChirpHandler>()
             .BuildServiceProvider();
