@@ -2,7 +2,5 @@ namespace Chirp.SimpleDB.Storage;
 
 public interface IStorageProvider<T>
 {
-    #pragma warning disable
-    public static IStorage<T> Storage { get; }
-    #pragma warning restore
+    public IStorage<T> Storage { get; }
 }

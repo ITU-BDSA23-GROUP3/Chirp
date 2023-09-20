@@ -1,28 +1,29 @@
+using Chirp.CLI.Interfaces;
 using Chirp.CLI.Types;
 
 namespace Chirp.CLI.Shared;
-public static class UserInterface
+public class UserInterface : IUserInterface
 {
-    public static string USAGE { get; } = @"
-Usage:
-    Chirp.CLI read
-    Chirp.CLI cheep <message>
+    private static string? _usage;
 
-Options:
-    -h --help     Show this screen.
-";
-
-    public static void Read(IEnumerable<ChirpRecord> records)
+    public UserInterface(IArgumentsProvider argumentsProvider)
+    {
+        _usage = argumentsProvider.Usage;
+    }
+    public int Read(IEnumerable<ChirpRecord> records)
     {
         foreach (var chirpRecord in records)
         {
             Console.WriteLine(chirpRecord.ToString());
         }
+
+        return 0;
     }
 
-    public static void Help()
+    public int Help()
     {
-        Console.WriteLine(USAGE);
+        Console.WriteLine(_usage);
+        return 0;
     }
 }
 

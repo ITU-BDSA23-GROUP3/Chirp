@@ -9,3 +9,4 @@ Chirp/obj/project.nuget.cache
 .DS_Store
 src/*/bin
 test/*/bin
+Chirp.sln.DotSettings.user
