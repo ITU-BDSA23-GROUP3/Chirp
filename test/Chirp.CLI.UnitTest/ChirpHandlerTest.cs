@@ -1,5 +1,6 @@
 using Xunit;
 using Chirp.CLI.Interfaces;
+using Chirp.CLI.Services;
 using Chirp.CLI.Types;
 using DocoptNet;
 using NSubstitute;
@@ -8,23 +9,22 @@ namespace Chirp.CLI.UnitTest;
 
 public class ChirpHandlerTest
 {
-    private readonly IHttpServiceProvider _service = Substitute.For<IHttpServiceProvider>();
-    private readonly HttpClient _client = Substitute.For<HttpClient>();
+    private readonly IServiceProvider<ChirpRecord, ChirpMessage> _serviceProvider = Substitute.For<IServiceProvider<ChirpRecord, ChirpMessage>>();
+    private readonly IService<ChirpRecord, ChirpMessage> _service = Substitute.For<IService<ChirpRecord, ChirpMessage>>();
     private readonly IArgumentsProvider _argsProvider = Substitute.For<IArgumentsProvider>();
     private readonly IUserInterface _ui = Substitute.For<IUserInterface>();
     private readonly ChirpHandler _sut;
 
     public ChirpHandlerTest()
     {
-        _sut = new ChirpHandler(_service, _argsProvider,_ui);
-        _client.BaseAddress = new Uri("http://haha");
+        _serviceProvider.Service.Returns(_service);
+        _sut = new ChirpHandler(_serviceProvider, _argsProvider,_ui);
     }
 
     [Fact]
-    public void ChirpHandler_ProvidesArgument_ArgumentsReadAndExecuted()
+    public async Task ChirpHandler_ProvidesArgument_ArgumentsReadAndExecuted()
     {
         // Arrange
-        _service.Client.Returns(_client);
         var argDict = new Dictionary<string, ArgValue>
         {
             { "read", ArgValue.True },
@@ -33,9 +33,9 @@ public class ChirpHandlerTest
         };
         
         // Act
-        _sut.HandleCustomArgs(argDict);
+        await _sut.HandleCustomArgs(argDict);
         
         // Assert
-        _client.Received().GetAsync("/Chirp");
+        await _service.Received().GetAllEntities();
     }
 }

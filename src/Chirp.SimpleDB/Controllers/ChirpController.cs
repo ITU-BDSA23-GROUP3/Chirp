@@ -18,9 +18,9 @@ public class ChirpController
     }
     
     [HttpPost]
-    public void Post(ChirpMessage message)
+    public void Post(List<ChirpMessage> messages)
     {
-        _storage.StoreEntity(message.ToChirpRecord());
+        _storage.StoreEntities(messages.Select(message => message.ToChirpRecord()).ToList());
     }
     
     [HttpGet]

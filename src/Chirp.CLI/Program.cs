@@ -1,7 +1,7 @@
-using System.Text.Json;
 using Chirp.CLI.Interfaces;
 using Chirp.CLI.Providers;
 using Chirp.CLI.Shared;
+using Chirp.CLI.Types;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chirp.CLI;
@@ -21,7 +21,7 @@ Options:
         var serviceProvider = new ServiceCollection()
             .AddSingleton<IArgumentsProvider>(new ArgumentProvider(args, Usage))
             .AddSingleton<IUserInterface, UserInterface>()
-            .AddSingleton<IHttpServiceProvider, HttpServiceprovider>()
+            .AddSingleton<IServiceProvider<ChirpRecord, ChirpMessage>, ChirpServiceProvider>()
             .AddSingleton<IChirpHandler, ChirpHandler>()
             .BuildServiceProvider();
         

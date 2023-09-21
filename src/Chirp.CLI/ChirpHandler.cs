@@ -1,9 +1,7 @@
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 using Chirp.CLI.Interfaces;
 using Chirp.CLI.Types;
 using DocoptNet;
+using IService = Chirp.CLI.Interfaces.IService<Chirp.CLI.Types.ChirpRecord, Chirp.CLI.Types.ChirpMessage>;
 
 namespace Chirp.CLI;
 
@@ -12,14 +10,14 @@ public class ChirpHandler : IChirpHandler
     private readonly IParser<IDictionary<string, ArgValue>> _parser;
     private readonly string[] _args;
     private readonly IUserInterface _userInterface;
-    private readonly HttpClient _client;
+    private readonly IService _service;
     
-    public ChirpHandler(IHttpServiceProvider serviceProvider, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
+    public ChirpHandler(IServiceProvider<ChirpRecord, ChirpMessage> serviceProvider, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
     {
         _parser = argumentsProvider.Parser;
         _args = argumentsProvider.ProgramArgs;
         _userInterface = userInterface;
-        _client = serviceProvider.Client;
+        _service = serviceProvider.Service;
     }
 
     public async Task<int> HandleInput()
@@ -39,17 +37,14 @@ public class ChirpHandler : IChirpHandler
     {
         if (argValues["cheep"].IsTrue)
         {
-            var author = Environment.UserName;
+            var user = Environment.UserName;
             var message = _args[1];
-            using StringContent serialized = new(JsonSerializer.Serialize(new ChirpMessage(author, message)), Encoding.UTF8, "application/json");
-            await _client.PostAsync("/Chirp", serialized);
+            await _service.StoreEntity(new(user, message));
         }
         else if(argValues["read"].IsTrue)
         {
-            var chirps = await _client.GetAsync("/Chirp");
-            var jsonResult = await chirps.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<List<ChirpRecord>>(jsonResult);
-            _userInterface.Read(result!);
+            var result = await _service.GetAllEntities();
+            _userInterface.Read(result??new());
         }
         else if (argValues["--help"].IsTrue)
         {
