@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - $default-branch
+      - feat-add_semantic_versioning
     tags:
       - v*
 
