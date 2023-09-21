@@ -44,22 +44,22 @@ jobs:
         run: |
           dotnet publish -c Release -r linux-x64 --self-contained false
 
-          zip -r -j "Chirp.CLI-$tag-linux-x64.zip" src/Chirp.CLI/bin/Release/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" -x "*.pdb"
+          zip -r -j "Chirp.CLI-$tag-linux-x64.zip" src/Chirp.CLI/bin/Release/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" "*.pdb"
       - name: Create Windows Release
         run: |
           dotnet publish -c Release -r win-x64 --self-contained false
 
-          zip -r -j "Chirp.CLI-$tag-windows-x64.zip" src/Chirp.CLI/bin/Release/net7.0/win-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" -x "*.pdb"
+          zip -r -j "Chirp.CLI-$tag-windows-x64.zip" src/Chirp.CLI/bin/Release/net7.0/win-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" "*.pdb"
       - name: Create OSX x64 Release
         run: |
           dotnet publish -c Release -r osx-x64 --self-contained false
 
-          zip -r -j "Chirp.CLI-$tag-osx-x64.zip" src/Chirp.CLI/bin/Release/net7.0/osx-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" -x "*.pdb"
+          zip -r -j "Chirp.CLI-$tag-osx-x64.zip" src/Chirp.CLI/bin/Release/net7.0/osx-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" "*.pdb"
       - name: Create OSX arm Release
         run: |
           dotnet publish -c Release -r osx-arm64 --self-contained false
 
-          zip -r -j "Chirp.CLI-$tag-osx-arm-x64.zip" src/Chirp.CLI/bin/Release/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" -x "*.pdb"
+          zip -r -j "Chirp.CLI-$tag-osx-arm-x64.zip" src/Chirp.CLI/bin/Release/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/ -x "*.sln" "*.pdb"
       - name: Upload Release Artifacts
         uses: softprops/action-gh-release@v1
         with:
