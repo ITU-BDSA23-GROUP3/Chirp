@@ -17,10 +17,11 @@ public class ChirpController
         _storage = storageProvider.Storage;
     }
     
-    [HttpPost(Name = "PostChirp")]
-    public void Post(StorageChirpRecord chirp)
+    [HttpPost]
+    public void Post(ChirpMessage message)
     {
-        Console.WriteLine(chirp);
+        
+        _storage.StoreEntity(message.ToChirpRecord());
     }
     
     [HttpGet]
