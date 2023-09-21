@@ -6,6 +6,10 @@ using Chirp.SimpleDB.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chirp.CLI;
+
+/// <summary>
+/// Main runner for the Chirp CLI project
+/// </summary>
 public static class Program
 {
     private const string Usage = @"

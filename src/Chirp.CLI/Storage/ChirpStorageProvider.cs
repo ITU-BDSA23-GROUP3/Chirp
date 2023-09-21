@@ -7,6 +7,9 @@ public class ChirpStorageProvider : IStorageProvider<ChirpRecord>
 {
     private static IStorage<ChirpRecord>? _storage;
     
+    /// <summary>
+    /// Return _storage, if _storage isn't instantiated, create an object, set _storage, and return that
+    /// </summary>
     public IStorage<ChirpRecord> Storage
     {
         // This makes sure that our storage is a singleton so we dont open multiple instances of the file

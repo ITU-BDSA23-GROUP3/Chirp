@@ -7,6 +7,12 @@ namespace Chirp.CLI.Types;
 /// </summary>
 public record ChirpRecord(string Author, string Message, long Timestamp)
 {
+    /// <summary>
+    /// Displays a Chirp Record as a string.
+    /// 
+    /// Example: Bob @ 09/21/23 14:43:37: Hello World!
+    /// </summary>
+    /// <returns>String of the form "author @ MM/dd/yy hh:mm:ss: message"</returns>
     public override string ToString()
     {
         var now = DateTimeHelper.EpochToDateTime(Timestamp);
