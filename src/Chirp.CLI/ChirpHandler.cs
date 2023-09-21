@@ -1,30 +1,32 @@
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using Chirp.CLI.Interfaces;
-using Chirp.CLI.Shared;
 using Chirp.CLI.Types;
-using Chirp.SimpleDB.Storage;
 using DocoptNet;
 
 namespace Chirp.CLI;
-using DocoptDictionary = IParser<IDictionary<string, ArgValue>>;
+
 public class ChirpHandler : IChirpHandler
 {
-    private readonly IStorage<ChirpRecord> _csvStorage;
-    private readonly DocoptDictionary parser;
+    private readonly IParser<IDictionary<string, ArgValue>> _parser;
     private readonly string[] _args;
     private readonly IUserInterface _userInterface;
-    public ChirpHandler(IStorageProvider<ChirpRecord> csvStorage, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
+    private readonly HttpClient _client;
+    
+    public ChirpHandler(IHttpServiceProvider serviceProvider, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
     {
-        _csvStorage = csvStorage.Storage;
-        parser = argumentsProvider.Parser;
+        _parser = argumentsProvider.Parser;
         _args = argumentsProvider.ProgramArgs;
         _userInterface = userInterface;
+        _client = serviceProvider.Client;
     }
 
-    public int HandleInput()
+    public async Task<int> HandleInput()
     {
-        return parser.Parse(_args) switch
+        return _parser.Parse(_args) switch
         {
-            IArgumentsResult<IDictionary<string, ArgValue>> { Arguments: var arguments } => HandleCustomArgs(arguments),
+            IArgumentsResult<IDictionary<string, ArgValue>> { Arguments: var arguments } => await HandleCustomArgs(arguments),
             IHelpResult => _userInterface.Help(),
             IVersionResult { Version: var version } => _userInterface.Help(),
             IInputErrorResult { Usage: var usage } => _userInterface.Help(),
@@ -32,22 +34,22 @@ public class ChirpHandler : IChirpHandler
         };
 
     }
-
-    public int HandleCustomArgs(IDictionary<string, ArgValue> argValues)
+    
+    public async Task<int> HandleCustomArgs(IDictionary<string, ArgValue> argValues)
     {
         if (argValues["cheep"].IsTrue)
         {
             var author = Environment.UserName;
             var message = _args[1];
-            var timestamp = DateTimeHelper.DateTimeToEpoch(DateTime.Now);
-
-            var chirp = new ChirpRecord(author, message, timestamp); 
-
-            _csvStorage.StoreEntity(chirp);
+            using StringContent serialized = new(JsonSerializer.Serialize(new ChirpMessage(author, message)), Encoding.UTF8, "application/json");
+            await _client.PostAsync("/Chirp", serialized);
         }
         else if(argValues["read"].IsTrue)
         {
-            _userInterface.Read(_csvStorage.GetEntities());
+            var chirps = await _client.GetAsync("/Chirp");
+            var jsonResult = await chirps.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<List<ChirpRecord>>(jsonResult);
+            _userInterface.Read(result!);
         }
         else if (argValues["--help"].IsTrue)
         {

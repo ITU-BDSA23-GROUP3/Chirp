@@ -6,7 +6,7 @@ using Chirp.SimpleDB.Types;
 namespace Chirp.SimpleDB.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Route("[controller]")]
 public class ChirpController
 {
     private readonly ILogger<ChirpController> _logger;
@@ -20,7 +20,6 @@ public class ChirpController
     [HttpPost]
     public void Post(ChirpMessage message)
     {
-        
         _storage.StoreEntity(message.ToChirpRecord());
     }
     
