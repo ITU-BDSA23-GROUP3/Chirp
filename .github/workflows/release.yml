@@ -47,7 +47,7 @@ jobs:
       - name: Create Windows Release
         run: |
           tag=$(git describe --tags --abbrev=0)
-          dotnet publish -r windows-x64 --self-contained
+          dotnet publish -r win-x64 --self-contained
 
           zip -r -j "Chirp.CLI-$tag-windows-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Create OSX x64 Release
