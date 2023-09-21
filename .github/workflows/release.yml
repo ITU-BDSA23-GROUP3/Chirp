@@ -19,6 +19,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Set tag
+        run: |
+          echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_ENV"
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -40,25 +43,21 @@ jobs:
 
       - name: Create Linux Release
         run: |
-          tag=$(git describe --tags --abbrev=0)
           dotnet publish -r linux-x64 --self-contained
 
           zip -r -j "Chirp.CLI-$tag-linux-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Create Windows Release
         run: |
-          tag=$(git describe --tags --abbrev=0)
           dotnet publish -r win-x64 --self-contained
 
           zip -r -j "Chirp.CLI-$tag-windows-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Create OSX x64 Release
         run: |
-          tag=$(git describe --tags --abbrev=0)
           dotnet publish -r osx-x64 --self-contained
 
           zip -r -j "Chirp.CLI-$tag-osx-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Create OSX arm Release
         run: |
-          tag=$(git describe --tags --abbrev=0)
           dotnet publish -r osx-arm64 --self-contained
 
           zip -r -j "Chirp.CLI-$tag-osx-arm-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
@@ -66,7 +65,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            Chirp.CLI-${tag}-linux-x64.zip
-            Chirp.CLI-${tag}-windows-x64.zip
-            Chirp.CLI-${tag}-osx-x64.zip
-            Chirp.CLI-${tag}-osx-arm-x64.zip
+            Chirp.CLI-${{ env.tag }}-linux-x64.zip
+            Chirp.CLI-${{ env.tag }}-windows-x64.zip
+            Chirp.CLI-${{ env.tag }}-osx-x64.zip
+            Chirp.CLI-${{ env.tag }}-osx-arm-x64.zip
