@@ -22,7 +22,7 @@ public class ChirpHandlerTest
     }
 
     [Fact]
-    public async Task ChirpHandler_ProvidesArgument_ArgumentsReadAndExecuted()
+    public async Task ChirpHandler_ReadArgumentProvided_ArgumentsReadAndExecuted()
     {
         // Arrange
         var argDict = new Dictionary<string, ArgValue>
@@ -37,5 +37,25 @@ public class ChirpHandlerTest
         
         // Assert
         await _service.Received().GetAllEntities();
+    }
+    
+    [Fact]
+    public async Task ChirpHandler_CheepArgumentProvided_ArgumentExecuted()
+    {
+        // Arrange
+        var message = "Hej";
+        _argsProvider.ProgramArgs.Returns(new[] { "",message });
+        var argDict = new Dictionary<string, ArgValue>
+        {
+            { "read", ArgValue.False },
+            { "cheep", ArgValue.True },
+            { "--help", ArgValue.False }
+        };
+        
+        // Act
+        await _sut.HandleCustomArgs(argDict);
+        
+        // Assert
+        await _service.Received().StoreEntity(Arg.Is<ChirpMessage>(msg => msg.message == message));
     }
 }

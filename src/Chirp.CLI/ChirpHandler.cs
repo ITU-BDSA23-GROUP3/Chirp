@@ -7,22 +7,22 @@ namespace Chirp.CLI;
 
 public class ChirpHandler : IChirpHandler
 {
-    private readonly IParser<IDictionary<string, ArgValue>> _parser;
-    private readonly string[] _args;
+    private readonly IArgumentsProvider _argumentsProvider;
     private readonly IUserInterface _userInterface;
     private readonly IService _service;
     
     public ChirpHandler(IServiceProvider<ChirpRecord, ChirpMessage> serviceProvider, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
     {
-        _parser = argumentsProvider.Parser;
-        _args = argumentsProvider.ProgramArgs;
+        _argumentsProvider = argumentsProvider;
         _userInterface = userInterface;
         _service = serviceProvider.Service;
     }
 
     public async Task<int> HandleInput()
     {
-        return _parser.Parse(_args) switch
+        var parser = _argumentsProvider.Parser;
+        var args = _argumentsProvider.ProgramArgs;
+        return parser.Parse(args) switch
         {
             IArgumentsResult<IDictionary<string, ArgValue>> { Arguments: var arguments } => await HandleCustomArgs(arguments),
             IHelpResult => _userInterface.Help(),
@@ -38,7 +38,7 @@ public class ChirpHandler : IChirpHandler
         if (argValues["cheep"].IsTrue)
         {
             var user = Environment.UserName;
-            var message = _args[1];
+            var message = _argumentsProvider.ProgramArgs[1];
             await _service.StoreEntity(new(user, message));
         }
         else if(argValues["read"].IsTrue)
