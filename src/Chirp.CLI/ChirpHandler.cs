@@ -20,9 +20,9 @@ public class ChirpHandler : IChirpHandler
 
     /// <inheritdoc cref="ChirpHandler"/>
     /// 
-    /// <param name="csvStorage"></param>
-    /// <param name="argumentsProvider"></param>
-    /// <param name="userInterface"></param>
+    /// <param name="csvStorage">Interface CSV storage provider</param>
+    /// <param name="argumentsProvider">Interface arguments provider</param>
+    /// <param name="userInterface">Interface user interface</param>
     public ChirpHandler(IStorageProvider<ChirpRecord> csvStorage, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
     {
         _csvStorage = csvStorage.Storage;
@@ -51,7 +51,7 @@ public class ChirpHandler : IChirpHandler
     /// <summary>
     /// Helper function for HandleInput, this is responsible for storing cheeps and reading them
     /// </summary>
-    /// <param name="argValues"></param>
+    /// <param name="argValues">Interface dictionary for argument values</param>
     /// <returns>Returns a status code</returns>
     public int HandleCustomArgs(IDictionary<string, ArgValue> argValues)
     {

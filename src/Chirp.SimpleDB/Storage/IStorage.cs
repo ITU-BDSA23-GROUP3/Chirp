@@ -3,7 +3,7 @@ namespace Chirp.SimpleDB.Storage;
 /// <summary>
 /// Interface for IStorage using generic types, in case what we want to store changes
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">Arbitrary parameter</typeparam>
 public interface IStorage<T>
 {
     public List<T> Records { get; }

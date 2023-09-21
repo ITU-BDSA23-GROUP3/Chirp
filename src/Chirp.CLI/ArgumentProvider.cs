@@ -15,8 +15,8 @@ public class ArgumentProvider : IArgumentsProvider
 
     /// <inheritdoc cref="ArgumentProvider"/>
     /// 
-    /// <param name="args"></param>
-    /// <param name="usage"></param>
+    /// <param name="args">String array with arguments</param>
+    /// <param name="usage">Usage string</param>
     public ArgumentProvider(string[] args, string usage)
     {
         Parser = Docopt.CreateParser(usage).WithVersion("0.0");

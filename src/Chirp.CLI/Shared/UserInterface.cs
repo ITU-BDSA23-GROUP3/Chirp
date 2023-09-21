@@ -12,7 +12,7 @@ public class UserInterface : IUserInterface
 
     /// <inheritdoc cref="UserInterface"/>
     /// 
-    /// <param name="argumentsProvider"></param>
+    /// <param name="argumentsProvider">Argument provider</param>
     public UserInterface(IArgumentsProvider argumentsProvider)
     {
         _usage = argumentsProvider.Usage;
@@ -21,7 +21,7 @@ public class UserInterface : IUserInterface
     /// <summary>
     /// Read a Chirp record
     /// </summary>
-    /// <param name="records"></param>
+    /// <param name="records">Chirp Record</param>
     /// <returns>Status</returns>
     public int Read(IEnumerable<ChirpRecord> records)
     {

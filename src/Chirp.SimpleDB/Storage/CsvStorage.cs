@@ -17,8 +17,8 @@ public class CsvStorage<T> : IStorage<T>
     /// <summary>
     /// Create a CSV storage
     /// </summary>
-    /// <param name="path"></param>
-    /// <param name="fileSystem"></param>
+    /// <param name="path">Path to CSV storage</param>
+    /// <param name="fileSystem">Filesystem</param>
     public CsvStorage(string path, IFileSystem? fileSystem = null)
     {
         _config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -32,7 +32,7 @@ public class CsvStorage<T> : IStorage<T>
     /// <summary>
     /// Store an entity of a generic type
     /// </summary>
-    /// <param name="entity"></param>
+    /// <param name="entity">Entity to store</param>
     public void StoreEntity(T entity)
     {
         StoreEntities(new List<T>{entity});
@@ -41,7 +41,7 @@ public class CsvStorage<T> : IStorage<T>
     /// <summary>
     /// Open file, and write to the file using the CSV format
     /// </summary>
-    /// <param name="entities"></param>
+    /// <param name="entities">List of entities</param>
     public void StoreEntities(List<T> entities)
     {
         ValidateFileOrCreate();
@@ -54,8 +54,8 @@ public class CsvStorage<T> : IStorage<T>
     /// <summary>
     /// Not implemented
     /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    /// <returns>Will return generic typed entity</returns>
+    /// <exception cref="NotImplementedException">Not implemented yet, throws exception</exception>
     public T GetEntity()
     {
         throw new NotImplementedException();
