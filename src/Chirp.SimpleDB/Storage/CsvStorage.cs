@@ -31,6 +31,7 @@ public class CsvStorage<T> : IStorage<T>
 
     public void StoreEntities(List<T> entities)
     {
+        ValidateFileOrCreate();
         using var stream = _fileSystem.File.Open(_path, FileMode.Append);
         using var writer = new StreamWriter(stream);
         using var csv = new CsvWriter(writer, _config);
@@ -44,6 +45,7 @@ public class CsvStorage<T> : IStorage<T>
 
     public IEnumerable<T> GetEntities()
     {
+        ValidateFileOrCreate();
         Records = new List<T>();
         using var reader = _fileSystem.File.OpenText(_path);;
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -53,5 +55,22 @@ public class CsvStorage<T> : IStorage<T>
         }
 
         return Records;
+    }
+
+    private void ValidateFileOrCreate()
+    {
+        if (!_fileSystem.File.Exists(_path))
+        {
+            using (var sw = _fileSystem.File.CreateText(_path))
+            using (var csv = new CsvWriter(sw, _config))
+            {
+                csv.WriteHeader<T>();
+            }
+            using (var stream = _fileSystem.File.Open(_path, FileMode.Append))
+            {
+                using var sw = new StreamWriter(stream);
+                sw.Write(Environment.NewLine);
+            }
+        }
     }
 }
