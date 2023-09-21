@@ -66,7 +66,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            Chirp.CLI-${{tag}}-linux-x64.zip
-            Chirp.CLI-${{tag}}-windows-x64.zip
-            Chirp.CLI-${{tag}}-osx-x64.zip
-            Chirp.CLI-${{tag}}-osx-arm-x64.zip
+            Chirp.CLI-${tag}-linux-x64.zip
+            Chirp.CLI-${tag}-windows-x64.zip
+            Chirp.CLI-${tag}-osx-x64.zip
+            Chirp.CLI-${tag}-osx-arm-x64.zip
