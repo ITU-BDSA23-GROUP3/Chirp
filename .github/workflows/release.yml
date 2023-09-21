@@ -19,19 +19,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Set tag
-        run: |
-          echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_ENV"
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
+      - name: Set tag
+        run: |
+          echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_ENV"
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
-
+  
       - name: Restore dependencies
         run: dotnet restore
 
