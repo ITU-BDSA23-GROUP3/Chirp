@@ -37,29 +37,33 @@ jobs:
 
       - name: Create Linux Release
         run: |
+          tag=$(git describe --tags --abbrev=0)
           dotnet publish -r linux-x64 --self-contained
-          zip -r linux-x64.zip src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
 
+          zip -r -j "Chirp.CLI-$tag-linux-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Create Windows Release
         run: |
-          dotnet publish -r win-x64 --self-contained
-          zip -r win-x64.zip src/Chirp.CLI/bin/Debug/net7.0/win-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/win-x64/publish/
+          tag=$(git describe --tags --abbrev=0)
+          dotnet publish -r windows-x64 --self-contained
 
+          zip -r -j "Chirp.CLI-$tag-windows-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Create OSX x64 Release
         run: |
+          tag=$(git describe --tags --abbrev=0)
           dotnet publish -r osx-x64 --self-contained
-          zip -r osx-x64.zip src/Chirp.CLI/bin/Debug/net7.0/osx-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-x64/publish/
 
+          zip -r -j "Chirp.CLI-$tag-osx-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Create OSX arm Release
         run: |
-          dotnet publish -r osx-arm64 --self-contained
-          zip -r osx-arm64.zip src/Chirp.CLI/bin/Debug/net7.0/osx-arm64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/osx-arm64/publish/
+          tag=$(git describe --tags --abbrev=0)
+          dotnet publish -r osx-arm-x64 --self-contained
 
+          zip -r -j "Chirp.CLI-$tag-osx-arm-x64.zip" src/Chirp.CLI/bin/Debug/net7.0/linux-x64/publish/ src/Chirp.SimpleDB/bin/Debug/net7.0/linux-x64/publish/
       - name: Upload Release Artifacts
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            linux-x64.zip
-            win-x64.zip
-            osx-x64.zip
-            osx-arm64.zip
+            "Chirp.CLI-$tag-linux-x64.zip"
+            "Chirp.CLI-$tag-windows-x64.zip"
+            "Chirp.CLI-$tag-osx-x64.zip"
+            "Chirp.CLI-$tag-osx-arm-x64.zip"
