@@ -10,7 +10,7 @@ env:
 on:
   push:
     branches:
-      - topic/fix-deployment
+      - "**"
   workflow_dispatch:
 
 jobs:
