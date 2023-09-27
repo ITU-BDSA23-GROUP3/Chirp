@@ -62,5 +62,5 @@ jobs:
         with:
           app-name: 'bdsagroup3chirpremotedb'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E56255FCEED84768B5DDF7B0A42B10FC }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_735FC0BF9C604D6D891DF8D5723C66F0 }}
           package: $GITHUB_WORKSPACE/myapp
