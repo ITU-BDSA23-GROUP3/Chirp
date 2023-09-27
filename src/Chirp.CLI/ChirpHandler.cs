@@ -1,30 +1,30 @@
 using Chirp.CLI.Interfaces;
-using Chirp.CLI.Shared;
 using Chirp.CLI.Types;
-using Chirp.SimpleDB.Storage;
 using DocoptNet;
+using IService = Chirp.CLI.Interfaces.IService<Chirp.CLI.Types.ChirpRecord, Chirp.CLI.Types.ChirpMessage>;
 
 namespace Chirp.CLI;
-using DocoptDictionary = IParser<IDictionary<string, ArgValue>>;
+
 public class ChirpHandler : IChirpHandler
 {
-    private readonly IStorage<ChirpRecord> _csvStorage;
-    private readonly DocoptDictionary parser;
-    private readonly string[] _args;
+    private readonly IArgumentsProvider _argumentsProvider;
     private readonly IUserInterface _userInterface;
-    public ChirpHandler(IStorageProvider<ChirpRecord> csvStorage, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
+    private readonly IService _service;
+    
+    public ChirpHandler(IServiceProvider<ChirpRecord, ChirpMessage> serviceProvider, IArgumentsProvider argumentsProvider, IUserInterface userInterface)
     {
-        _csvStorage = csvStorage.Storage;
-        parser = argumentsProvider.Parser;
-        _args = argumentsProvider.ProgramArgs;
+        _argumentsProvider = argumentsProvider;
         _userInterface = userInterface;
+        _service = serviceProvider.Service;
     }
 
-    public int HandleInput()
+    public async Task<int> HandleInput()
     {
-        return parser.Parse(_args) switch
+        var parser = _argumentsProvider.Parser;
+        var args = _argumentsProvider.ProgramArgs;
+        return parser.Parse(args) switch
         {
-            IArgumentsResult<IDictionary<string, ArgValue>> { Arguments: var arguments } => HandleCustomArgs(arguments),
+            IArgumentsResult<IDictionary<string, ArgValue>> { Arguments: var arguments } => await HandleCustomArgs(arguments),
             IHelpResult => _userInterface.Help(),
             IVersionResult { Version: var version } => _userInterface.Help(),
             IInputErrorResult { Usage: var usage } => _userInterface.Help(),
@@ -32,22 +32,19 @@ public class ChirpHandler : IChirpHandler
         };
 
     }
-
-    public int HandleCustomArgs(IDictionary<string, ArgValue> argValues)
+    
+    public async Task<int> HandleCustomArgs(IDictionary<string, ArgValue> argValues)
     {
         if (argValues["cheep"].IsTrue)
         {
-            var author = Environment.UserName;
-            var message = _args[1];
-            var timestamp = DateTimeHelper.DateTimeToEpoch(DateTime.Now);
-
-            var chirp = new ChirpRecord(author, message, timestamp); 
-
-            _csvStorage.StoreEntity(chirp);
+            var user = Environment.UserName;
+            var message = _argumentsProvider.ProgramArgs[1];
+            await _service.StoreEntity(new(user, message));
         }
         else if(argValues["read"].IsTrue)
         {
-            _userInterface.Read(_csvStorage.GetEntities());
+            var result = await _service.GetAllEntities();
+            _userInterface.Read(result??new());
         }
         else if (argValues["--help"].IsTrue)
         {

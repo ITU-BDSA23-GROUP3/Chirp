@@ -1,8 +1,7 @@
 using Chirp.CLI.Interfaces;
+using Chirp.CLI.Providers;
 using Chirp.CLI.Shared;
-using Chirp.CLI.Storage;
 using Chirp.CLI.Types;
-using Chirp.SimpleDB.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chirp.CLI;
@@ -17,17 +16,17 @@ Options:
     -h --help     Show this screen.
 ";
 
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var serviceProvider = new ServiceCollection()
             .AddSingleton<IArgumentsProvider>(new ArgumentProvider(args, Usage))
             .AddSingleton<IUserInterface, UserInterface>()
-            .AddSingleton<IStorageProvider<ChirpRecord>, ChirpStorageProvider>()
+            .AddSingleton<IServiceProvider<ChirpRecord, ChirpMessage>, ChirpServiceProvider>()
             .AddSingleton<IChirpHandler, ChirpHandler>()
             .BuildServiceProvider();
         
         var handler = serviceProvider.GetService<IChirpHandler>();
-        handler.HandleInput();
+        await handler.HandleInput();
     }
 }
 

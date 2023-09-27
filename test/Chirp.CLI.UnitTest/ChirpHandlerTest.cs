@@ -1,37 +1,61 @@
 using Xunit;
-using System.Reflection;
 using Chirp.CLI.Interfaces;
+using Chirp.CLI.Services;
 using Chirp.CLI.Types;
-using Chirp.SimpleDB.Storage;
 using DocoptNet;
 using NSubstitute;
-using Xunit.Abstractions;
 
 namespace Chirp.CLI.UnitTest;
 
 public class ChirpHandlerTest
 {
-    private readonly IStorageProvider<ChirpRecord> _storage = Substitute.For<IStorageProvider<ChirpRecord>>();
-    private readonly IStorage<ChirpRecord> _providedStorage = Substitute.For<IStorage<ChirpRecord>>();
+    private readonly IServiceProvider<ChirpRecord, ChirpMessage> _serviceProvider = Substitute.For<IServiceProvider<ChirpRecord, ChirpMessage>>();
+    private readonly IService<ChirpRecord, ChirpMessage> _service = Substitute.For<IService<ChirpRecord, ChirpMessage>>();
     private readonly IArgumentsProvider _argsProvider = Substitute.For<IArgumentsProvider>();
     private readonly IUserInterface _ui = Substitute.For<IUserInterface>();
     private readonly ChirpHandler _sut;
 
     public ChirpHandlerTest()
     {
-        _sut = new ChirpHandler(_storage, _argsProvider,_ui);
+        _serviceProvider.Service.Returns(_service);
+        _sut = new ChirpHandler(_serviceProvider, _argsProvider,_ui);
     }
 
     [Fact]
-    public void ChirpHandler_ProvidesArgument_ArgumentsReadAndExecuted()
+    public async Task ChirpHandler_ReadArgumentProvided_ArgumentsReadAndExecuted()
     {
-        _storage.Storage.Returns(_providedStorage);
+        // Arrange
         var argDict = new Dictionary<string, ArgValue>
         {
             { "read", ArgValue.True },
             { "cheep", ArgValue.False },
             { "--help", ArgValue.False }
         };
-        _sut.HandleCustomArgs(argDict);
+        
+        // Act
+        await _sut.HandleCustomArgs(argDict);
+        
+        // Assert
+        await _service.Received().GetAllEntities();
+    }
+    
+    [Fact]
+    public async Task ChirpHandler_CheepArgumentProvided_ArgumentExecuted()
+    {
+        // Arrange
+        var message = "Hej";
+        _argsProvider.ProgramArgs.Returns(new[] { "",message });
+        var argDict = new Dictionary<string, ArgValue>
+        {
+            { "read", ArgValue.False },
+            { "cheep", ArgValue.True },
+            { "--help", ArgValue.False }
+        };
+        
+        // Act
+        await _sut.HandleCustomArgs(argDict);
+        
+        // Assert
+        await _service.Received().StoreEntity(Arg.Is<ChirpMessage>(msg => msg.message == message));
     }
 }
