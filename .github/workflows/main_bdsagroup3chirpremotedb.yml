@@ -30,16 +30,16 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/${{ env.SIMPLEDB_NAME }}' --configuration Release
+        run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/${{ env.SIMPLEDB_NAME }}' -c Release -o '${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_NAME }}'
+        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o '${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_NAME }}
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: ubuntu-latest
@@ -61,5 +61,5 @@ jobs:
           app-name: 'bdsagroup3chirpremotedb'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E56255FCEED84768B5DDF7B0A42B10FC }}
-          package: ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_NAME }}
+          package: ${{env.DOTNET_ROOT}}/myapp
 
