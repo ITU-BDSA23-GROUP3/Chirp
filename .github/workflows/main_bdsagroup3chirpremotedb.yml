@@ -3,6 +3,10 @@
 
 name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirpremotedb
 
+env:
+  AZURE_WEBAPP_NAME: bdsagroup3chirpremotedb
+  AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.SimpleDB'
+
 
 on:
   push:
@@ -10,9 +14,6 @@ on:
       - "**"
   workflow_dispatch:
 
-env:
-  AZURE_WEBAPP_NAME: bdsagroup3chirpremotedb
-  AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.SimpleDB'
 
 jobs:
   build:
@@ -28,16 +29,16 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build ${{ AZURE_WEBAPP_PACKAGE_PATH }}/${{ AZURE_WEBAPP_NAME }} --configuration Release
+        run: dotnet build '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/${{ env.AZURE_WEBAPP_NAME }}' --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ${{ AZURE_WEBAPP_PACKAGE_PATH }}/${{ AZURE_WEBAPP_NAME }} -c Release -o ${{env.DOTNET_ROOT}}/${{ AZURE_WEBAPP_NAME }}
+        run: dotnet publish '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/${{ env.AZURE_WEBAPP_NAME }}' -c Release -o '${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_NAME }}'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/${{ AZURE_WEBAPP_NAME }}
+          path: ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_NAME }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,5 +60,5 @@ jobs:
           app-name: 'bdsagroup3chirpremotedb'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E56255FCEED84768B5DDF7B0A42B10FC }}
-          package: ${{ AZURE_WEBAPP_PACKAGE_PATH }}
+          package: ${{ env.ZURE_WEBAPP_PACKAGE_PATH }}
 
