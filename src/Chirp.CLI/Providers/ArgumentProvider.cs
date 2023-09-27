@@ -1,7 +1,7 @@
 using Chirp.CLI.Interfaces;
 using DocoptNet;
 
-namespace Chirp.CLI;
+namespace Chirp.CLI.Providers;
 using DocoptDictionary = IParser<IDictionary<string, ArgValue>>;
 
 public class ArgumentProvider : IArgumentsProvider
