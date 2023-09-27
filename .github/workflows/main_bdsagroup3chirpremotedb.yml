@@ -3,15 +3,15 @@
 
 name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirpremotedb
 
-env:
-  AZURE_WEBAPP_NAME: bdsagroup3chirpremotedb
-  AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.SimpleDB'
 
 on:
   push:
     branches:
       - "**"
   workflow_dispatch:
+env:
+  AZURE_WEBAPP_NAME: bdsagroup3chirpremotedb
+  AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.SimpleDB'
 
 jobs:
   build:
