@@ -61,5 +61,5 @@ jobs:
           app-name: 'bdsagroup3chirpremotedb'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E56255FCEED84768B5DDF7B0A42B10FC }}
-          package: ${{env.DOTNET_ROOT}}/myapp
+          package: /myapp
 
