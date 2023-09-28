@@ -2,9 +2,13 @@ name: .NET Build and Test
 
 on:
   push:
-    branches: [ $default-branch  ]
+    branches: 
+      - main
+      - addSqlite3support
   pull_request:
-    branches: [ $default-branch ]
+    branches: 
+      - main
+      - addSqlite3support
 
 jobs:
   build:

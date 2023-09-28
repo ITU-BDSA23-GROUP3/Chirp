@@ -17,7 +17,7 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheeps()
     {
-        var sqlDBFilePath = "/tmp/chirp.db";
+        var sqlDBFilePath = "../../data/chirp.db";
         var sqlQuery = @"SELECT user.username, message.text, message.pub_date FROM message JOIN user ON user.user_id = message.author_id ORDER by message.pub_date desc";
 
         using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
