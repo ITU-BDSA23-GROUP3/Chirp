@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor", "src\Chirp.Razor\Chirp.Razor.csproj", "{3C75C65E-17C9-4E3A-A2F0-610ACB7C665A}"
+EndProject
+
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{988BAA41-CD9F-4F71-8C9D-97774D934393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{988BAA41-CD9F-4F71-8C9D-97774D934393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{988BAA41-CD9F-4F71-8C9D-97774D934393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{988BAA41-CD9F-4F71-8C9D-97774D934393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD17A5EB-79DA-49BF-9D0A-0682B3366987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD17A5EB-79DA-49BF-9D0A-0682B3366987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD17A5EB-79DA-49BF-9D0A-0682B3366987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD17A5EB-79DA-49BF-9D0A-0682B3366987}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{988BAA41-CD9F-4F71-8C9D-97774D934393} = {F2F82790-FCA8-4B49-938C-527A8B9F022F}
+		{DD17A5EB-79DA-49BF-9D0A-0682B3366987} = {E578A028-C583-446C-B78C-05F0FD37FBE4}
+	EndGlobalSection
+EndGlobal
