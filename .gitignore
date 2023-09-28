@@ -1,6 +1,8 @@
 */.idea/
 */bin/
-*/obj/
+*/bin/
+bin/
+obj/
 .idea/
 /src/obj/
 obj
