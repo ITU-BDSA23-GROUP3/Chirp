@@ -15,7 +15,8 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author)
     {
-        Cheeps = _service.GetCheepsFromAuthor(author);
+        // Placeholder 1 since no pagination for specific user pages
+        Cheeps = _service.GetCheepsFromAuthor(1, author);
         return Page();
     }
 }
