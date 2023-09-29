@@ -53,12 +53,12 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheeps(int pageNumber)
     {
-        var sqlQuery = $@"
+        var sqlQuery = @"
             SELECT user.username, message.text, message.pub_date 
             FROM message JOIN user ON user.user_id = message.author_id 
             ORDER by message.pub_date desc 
-            LIMIT {cheepsPerPage} 
-            OFFSET {pageNumber * cheepsPerPage - cheepsPerPage}
+            LIMIT @cheepsPerPage 
+            OFFSET @pageNumber * @cheepsPerPage - @cheepsPerPage
         ";
 
         _cheeps.Clear();
@@ -67,19 +67,22 @@ public class CheepService : ICheepService
         {
             connection.Open();
 
-            var command = connection.CreateCommand();
-            command.CommandText = sqlQuery;
-
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
+            using (SqliteCommand command = new SqliteCommand(sqlQuery, connection))
             {
-                var dataRecord = (IDataRecord)reader;
+                command.Parameters.AddWithValue("@cheepsPerPage", cheepsPerPage);
+                command.Parameters.AddWithValue("@pageNumber", pageNumber);
 
-                var author = dataRecord[0].ToString();
-                var message = dataRecord[1].ToString();
-                var timestamp = UnixTimeStampToDateTimeString(double.Parse(dataRecord[2].ToString()));
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var dataRecord = (IDataRecord)reader;
 
-                _cheeps.Add(new CheepViewModel(author, message, timestamp));
+                    var author = dataRecord[0].ToString();
+                    var message = dataRecord[1].ToString();
+                    var timestamp = UnixTimeStampToDateTimeString(double.Parse(dataRecord[2].ToString()));
+
+                    _cheeps.Add(new CheepViewModel(author, message, timestamp));
+                }
             }
         }
         return _cheeps;
@@ -87,10 +90,10 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheepsFromAuthor(int pageNumber, string author)
     {
-        var sqlQuery = $@"
+        var sqlQuery = @"
             SELECT message.text, message.pub_date 
             FROM message JOIN user ON user.user_id = message.author_id 
-            WHERE user.username = '{author}' 
+            WHERE user.username = @author 
             ORDER by message.pub_date desc
         ";
 
@@ -100,17 +103,19 @@ public class CheepService : ICheepService
         {
             connection.Open();
 
-            var command = connection.CreateCommand();
-            command.CommandText = sqlQuery;
-
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
+            using (SqliteCommand command = new SqliteCommand(sqlQuery, connection))
             {
-                var dataRecord = (IDataRecord)reader;
-                var message = dataRecord[0].ToString();
-                var timestamp = UnixTimeStampToDateTimeString(double.Parse(dataRecord[1].ToString()));
+                command.Parameters.AddWithValue("@author", author);
 
-                _cheeps.Add(new CheepViewModel(author, message, timestamp));
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var dataRecord = (IDataRecord)reader;
+                    var message = dataRecord[0].ToString();
+                    var timestamp = UnixTimeStampToDateTimeString(double.Parse(dataRecord[1].ToString()));
+
+                    _cheeps.Add(new CheepViewModel(author, message, timestamp));
+                }
             }
         }
         return _cheeps;
