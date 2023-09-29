@@ -1,4 +1,3 @@
-using Chirp.Razor;
 
 var builder = WebApplication.CreateBuilder(args);
 
