@@ -55,17 +55,52 @@ public class ChirpStorage : IChirpStorage
 
     public void StoreCheeps(List<Cheep> entities)
     {
-        throw new NotImplementedException();
+        var sqlQuery =
+            """
+            INSERT INTO message (author_id, text, pub_date)
+            SELECT user_id, @text, @timestamp FROM user
+            JOIN message on user_id = author_id
+            WHERE username = @author
+            LIMIT 1;
+            """;
+        using var connection = GetConnection();
+        connection.Open();
+        using var transaction = connection.BeginTransaction();
+        using var command = new SqliteCommand(sqlQuery, connection);
+        command.Parameters.Add("@author", SqliteType.Text);
+        command.Parameters.Add("@text", SqliteType.Text);
+        command.Parameters.Add("@pubDate", SqliteType.Integer);
+        
+        try
+        {
+            entities.ForEach(cheep =>
+            {
+                command.Parameters[0].Value = cheep.Author;
+                command.Parameters[1].Value = cheep.Message;
+                command.Parameters[2].Value = cheep.Timestamp;
+                if (command.ExecuteNonQuery() != 1)
+                {
+                    throw new InvalidDataException($"The cheep provided {cheep} was not valid for insertion, check if the user exists");
+                }
+            });
+            transaction.Commit();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            transaction.Rollback();
+        }
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author)
     {
-        var sqlQuery = """
-                       SELECT message.text, message.pub_date
-                       FROM message JOIN user ON user.user_id = message.author_id
-                       WHERE user.username = @author
-                       ORDER by message.pub_date desc
-                       """;
+        var sqlQuery = 
+            """
+            SELECT message.text, message.pub_date
+            FROM message JOIN user ON user.user_id = message.author_id
+            WHERE user.username = @author
+            ORDER by message.pub_date desc
+            """;
         
         using var connection = GetConnection();
         connection.Open();
