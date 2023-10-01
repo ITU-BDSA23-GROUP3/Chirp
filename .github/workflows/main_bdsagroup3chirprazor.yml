@@ -3,6 +3,9 @@
 
 name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirprazor
 
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.Razor'
+
 on:
   push:
     branches:
@@ -23,10 +26,13 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+      - name: Add data folder
+        run: cp -r ./data ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
