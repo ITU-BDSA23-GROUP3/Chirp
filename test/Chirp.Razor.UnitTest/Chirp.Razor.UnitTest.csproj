@@ -12,6 +12,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2"/>
         <PackageReference Include="NSubstitute" Version="5.1.0" />
         <PackageReference Include="xunit" Version="2.5.1"/>
+        <PackageReference Include="Xunit.DependencyInjection" Version="8.9.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -20,5 +21,9 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Chirp.Razor\Chirp.Razor.csproj" />
     </ItemGroup>
 </Project>
