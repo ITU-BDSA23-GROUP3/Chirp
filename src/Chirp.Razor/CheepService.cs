@@ -13,7 +13,7 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    static readonly string sqlDBFilePath = "../../data/chirp.db";
+    static readonly string sqlDBFilePath = "./data/chirp.db";
 
 
     // These would normally be loaded from a database for example
