@@ -67,23 +67,16 @@ public class ChirpStorage : IChirpStorage
         command.Parameters.Add("@text", SqliteType.Text);
         command.Parameters.Add("@pubDate", SqliteType.Integer);
         
-        try
+        entities.ForEach(cheep =>
         {
-            entities.ForEach(cheep =>
+            command.Parameters[0].Value = cheep.Author;
+            command.Parameters[1].Value = cheep.Message;
+            command.Parameters[2].Value = cheep.Timestamp;
+            if (command.ExecuteNonQuery() != 1)
             {
-                command.Parameters[0].Value = cheep.Author;
-                command.Parameters[1].Value = cheep.Message;
-                command.Parameters[2].Value = cheep.Timestamp;
-                if (command.ExecuteNonQuery() != 1)
-                {
-                    throw new InvalidDataException($"The cheep provided {cheep} was not valid for insertion, check if the user exists");
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+                throw new InvalidDataException($"The cheep provided {cheep} was not valid for insertion, check if the user exists");
+            }
+        });
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author)

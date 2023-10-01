@@ -8,46 +8,62 @@ namespace Chirp.Razor.UnitTest;
 
 public class ChirpStorageTest
 {
-    private readonly ChirpStorage _sut;
+    private readonly ChirpStorageFixture _fixture;
 
     public ChirpStorageTest(ChirpStorageFixture fixture)
     {
-        _sut = fixture.Storage;
+        _fixture = fixture;
     }
     
     [Fact]
     public void StoreChirp_ValueIsStored_GetValueAsAuthor()
     {
+        _fixture.ClearDb();
+        var sut = _fixture.Storage;
+        
         // Arrange
-        var chirp = new Cheep("Hej", "med", 0);
-        var sqlQuery = $"INSERT INTO user (username, email) VALUES ('{chirp.Author}', 'random@mail.com');";
-        using var conn = _sut.GetConnection();
-        conn.Open();
-        using var command = new SqliteCommand(sqlQuery, conn);
-        command.ExecuteNonQuery();
+        var chirp1 = new Cheep("foo", "bar", 0);
+        var chirp2 = new Cheep("baz", "bar", 0);
+        AddUser(chirp1.Author, sut);
+        AddUser(chirp2.Author, sut);
         
         // Act
-        _sut.StoreCheep(chirp);
+        sut.StoreCheeps(new List<Cheep> {chirp1, chirp2});
         
         // Assert
-        _sut.GetCheepsFromAuthor(0, chirp.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp});
+        sut.GetCheepsFromAuthor(0, chirp1.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1});
     }
     
     [Fact]
     public void StoreChirp_ValueIsStored_GetValueAsPage()
     {
+        _fixture.ClearDb();
+        var sut = _fixture.Storage;
+
         // Arrange
-        var chirp = new Cheep("Hej", "med", 0);
-        var sqlQuery = $"INSERT INTO user (username, email) VALUES ('{chirp.Author}', 'random@mail.com');";
-        using var conn = _sut.GetConnection();
-        conn.Open();
-        using var command = new SqliteCommand(sqlQuery, conn);
-        command.ExecuteNonQuery();
+        var chirp1 = new Cheep("foo", "bar", 0);
+        var chirp2 = new Cheep("baz", "bar", 0);
+        AddUser(chirp1.Author, sut);
+        AddUser(chirp2.Author, sut);
         
         // Act
-        _sut.StoreCheep(chirp);
+        sut.StoreCheeps(new List<Cheep> {chirp1, chirp2});
         
         // Assert
-        _sut.GetCheepsPerPage(0, 1).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp});
+        sut.GetCheepsPerPage(0, 2).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1, chirp2});
+    }
+
+    public void AddUser(string name, ChirpStorage sut)
+    {
+        var sqlQuery =
+            """
+            INSERT INTO user (username, email)
+            VALUES (@author, 'random@mail.com');
+            """;
+        using var connection = sut.GetConnection();
+        connection.Open();
+        using var command = new SqliteCommand(sqlQuery, connection);
+        command.Parameters.AddWithValue("@author", name);
+        command.ExecuteNonQuery();
     }
 }
