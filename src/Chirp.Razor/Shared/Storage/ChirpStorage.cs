@@ -55,14 +55,13 @@ public class ChirpStorage : IChirpStorage
         var sqlQuery =
             """
             INSERT INTO message (author_id, text, pub_date)
-            SELECT user_id, @text, @timestamp FROM user
-            JOIN message on user_id = author_id
+            SELECT user_id, @text, @pubDate FROM user
+            LEFT JOIN message on user_id = author_id
             WHERE username = @author
             LIMIT 1;
             """;
         using var connection = GetConnection();
         connection.Open();
-        using var transaction = connection.BeginTransaction();
         using var command = new SqliteCommand(sqlQuery, connection);
         command.Parameters.Add("@author", SqliteType.Text);
         command.Parameters.Add("@text", SqliteType.Text);
@@ -80,12 +79,10 @@ public class ChirpStorage : IChirpStorage
                     throw new InvalidDataException($"The cheep provided {cheep} was not valid for insertion, check if the user exists");
                 }
             });
-            transaction.Commit();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            transaction.Rollback();
         }
     }
 
@@ -139,9 +136,9 @@ public class ChirpStorage : IChirpStorage
         return cheepReader.Cheeps;
     }
 
-    private SqliteConnection GetConnection()
+    public SqliteConnection GetConnection()
     {
-        var connection = new SqliteConnection($"Data Source={_path}");
+        var connection = new SqliteConnection($"DataSource={_path}");
         return connection;
     }
 }
