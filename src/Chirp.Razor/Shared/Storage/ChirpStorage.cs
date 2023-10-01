@@ -1,5 +1,4 @@
 using System.Data;
-using System.IO.Abstractions;
 using Chirp.Razor.Shared.StorageReaders;
 using Chirp.Razor.Storage;
 using Chirp.Razor.Storage.Types;
@@ -9,13 +8,11 @@ namespace Chirp.Razor.Shared.Storage;
 
 public class ChirpStorage : IChirpStorage
 {
-    private readonly IFileSystem _fileSystem;
     private readonly string _path;
     
 
-    public ChirpStorage(string path = "../../data/chirp.db", IFileSystem? fileSystem = null)
+    public ChirpStorage(string path = "../../data/chirp.db")
     {
-        _fileSystem = fileSystem ?? new FileSystem();
         _path = path;
     }
     
