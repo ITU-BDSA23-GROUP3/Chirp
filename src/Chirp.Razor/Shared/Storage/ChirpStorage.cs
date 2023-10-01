@@ -11,7 +11,7 @@ public class ChirpStorage : IChirpStorage
     private readonly string _path;
     
 
-    public ChirpStorage(string path = "../../data/chirp.db")
+    public ChirpStorage(string path = "./data/chirp.db")
     {
         _path = path;
     }
