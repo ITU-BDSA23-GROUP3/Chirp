@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - main
+      - action-test
   workflow_dispatch:
 
 jobs:
@@ -28,6 +29,9 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
+
+      - name: Test with dotnet
+        run: dotnet test *.sln
 
       - name: dotnet publish
         run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o ${{env.DOTNET_ROOT}}/myapp

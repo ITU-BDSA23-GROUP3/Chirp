@@ -21,4 +21,18 @@ public class ChirpStorageFixture
         using var command = new SqliteCommand(sqlQuery, conn);
         command.ExecuteNonQuery();
     }
+
+    public void AddUser(string name)
+    {
+        var sqlQuery =
+            """
+            INSERT INTO user (username, email)
+            VALUES (@author, 'random@mail.com');
+            """;
+        using var connection = Storage.GetConnection();
+        connection.Open();
+        using var command = new SqliteCommand(sqlQuery, connection);
+        command.Parameters.AddWithValue("@author", name);
+        command.ExecuteNonQuery();
+    }
 }

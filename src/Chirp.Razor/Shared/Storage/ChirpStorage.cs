@@ -102,7 +102,7 @@ public class ChirpStorage : IChirpStorage
     {
         var sqlQuery = 
             """
-            SELECT message.text, message.pub_date
+            SELECT user.username, message.text, message.pub_date
             FROM message JOIN user ON user.user_id = message.author_id
             WHERE user.username = @author
             ORDER by message.pub_date desc
@@ -114,8 +114,8 @@ public class ChirpStorage : IChirpStorage
         command.Parameters.AddWithValue("@author", author);
 
         using var reader = command.ExecuteReader();
-        var cheepReader = new CheepsFromAuthorReader(reader, author);
-        connection.Close();
+        var cheepReader = new CheepReader(reader);
+        
         return cheepReader.Cheeps;
     }
 
@@ -126,6 +126,11 @@ public class ChirpStorage : IChirpStorage
 
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
+        if (pageNumber == 0)
+        {
+            throw new ArgumentException("Page number can't be zero");
+        }
+
         var sqlQuery = 
             """
            SELECT user.username, message.text, message.pub_date
@@ -144,7 +149,6 @@ public class ChirpStorage : IChirpStorage
         using var reader = command.ExecuteReader();
         var cheepReader = new CheepReader(reader);
         
-        connection.Close();
         return cheepReader.Cheeps;
     }
 
