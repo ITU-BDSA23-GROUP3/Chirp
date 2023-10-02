@@ -1,17 +1,17 @@
 namespace Chirp.Razor.Shared.Storage;
-public interface IPathHandler
+public interface IStoragePathHandler
 {
     public string DefaultDataPath { get; }
     public string ChirpDbPath { get; }
 
     public string Combine(string first, string second);
 }
-public class PathHandler : IPathHandler
+public class StoragePathHandler : IStoragePathHandler
 {
     public string DefaultDataPath { get; } = "../../data";
     public string ChirpDbPath { get; } = Path.Combine(Path.GetTempPath(), "chirp.db");
 
-    public PathHandler(string? chirpDbPath = null, string? defaultDataPath = null) 
+    public StoragePathHandler(string? chirpDbPath = null, string? defaultDataPath = null) 
     {
         if (!string.IsNullOrEmpty(defaultDataPath))
         {

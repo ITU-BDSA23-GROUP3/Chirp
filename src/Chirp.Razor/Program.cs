@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services
-    .AddSingleton<IPathHandler, PathHandler>()
+    .AddSingleton<IStoragePathHandler, StoragePathHandler>()
     .AddSingleton<IChirpStorage, ChirpStorage>()
     .AddSingleton<ICheepService, CheepService>();
 
