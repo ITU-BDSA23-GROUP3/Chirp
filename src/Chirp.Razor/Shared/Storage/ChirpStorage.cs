@@ -9,13 +9,49 @@ namespace Chirp.Razor.Shared.Storage;
 public class ChirpStorage : IChirpStorage
 {
     private readonly string _path;
-    
+    private const string PathToData = "../../data";
 
-    public ChirpStorage(string path = "./data/chirp.db")
-    {
-        _path = path;
+    public ChirpStorage(string? path, string? dataPath)
+   {
+        string chirpDbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+
+        if (!string.IsNullOrEmpty(chirpDbPath)) 
+        {
+            _path = chirpDbPath;
+        }
+        else if (string.IsNullOrEmpty(path))
+        {
+            _path = Path.Combine(Path.GetTempPath(), "chirp.db");
+        }
+        else 
+        {
+            _path = path;
+        }
+
+        CreateDB(_path, string.IsNullOrEmpty(dataPath) ? PathToData : dataPath);
     }
     
+    private static void CreateDB(string path, string dataPath)
+    {
+        // Let's make sure we're not overwriting the database
+        if (File.Exists(path))
+        {
+            Console.WriteLine($"Database file already exists at {path}");
+            return;
+        }
+        var connection = new SqliteConnection($"Data Source={path}");
+        connection.Open();
+
+        var createDatabaseQuery = File.ReadAllText($"{dataPath}/schema.sql");
+        using var commandCreateDB = new SqliteCommand(createDatabaseQuery, connection);
+        commandCreateDB.ExecuteNonQuery();
+
+        var populateDatabaseQuery = File.ReadAllText($"{dataPath}/dump.sql");
+        using var commandPopulate = new SqliteCommand(populateDatabaseQuery, connection);
+        commandPopulate.ExecuteNonQuery();
+
+        connection.Close();
+    }
     public int Count()
     {
         const string sqlQuery = 
