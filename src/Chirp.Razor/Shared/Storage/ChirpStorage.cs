@@ -8,45 +8,29 @@ namespace Chirp.Razor.Shared.Storage;
 
 public class ChirpStorage : IChirpStorage
 {
-    private readonly string _path;
+    private readonly IPathHandler _ph;
     private const string PathToData = "../../data";
 
-    public ChirpStorage(string? path, string? dataPath)
-   {
-        string chirpDbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
-
-        if (!string.IsNullOrEmpty(chirpDbPath)) 
-        {
-            _path = chirpDbPath;
-        }
-        else if (string.IsNullOrEmpty(path))
-        {
-            _path = Path.Combine(Path.GetTempPath(), "chirp.db");
-        }
-        else 
-        {
-            _path = path;
-        }
-
-        CreateDB(_path, string.IsNullOrEmpty(dataPath) ? PathToData : dataPath);
-    }
-    
-    private static void CreateDB(string path, string dataPath)
+    public ChirpStorage(IPathHandler ph)
     {
-        // Let's make sure we're not overwriting the database
-        if (File.Exists(path))
+        _ph = ph;
+
+        // Ensure that we don't overwrite the database
+        if (!File.Exists(ph.ChirpDbPath))
         {
-            Console.WriteLine($"Database file already exists at {path}");
-            return;
+            CreateDB();
         }
-        var connection = new SqliteConnection($"Data Source={path}");
+    }
+    private void CreateDB()
+    {
+        var connection = new SqliteConnection($"Data Source={_ph.ChirpDbPath}");
         connection.Open();
 
-        var createDatabaseQuery = File.ReadAllText($"{dataPath}/schema.sql");
+        var createDatabaseQuery = File.ReadAllText(_ph.Combine(_ph.DefaultDataPath, "schema.sql"));
         using var commandCreateDB = new SqliteCommand(createDatabaseQuery, connection);
         commandCreateDB.ExecuteNonQuery();
 
-        var populateDatabaseQuery = File.ReadAllText($"{dataPath}/dump.sql");
+        var populateDatabaseQuery = File.ReadAllText(_ph.Combine(_ph.DefaultDataPath, "dump.sql"));
         using var commandPopulate = new SqliteCommand(populateDatabaseQuery, connection);
         commandPopulate.ExecuteNonQuery();
 
@@ -167,7 +151,7 @@ public class ChirpStorage : IChirpStorage
 
     public SqliteConnection GetConnection()
     {
-        var connection = new SqliteConnection($"DataSource={_path}");
+        var connection = new SqliteConnection($"DataSource={_ph.ChirpDbPath}");
         return connection;
     }
 }
