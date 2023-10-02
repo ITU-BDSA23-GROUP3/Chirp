@@ -5,9 +5,8 @@ namespace Chirp.Razor.UnitTest;
 
 public class ChirpStorageFixture
 {
-    private const string PathToData = "./../../../../../data";
-    public ChirpStorage Storage { get; } = new("file:memdb1?mode=memory&cache=shared");
-    // public ChirpStorage Storage { get; } = new($"{PathToData}/test_db.db");
+    private const string PathToData = "../../../../../data";
+    public ChirpStorage Storage { get; } = new(new StoragePathHandler("file:memdb1?mode=memory&cache=shared", PathToData));
     
     public ChirpStorageFixture()
     {

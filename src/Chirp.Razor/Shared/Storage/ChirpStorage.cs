@@ -8,14 +8,33 @@ namespace Chirp.Razor.Shared.Storage;
 
 public class ChirpStorage : IChirpStorage
 {
-    private readonly string _path;
-    
+    private readonly IStoragePathHandler _ph;
 
-    public ChirpStorage(string path = "./data/chirp.db")
+    public ChirpStorage(IStoragePathHandler ph)
     {
-        _path = path;
+        _ph = ph;
+
+        // Ensure that we don't overwrite the database
+        if (!File.Exists(ph.ChirpDbPath))
+        {
+            CreateDB();
+        }
     }
-    
+    private void CreateDB()
+    {
+        var connection = new SqliteConnection($"Data Source={_ph.ChirpDbPath}");
+        connection.Open();
+
+        var createDatabaseQuery = File.ReadAllText(_ph.Combine(_ph.DefaultDataPath, "schema.sql"));
+        using var commandCreateDB = new SqliteCommand(createDatabaseQuery, connection);
+        commandCreateDB.ExecuteNonQuery();
+
+        var populateDatabaseQuery = File.ReadAllText(_ph.Combine(_ph.DefaultDataPath, "dump.sql"));
+        using var commandPopulate = new SqliteCommand(populateDatabaseQuery, connection);
+        commandPopulate.ExecuteNonQuery();
+
+        connection.Close();
+    }
     public int Count()
     {
         const string sqlQuery = 
@@ -135,7 +154,7 @@ public class ChirpStorage : IChirpStorage
 
     public SqliteConnection GetConnection()
     {
-        var connection = new SqliteConnection($"DataSource={_path}");
+        var connection = new SqliteConnection($"DataSource={_ph.ChirpDbPath}");
         return connection;
     }
 }
