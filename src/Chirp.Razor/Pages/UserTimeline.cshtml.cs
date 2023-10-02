@@ -8,16 +8,20 @@ public class UserTimelineModel : PageModel
 {
     private readonly ICheepService _service;
     public List<Cheep> Cheeps { get; set; }
+    public int CheepsPerPage;
+    public int NumOfCheeps;
+
 
     public UserTimelineModel(ICheepService service)
     {
         _service = service;
     }
 
-    public ActionResult OnGet(string author)
+    public ActionResult OnGet(string author, int pageNumber = 1)
     {
-        // Placeholder 1 since no pagination for specific user pages
-        Cheeps = _service.GetCheepsFromAuthor(1, author);
+        Cheeps = _service.GetCheepsFromAuthor(pageNumber, author);
+        CheepsPerPage = _service.CheepsPerPage;
+        NumOfCheeps = Cheeps.Count();
         return Page();
     }
 }

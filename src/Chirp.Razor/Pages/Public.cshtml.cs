@@ -17,11 +17,11 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet(int pageNumber)
+    public ActionResult OnGet(int pageNumber = 1)
     {
         Cheeps = _service.GetCheeps(pageNumber);
         CheepsPerPage = _service.CheepsPerPage;
-        NumOfCheeps = _service.GetNumOfCheeps();
+        NumOfCheeps = Cheeps.Count();
         return Page();
     }
 }

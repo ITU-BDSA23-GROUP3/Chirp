@@ -30,4 +30,11 @@
     {
         <em>There are no cheeps so far.</em>
     }
+
+    <div class="pagination">
+        @for (int i = 1; i <= Math.Ceiling((double) Model.NumOfCheeps / Model.CheepsPerPage); i++)
+        {
+            <a href="/@routeName/?page=@i">@i</a>
+        }
+    </div>
 </div>

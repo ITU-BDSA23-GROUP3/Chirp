@@ -119,11 +119,6 @@ public class ChirpStorage : IChirpStorage
         return cheepReader.Cheeps;
     }
 
-    public IEnumerable<Cheep> GetCheeps()
-    {
-        throw new NotImplementedException();
-    }
-
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
         if (pageNumber == 0)
