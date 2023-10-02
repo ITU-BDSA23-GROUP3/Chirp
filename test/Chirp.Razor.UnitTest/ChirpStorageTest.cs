@@ -57,7 +57,7 @@ public class ChirpStorageTest
     }
 
     [Fact]
-    public void StoreChirp_PageZeroThrowsException_GetValueAsPage()
+    public void StoreChirp_PageZeroAsArgument_ShouldThrow()
     {
          _fixture.ClearDb();
         var sut = _fixture.Storage;
