@@ -9,7 +9,6 @@ namespace Chirp.Razor.Shared.Storage;
 public class ChirpStorage : IChirpStorage
 {
     private readonly IStoragePathHandler _ph;
-    private const string PathToData = "../../data";
 
     public ChirpStorage(IStoragePathHandler ph)
     {
