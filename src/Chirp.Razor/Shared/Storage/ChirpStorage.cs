@@ -96,7 +96,7 @@ public class ChirpStorage : IChirpStorage
 
         using var reader = command.ExecuteReader();
         var cheepReader = new CheepReader(reader);
-        connection.Close();
+        
         return cheepReader.Cheeps;
     }
 
@@ -130,7 +130,6 @@ public class ChirpStorage : IChirpStorage
         using var reader = command.ExecuteReader();
         var cheepReader = new CheepReader(reader);
         
-        connection.Close();
         return cheepReader.Cheeps;
     }
 
