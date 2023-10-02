@@ -67,12 +67,13 @@ public class ChirpStorageTest
         _fixture.AddUser(chirp1.Author);
         
         // Act
-        sut.StoreCheeps(new List<Cheep> {chirp1, chirp2});
+        sut.StoreCheeps(new List<Cheep> {chirp1});
         
         // Assert
         Action act = () => sut.GetCheepsPerPage(0, 2);
 
-        act.Should().Throw<ArgumentOutOfRangeException>();
+        act.Should().Throw<ArgumentException>()
+        .WithMessage("Page number can't be zero");
     }
 
 }

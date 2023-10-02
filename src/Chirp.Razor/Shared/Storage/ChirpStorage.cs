@@ -109,7 +109,7 @@ public class ChirpStorage : IChirpStorage
     {
         if (pageNumber == 0)
         {
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentException("Page number can't be zero");
         }
 
         var sqlQuery = 
