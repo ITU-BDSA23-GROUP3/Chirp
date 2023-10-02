@@ -25,7 +25,7 @@ public class StoragePathHandler : IStoragePathHandler
         }
         else 
         {
-            string chirpDbEnv = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+            var chirpDbEnv = Environment.GetEnvironmentVariable("CHIRPDBPATH");
             if (!string.IsNullOrEmpty(chirpDbEnv)) 
             {
                 ChirpDbPath = chirpDbEnv;
