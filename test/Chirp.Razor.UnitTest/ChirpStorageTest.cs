@@ -23,15 +23,16 @@ public class ChirpStorageTest
         
         // Arrange
         var chirp1 = new Cheep("foo", "bar", 0);
-        var chirp2 = new Cheep("baz", "bar", 0);
-        AddUser(chirp1.Author, sut);
-        AddUser(chirp2.Author, sut);
+        var chirp2 = new Cheep("baz", "bar1", 0);
+        var chirp3 = new Cheep("baz", "bar2", 0);
+        _fixture.AddUser(chirp1.Author);
+        _fixture.AddUser(chirp2.Author);
         
         // Act
-        sut.StoreCheeps(new List<Cheep> {chirp1, chirp2});
+        sut.StoreCheeps(new List<Cheep> {chirp1, chirp2, chirp3});
         
         // Assert
-        sut.GetCheepsFromAuthor(0, chirp1.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1});
+        sut.GetCheepsFromAuthor(0, chirp2.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp2, chirp3});
     }
     
     [Fact]
@@ -42,28 +43,36 @@ public class ChirpStorageTest
 
         // Arrange
         var chirp1 = new Cheep("foo", "bar", 0);
-        var chirp2 = new Cheep("baz", "bar", 0);
-        AddUser(chirp1.Author, sut);
-        AddUser(chirp2.Author, sut);
+        var chirp2 = new Cheep("baz", "bar1", 0);
+        var chirp3 = new Cheep("baz", "bar2", 0);
+        _fixture.AddUser(chirp1.Author);
+        _fixture.AddUser(chirp2.Author);
+        
+        // Act
+        sut.StoreCheeps(new List<Cheep> {chirp1, chirp2, chirp3});
+        
+        // Assert
+        sut.GetCheepsPerPage(1, 2).ToList().Count.Should().Be(2);
+        sut.GetCheepsPerPage(1, 2).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1, chirp2});
+    }
+
+    [Fact]
+    public void StoreChirp_PageZeroThrowsException_GetValueAsPage()
+    {
+         _fixture.ClearDb();
+        var sut = _fixture.Storage;
+
+        // Arrange
+        var chirp1 = new Cheep("foo", "bar", 0);
+        _fixture.AddUser(chirp1.Author);
         
         // Act
         sut.StoreCheeps(new List<Cheep> {chirp1, chirp2});
         
         // Assert
-        sut.GetCheepsPerPage(0, 2).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1, chirp2});
+        Action act = () => sut.GetCheepsPerPage(0, 2);
+
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
-    public void AddUser(string name, ChirpStorage sut)
-    {
-        var sqlQuery =
-            """
-            INSERT INTO user (username, email)
-            VALUES (@author, 'random@mail.com');
-            """;
-        using var connection = sut.GetConnection();
-        connection.Open();
-        using var command = new SqliteCommand(sqlQuery, connection);
-        command.Parameters.AddWithValue("@author", name);
-        command.ExecuteNonQuery();
-    }
 }
