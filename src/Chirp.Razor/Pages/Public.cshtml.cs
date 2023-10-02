@@ -21,7 +21,7 @@ public class PublicModel : PageModel
     {
         Cheeps = _service.GetCheeps(pageNumber);
         CheepsPerPage = _service.CheepsPerPage;
-        NumOfCheeps = Cheeps.Count();
+        NumOfCheeps = _service.GetCheepCount();
         return Page();
     }
 }
