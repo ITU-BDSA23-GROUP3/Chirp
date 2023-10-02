@@ -7,6 +7,10 @@ public interface ICheepService
 {
     public int CheepsPerPage { get; }
     public List<Cheep> GetCheeps(int pageNumber);
+
+    public int GetCheepCount();
+
+    public int GetCheepCountFromAuthor(int pageNumber, string author);
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author);
 }
 
@@ -24,6 +28,16 @@ public class CheepService : ICheepService
     public List<Cheep> GetCheeps(int pageNumber)
     {
         return _chirpStorage.GetCheepsPerPage(pageNumber, CheepsPerPage).ToList();
+    }
+
+    public int GetCheepCount()
+    {
+        return _chirpStorage.Count();
+    }
+
+    public int GetCheepCountFromAuthor(int pageNumber, string author)
+    {
+        return _chirpStorage.GetCheepsFromAuthor(pageNumber, author).Count();
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author)
