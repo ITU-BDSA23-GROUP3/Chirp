@@ -122,6 +122,11 @@ public class ChirpStorage : IChirpStorage
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
 
+        if(pageNumber == 0)
+        {
+            pageNumber = 1;
+        }
+
         var sqlQuery = 
             """
            SELECT user.username, message.text, message.pub_date
