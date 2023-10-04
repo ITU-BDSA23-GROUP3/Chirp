@@ -121,10 +121,6 @@ public class ChirpStorage : IChirpStorage
 
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
-        if (pageNumber == 0)
-        {
-            throw new ArgumentException("Page number can't be zero");
-        }
 
         var sqlQuery = 
             """
