@@ -18,7 +18,7 @@ public class CheepService : ICheepService
 {
     private readonly IChirpStorage _chirpStorage;
 
-    public int CheepsPerPage => 5;
+    public int CheepsPerPage => 32;
 
     public CheepService(IChirpStorage chirpStorage)
     {
