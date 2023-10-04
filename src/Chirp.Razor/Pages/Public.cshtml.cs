@@ -17,7 +17,7 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet([FromQuery] int page = 1)
+    public ActionResult OnGet([FromQuery] int page = 0)
     {
         NumOfCheeps = _service.GetCheepCount();
         int maxPage = NumOfCheeps / _service.CheepsPerPage;
