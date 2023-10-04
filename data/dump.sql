@@ -3,6 +3,7 @@ INSERT INTO user VALUES(2,'Bob','bob@example.com');
 INSERT INTO user VALUES(3,'Maria','maria@example.com');
 INSERT INTO user VALUES(4,'John','john@example.com');
 INSERT INTO user VALUES(5,'Anna','anna@example.com');
+INSERT INTO user VALUES(6,'Helge','helge@example.com');
 
 INSERT INTO message VALUES(1,1,'Hello, everyone!',1690892208);
 INSERT INTO message VALUES(2,2,'Nice to meet you.',1690895308);
@@ -25,3 +26,4 @@ INSERT INTO message VALUES(18,3,'Great, see you all then!',1690944708);
 INSERT INTO message VALUES(19,4,'Looking forward to it!',1690947808);
 INSERT INTO message VALUES(20,5,'Me too!',1690950908);
 INSERT INTO message VALUES(21,2,'Spaghetti!',1690950908);
+INSERT INTO message VALUES(22,6,'Hello there',1690950908);
