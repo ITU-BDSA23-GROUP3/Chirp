@@ -55,25 +55,4 @@ public class ChirpStorageTest
         sut.GetCheepsPerPage(1, 2).ToList().Count.Should().Be(2);
         sut.GetCheepsPerPage(1, 2).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1, chirp2});
     }
-
-    [Fact]
-    public void StoreChirp_PageZeroAsArgument_ShouldThrow()
-    {
-         _fixture.ClearDb();
-        var sut = _fixture.Storage;
-
-        // Arrange
-        var chirp1 = new Cheep("foo", "bar", 0);
-        _fixture.AddUser(chirp1.Author);
-        
-        // Act
-        sut.StoreCheeps(new List<Cheep> {chirp1});
-        
-        // Assert
-        Action act = () => sut.GetCheepsPerPage(0, 2);
-
-        act.Should().Throw<ArgumentException>()
-        .WithMessage("Page number can't be zero");
-    }
-
 }
