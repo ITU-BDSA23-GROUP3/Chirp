@@ -142,7 +142,8 @@ public class ChirpStorage : IChirpStorage
         using var command = new SqliteCommand(sqlQuery, connection);
         command.Parameters.AddWithValue("@author", author);
         command.Parameters.AddWithValue("@cheepsPerPage", amount);
-        command.Parameters.AddWithValue("@pageNumber", pageNumber);
+        //+ 1 because 0 * x = 0
+        command.Parameters.AddWithValue("@pageNumber", pageNumber+1);
         
         using var reader = command.ExecuteReader();
         var cheepReader = new CheepReader(reader);
@@ -152,10 +153,10 @@ public class ChirpStorage : IChirpStorage
 
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
-        if (pageNumber == 0)
-        {
-            throw new ArgumentException("Page number can't be zero");
-        }
+        // if (pageNumber == 0)
+        // {
+        //     throw new ArgumentException("Page number can't be zero");
+        // }
 
         var sqlQuery = 
             """
@@ -170,7 +171,8 @@ public class ChirpStorage : IChirpStorage
         connection.Open();
         using var command = new SqliteCommand(sqlQuery, connection);
         command.Parameters.AddWithValue("@cheepsPerPage", amount);
-        command.Parameters.AddWithValue("@pageNumber", pageNumber);
+        //+ 1 because 0 * x = 0
+        command.Parameters.AddWithValue("@pageNumber", pageNumber+1);
         
         using var reader = command.ExecuteReader();
         var cheepReader = new CheepReader(reader);

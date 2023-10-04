@@ -22,14 +22,14 @@ public class UserTimelineModel : PageModel
 
         NumOfCheeps = _service.GetAuthorCheepCount(author);
 
-        int maxPage = NumOfCheeps / _service.CheepsPerPage + 1;
+        int maxPage = NumOfCheeps / _service.CheepsPerPage ;
 
         if (page < 0 || page > maxPage)
         {
             return RedirectToPage();
         }
 
-        Cheeps = _service.GetCheepsFromAuthor(page==0 ? 1 : page, author);
+        Cheeps = _service.GetCheepsFromAuthor(page, author);
         
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
