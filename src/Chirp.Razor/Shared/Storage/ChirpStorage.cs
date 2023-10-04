@@ -122,8 +122,9 @@ public class ChirpStorage : IChirpStorage
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
 
-        if(pageNumber == 0)
+        if (pageNumber < 1 || Count()< pageNumber * amount)
         {
+            Console.WriteLine($"User tried to acces page {pageNumber}");
             pageNumber = 1;
         }
 
