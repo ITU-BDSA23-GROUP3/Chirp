@@ -17,9 +17,9 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet(int pageNumber = 1)
+    public ActionResult OnGet([FromQuery] int page = 1)
     {
-        Cheeps = _service.GetCheeps(pageNumber);
+        Cheeps = _service.GetCheeps(page);
         CheepsPerPage = _service.CheepsPerPage;
         NumOfCheeps = _service.GetCheepCount();
         return Page();

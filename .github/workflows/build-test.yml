@@ -4,11 +4,9 @@ on:
   push:
     branches: 
       - main
-      - addSqlite3support
   pull_request:
     branches: 
       - main
-      - addSqlite3support
 
 jobs:
   build:
