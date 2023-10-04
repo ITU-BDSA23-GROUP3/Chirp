@@ -8,9 +8,11 @@ public interface IChirpStorage
     
     public void StoreCheeps(List<Cheep> entities);
     
-    public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author);
+    public List<Cheep> GetCheepsFromAuthor(int pageNumber, int amount, string author);
 
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount);
 
-    public int Count();
+    public int CountCheeps();
+
+    public int CountCheepsFromAuthor(string author);
 }

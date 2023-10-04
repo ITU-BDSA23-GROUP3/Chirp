@@ -21,7 +21,7 @@ public class UserTimelineModel : PageModel
     {
         Cheeps = _service.GetCheepsFromAuthor(page, author);
         CheepsPerPage = _service.CheepsPerPage;
-        NumOfCheeps = _service.GetCheepCountFromAuthor(page, author);
+        NumOfCheeps = _service.GetAuthorCheepCount(author);
         return Page();
     }
 }
