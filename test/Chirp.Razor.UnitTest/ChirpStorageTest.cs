@@ -32,7 +32,7 @@ public class ChirpStorageTest
         sut.StoreCheeps(new List<Cheep> {chirp1, chirp2, chirp3});
         
         // Assert
-        sut.GetCheepsFromAuthor(1, 2, chirp2.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp2, chirp3});
+        sut.GetCheepsFromAuthor(0, 2, chirp2.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp2, chirp3});
     }
     
     [Fact]
@@ -52,8 +52,8 @@ public class ChirpStorageTest
         sut.StoreCheeps(new List<Cheep> {chirp1, chirp2, chirp3});
         
         // Assert
-        sut.GetCheepsPerPage(1, 2).ToList().Count.Should().Be(2);
-        sut.GetCheepsPerPage(1, 2).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1, chirp2});
+        sut.GetCheepsPerPage(0, 2).ToList().Count.Should().Be(2);
+        sut.GetCheepsPerPage(0, 2).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp1, chirp2});
     }
 
     // [Fact]
