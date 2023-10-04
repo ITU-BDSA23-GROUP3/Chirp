@@ -20,14 +20,14 @@ public class PublicModel : PageModel
     public ActionResult OnGet([FromQuery] int page = 1)
     {
         NumOfCheeps = _service.GetCheepCount();
-        int maxPage = NumOfCheeps / _service.CheepsPerPage + 1;
+        int maxPage = NumOfCheeps / _service.CheepsPerPage;
 
         if (page < 0 || page > maxPage)
         {
             return RedirectToPage();
         }
 
-        Cheeps = _service.GetCheeps(page==0 ? 1 : page);
+        Cheeps = _service.GetCheeps(page);
 
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
