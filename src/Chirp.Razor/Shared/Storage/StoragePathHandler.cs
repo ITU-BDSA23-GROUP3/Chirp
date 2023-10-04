@@ -23,13 +23,13 @@ public class StoragePathHandler : IStoragePathHandler
         {
             ChirpDbPath = chirpDbPath;
         }
-        else 
+        else if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHIRPDBPATH"))) 
         {
-            var chirpDbEnv = Environment.GetEnvironmentVariable("CHIRPDBPATH");
-            if (!string.IsNullOrEmpty(chirpDbEnv)) 
-            {
-                ChirpDbPath = chirpDbEnv;
-            }
+            ChirpDbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+        }
+        else if (Path.Exists(DefaultDataPath))
+        {
+            ChirpDbPath = Path.Combine(DefaultDataPath, "chirp.db");
         }
     }
 

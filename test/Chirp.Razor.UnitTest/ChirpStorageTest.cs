@@ -32,7 +32,7 @@ public class ChirpStorageTest
         sut.StoreCheeps(new List<Cheep> {chirp1, chirp2, chirp3});
         
         // Assert
-        sut.GetCheepsFromAuthor(0, chirp2.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp2, chirp3});
+        sut.GetCheepsFromAuthor(1, 2, chirp2.Author).ToList().Should().BeEquivalentTo(new List<Cheep> {chirp2, chirp3});
     }
     
     [Fact]

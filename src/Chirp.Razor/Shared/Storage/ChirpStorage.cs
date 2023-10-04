@@ -35,7 +35,7 @@ public class ChirpStorage : IChirpStorage
 
         connection.Close();
     }
-    public int Count()
+    public int CountCheeps()
     {
         const string sqlQuery = 
             """
@@ -62,7 +62,34 @@ public class ChirpStorage : IChirpStorage
         connection.Close();
         return ret;
     }
+    public int CountCheepsFromAuthor(string author)
+    {
+        const string sqlQuery = 
+            """
+            SELECT Count(*) FROM user 
+            JOIN message ON author_id = user_id
+            WHERE username = @author
+            """;
 
+        using var connection = GetConnection();
+        connection.Open();
+        using var command = connection.CreateCommand();
+        command.CommandText = sqlQuery;
+        command.Parameters.AddWithValue("@author", author);
+        
+        using var reader = command.ExecuteReader();
+
+        var ret = 0;
+        
+        while (reader.Read())
+        {
+            var dataRecord = (IDataRecord)reader;
+            ret = int.Parse(dataRecord[0].ToString());
+        }
+        
+        connection.Close();
+        return ret;
+    }
     
     public void StoreCheep(Cheep entity)
     {
@@ -98,21 +125,25 @@ public class ChirpStorage : IChirpStorage
         });
     }
 
-    public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author)
+    public List<Cheep> GetCheepsFromAuthor(int pageNumber, int amount, string author)
     {
         var sqlQuery = 
             """
             SELECT user.username, message.text, message.pub_date
             FROM message JOIN user ON user.user_id = message.author_id
             WHERE user.username = @author
-            ORDER by message.pub_date desc
+            ORDER by message.pub_date desc 
+            LIMIT @cheepsPerPage
+            OFFSET @pageNumber * @cheepsPerPage - @cheepsPerPage
             """;
         
         using var connection = GetConnection();
         connection.Open();
         using var command = new SqliteCommand(sqlQuery, connection);
         command.Parameters.AddWithValue("@author", author);
-
+        command.Parameters.AddWithValue("@cheepsPerPage", amount);
+        command.Parameters.AddWithValue("@pageNumber", pageNumber);
+        
         using var reader = command.ExecuteReader();
         var cheepReader = new CheepReader(reader);
         

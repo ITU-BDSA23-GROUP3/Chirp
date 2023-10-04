@@ -26,8 +26,8 @@ public class ChirpStorageFixture
     {
         var sqlQuery =
             """
-            INSERT INTO user (username, email)
-            VALUES (@author, 'random@mail.com');
+            INSERT INTO user (username, email, pw_hash)
+            VALUES (@author, 'random@mail.com', '123');
             """;
         using var connection = Storage.GetConnection();
         connection.Open();
