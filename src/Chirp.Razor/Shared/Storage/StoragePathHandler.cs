@@ -8,7 +8,7 @@ public interface IStoragePathHandler
 }
 public class StoragePathHandler : IStoragePathHandler
 {
-    public string DefaultDataPath { get; } = "../../data";
+    public string DefaultDataPath { get; } = Path.Combine("..", "..", "data");
     public string ChirpDbPath { get; } = Path.Combine(Path.GetTempPath(), "chirp.db");
 
     public StoragePathHandler(string? chirpDbPath = null, string? defaultDataPath = null) 
