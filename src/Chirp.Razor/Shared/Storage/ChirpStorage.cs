@@ -3,92 +3,38 @@ using Chirp.Razor.Shared.StorageReaders;
 using Chirp.Razor.Storage;
 using Chirp.Razor.Storage.Types;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Chirp.Razor.Shared.Storage;
 
 public class ChirpStorage : IChirpStorage
 {
     private readonly IStoragePathHandler _ph;
+    private ChirpDBContext _db;
 
     public ChirpStorage(IStoragePathHandler ph)
     {
         _ph = ph;
 
         // Ensure that we don't overwrite the database
-        if (!File.Exists(ph.ChirpDbPath))
+        if (!File.Exists(_ph.ChirpDbPath))
         {
             CreateDB();
         }
     }
     private void CreateDB()
     {
-        var connection = new SqliteConnection($"Data Source={_ph.ChirpDbPath}");
-        connection.Open();
-
-        var createDatabaseQuery = File.ReadAllText(_ph.Combine(_ph.DefaultDataPath, "schema.sql"));
-        using var commandCreateDB = new SqliteCommand(createDatabaseQuery, connection);
-        commandCreateDB.ExecuteNonQuery();
-
-        var populateDatabaseQuery = File.ReadAllText(_ph.Combine(_ph.DefaultDataPath, "dump.sql"));
-        using var commandPopulate = new SqliteCommand(populateDatabaseQuery, connection);
-        commandPopulate.ExecuteNonQuery();
-
-        connection.Close();
+        _db = new ChirpDBContext(_ph.ChirpDbPath);
+        DbInitializer.SeedDatabase(_db);
     }
     public int CountCheeps()
     {
-        const string sqlQuery = 
-            """
-            SELECT COUNT(*) FROM (
-                SELECT * FROM message
-            )
-            """;
-
-        using var connection = GetConnection();
-        connection.Open();
-        using var command = connection.CreateCommand();
-        command.CommandText = sqlQuery;
-
-        using var reader = command.ExecuteReader();
-
-        var ret = 0;
-        
-        while (reader.Read())
-        {
-            var dataRecord = (IDataRecord)reader;
-            ret = int.Parse(dataRecord[0].ToString());
-        }
-        
-        connection.Close();
-        return ret;
+        return _db.Cheeps.Count();
     }
     public int CountCheepsFromAuthor(string author)
     {
-        const string sqlQuery = 
-            """
-            SELECT Count(*) FROM user 
-            JOIN message ON author_id = user_id
-            WHERE username = @author
-            """;
-
-        using var connection = GetConnection();
-        connection.Open();
-        using var command = connection.CreateCommand();
-        command.CommandText = sqlQuery;
-        command.Parameters.AddWithValue("@author", author);
-        
-        using var reader = command.ExecuteReader();
-
-        var ret = 0;
-        
-        while (reader.Read())
-        {
-            var dataRecord = (IDataRecord)reader;
-            ret = int.Parse(dataRecord[0].ToString());
-        }
-        
-        connection.Close();
-        return ret;
+        return _db.Cheeps.Where(c => c.Author.Name == author).Count();
     }
     
     public void StoreCheep(Cheep entity)
@@ -98,91 +44,15 @@ public class ChirpStorage : IChirpStorage
 
     public void StoreCheeps(List<Cheep> entities)
     {
-        var sqlQuery =
-            """
-            INSERT INTO message (author_id, text, pub_date)
-            SELECT user_id, @text, @pubDate FROM user
-            LEFT JOIN message on user_id = author_id
-            WHERE username = @author
-            LIMIT 1;
-            """;
-        using var connection = GetConnection();
-        connection.Open();
-        using var command = new SqliteCommand(sqlQuery, connection);
-        command.Parameters.Add("@author", SqliteType.Text);
-        command.Parameters.Add("@text", SqliteType.Text);
-        command.Parameters.Add("@pubDate", SqliteType.Integer);
-        
-        entities.ForEach(cheep =>
-        {
-            command.Parameters[0].Value = cheep.Author;
-            command.Parameters[1].Value = cheep.Message;
-            command.Parameters[2].Value = cheep.Timestamp;
-            if (command.ExecuteNonQuery() != 1)
-            {
-                throw new InvalidDataException($"The cheep provided {cheep} was not valid for insertion, check if the user exists");
-            }
-        });
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, int amount, string author)
     {
-        var sqlQuery = 
-            """
-            SELECT user.username, message.text, message.pub_date
-            FROM message JOIN user ON user.user_id = message.author_id
-            WHERE user.username = @author
-            ORDER by message.pub_date desc 
-            LIMIT @cheepsPerPage
-            OFFSET @pageNumber * @cheepsPerPage - @cheepsPerPage
-            """;
-        
-        using var connection = GetConnection();
-        connection.Open();
-        using var command = new SqliteCommand(sqlQuery, connection);
-        command.Parameters.AddWithValue("@author", author);
-        command.Parameters.AddWithValue("@cheepsPerPage", amount);
-        //+ 1 because 0 * x = 0
-        command.Parameters.AddWithValue("@pageNumber", pageNumber+1);
-        
-        using var reader = command.ExecuteReader();
-        var cheepReader = new CheepReader(reader);
-        
-        return cheepReader.Cheeps;
+        return _db.Cheeps.Where(c => c.Author.Name == author).ToList();
     }
 
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
-        // if (pageNumber == 0)
-        // {
-        //     throw new ArgumentException("Page number can't be zero");
-        // }
-
-        var sqlQuery = 
-            """
-           SELECT user.username, message.text, message.pub_date
-           FROM message JOIN user ON user.user_id = message.author_id
-           ORDER by message.pub_date desc
-           LIMIT @cheepsPerPage
-           OFFSET @pageNumber * @cheepsPerPage - @cheepsPerPage
-           """;
-
-        using var connection = GetConnection();
-        connection.Open();
-        using var command = new SqliteCommand(sqlQuery, connection);
-        command.Parameters.AddWithValue("@cheepsPerPage", amount);
-        //+ 1 because 0 * x = 0
-        command.Parameters.AddWithValue("@pageNumber", pageNumber+1);
-        
-        using var reader = command.ExecuteReader();
-        var cheepReader = new CheepReader(reader);
-        
-        return cheepReader.Cheeps;
-    }
-
-    public SqliteConnection GetConnection()
-    {
-        var connection = new SqliteConnection($"DataSource={_ph.ChirpDbPath}");
-        return connection;
+        return new List<Cheep>();
     }
 }
