@@ -23,7 +23,8 @@ public class ChirpStorage : IChirpStorage
     }
     private void CreateDB()
     {
-        _db = new ChirpDBContext(_ph.ChirpDbPath);
+        Console.WriteLine($"Now creating database at: {_ph.ChirpDbPath}");
+        _db = new ChirpDBContext();
         DbInitializer.SeedDatabase(_db);
     }
     public int CountCheeps()
