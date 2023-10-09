@@ -15,11 +15,18 @@ public class ChirpStorage : IChirpStorage
     {
         _ph = ph;
 
+
+        // This is a hotfix, will always initialize the database, 
+        // potentially overwriting data
+        Console.WriteLine("Creating database");
+        CreateDB();
+
+        // FIX: 
         // Ensure that we don't overwrite the database
-        if (!File.Exists(_ph.ChirpDbPath))
-        {
-            CreateDB();
-        }
+        // if (!File.Exists(_ph.ChirpDbPath))
+        // {
+        //     CreateDB();
+        // }
     }
     private void CreateDB()
     {
@@ -29,13 +36,13 @@ public class ChirpStorage : IChirpStorage
     }
     public int CountCheeps()
     {
+        Console.WriteLine(_db.Cheeps.Count());
         return _db.Cheeps.Count();
     }
     public int CountCheepsFromAuthor(string author)
     {
         return _db.Cheeps.Where(c => c.Author.Name == author).Count();
-    }
-    
+    }    
     public void StoreCheep(Cheep entity)
     {
         StoreCheeps(new List<Cheep>{entity});
