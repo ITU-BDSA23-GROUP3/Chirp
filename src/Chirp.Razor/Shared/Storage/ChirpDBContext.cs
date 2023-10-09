@@ -38,6 +38,11 @@ public class Cheep
     public required string Text { get; set; }
     public required DateTime TimeStamp { get; set; }
 
+    public string GetSerializedTimeStamp()
+    {
+        return $"{TimeStamp:MM/dd/yy H:mm:ss}";
+    }
+
     public override string ToString()
     {
         return Author.Name + " " + Text + " " + TimeStamp;
