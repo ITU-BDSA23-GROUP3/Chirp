@@ -11,7 +11,7 @@ public class StoragePathHandler : IStoragePathHandler
     public string DefaultDataPath { get; } = "../../data";
     public string ChirpDbPath { get; } = Path.Combine(Path.GetTempPath(), "chirp.db");
 
-    public StoragePathHandler(string? chirpDbPath = null, string? defaultDataPath = null) 
+    public StoragePathHandler(string? chirpDbPath = null, string? defaultDataPath = null)
     {
         if (!string.IsNullOrEmpty(defaultDataPath))
         {
@@ -19,11 +19,11 @@ public class StoragePathHandler : IStoragePathHandler
         }
 
         // Allows for easy testing, using virtual filesystems
-        if (!string.IsNullOrEmpty(chirpDbPath)) 
+        if (!string.IsNullOrEmpty(chirpDbPath))
         {
             ChirpDbPath = chirpDbPath;
         }
-        else if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHIRPDBPATH"))) 
+        else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHIRPDBPATH")))
         {
             ChirpDbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
         }
@@ -35,6 +35,6 @@ public class StoragePathHandler : IStoragePathHandler
 
     public string Combine(string first, string second)
     {
-        return Path.Combine(first, second); 
+        return Path.Combine(first, second);
     }
 }

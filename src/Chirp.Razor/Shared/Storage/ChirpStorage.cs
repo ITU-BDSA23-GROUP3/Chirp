@@ -14,19 +14,8 @@ public class ChirpStorage : IChirpStorage
     public ChirpStorage(IStoragePathHandler ph)
     {
         _ph = ph;
-
-
-        // This is a hotfix, will always initialize the database, 
-        // potentially overwriting data
         Console.WriteLine("Creating database");
         CreateDB();
-
-        // FIX: 
-        // Ensure that we don't overwrite the database
-        // if (!File.Exists(_ph.ChirpDbPath))
-        // {
-        //     CreateDB();
-        // }
     }
     private void CreateDB()
     {
@@ -41,10 +30,10 @@ public class ChirpStorage : IChirpStorage
     public int CountCheepsFromAuthor(string author)
     {
         return _db.Cheeps.Where(c => c.Author.Name == author).Count();
-    }    
+    }
     public void StoreCheep(Cheep entity)
     {
-        StoreCheeps(new List<Cheep>{entity});
+        StoreCheeps(new List<Cheep> { entity });
     }
 
     public void StoreCheeps(List<Cheep> entities)
@@ -52,28 +41,28 @@ public class ChirpStorage : IChirpStorage
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, int amount, string author)
-    {       
-        int startIndex = pageNumber  * amount;
+    {
+        int startIndex = pageNumber * amount;
         var cheeps = _db.Cheeps
             .Skip(startIndex)
             .Where(c => c.Author.Name == author)
-            .Include(c => c.Author) 
+            .Include(c => c.Author)
             .Take(amount)
             .ToList();
-    
+
         return cheeps;
     }
 
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
-        int startIndex = pageNumber  * amount;
+        int startIndex = pageNumber * amount;
 
         var cheeps = _db.Cheeps
             .Skip(startIndex)
-            .Include(c => c.Author) 
+            .Include(c => c.Author)
             .Take(amount)
             .ToList();
-    
+
         return cheeps;
     }
 }
