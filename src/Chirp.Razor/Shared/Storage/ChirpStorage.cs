@@ -29,7 +29,7 @@ public class ChirpStorage : IChirpStorage
     }
     public int CountCheepsFromAuthor(string author)
     {
-        return _db.Cheeps.Where(c => c.Author.Name == author).Count();
+        return _db.Cheeps.Count(c => c.Author.Name == author);
     }
     public void StoreCheep(Cheep entity)
     {
