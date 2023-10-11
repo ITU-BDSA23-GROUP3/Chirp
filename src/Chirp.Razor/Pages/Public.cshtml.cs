@@ -16,12 +16,17 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet([FromQuery] int page = 0)
+    public ActionResult OnGet([FromQuery] int page = 1)
     {
         NumOfCheeps = _service.GetCheepCount();
         int maxPage = NumOfCheeps / _service.CheepsPerPage;
 
-        if (page < 0 || page > maxPage)
+        if (page == 0)
+        {
+            page = 1;
+        }
+
+        if (page < 1 || page > maxPage)
         {
             return RedirectToPage();
         }

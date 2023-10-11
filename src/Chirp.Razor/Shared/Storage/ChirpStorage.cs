@@ -36,7 +36,6 @@ public class ChirpStorage : IChirpStorage
     }
     public int CountCheeps()
     {
-        Console.WriteLine(_db.Cheeps.Count());
         return _db.Cheeps.Count();
     }
     public int CountCheepsFromAuthor(string author)
@@ -53,12 +52,28 @@ public class ChirpStorage : IChirpStorage
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, int amount, string author)
-    {
-        return _db.Cheeps.Where(c => c.Author.Name == author).ToList();
+    {       
+        int startIndex = pageNumber  * amount;
+        var cheeps = _db.Cheeps
+            .Skip(startIndex)
+            .Where(c => c.Author.Name == author)
+            .Include(c => c.Author) 
+            .Take(amount)
+            .ToList();
+    
+        return cheeps;
     }
 
     public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
     {
-        return new List<Cheep>();
+        int startIndex = pageNumber  * amount;
+
+        var cheeps = _db.Cheeps
+            .Skip(startIndex)
+            .Include(c => c.Author) 
+            .Take(amount)
+            .ToList();
+    
+        return cheeps;
     }
 }
