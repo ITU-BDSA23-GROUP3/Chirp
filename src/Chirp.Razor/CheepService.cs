@@ -1,5 +1,4 @@
 using Chirp.Razor.Storage;
-using Chirp.Razor.Storage.Types;
 
 namespace Chirp.Razor;
 
@@ -7,9 +6,7 @@ public interface ICheepService
 {
     public int CheepsPerPage { get; }
     public List<Cheep> GetCheeps(int pageNumber);
-
     public int GetCheepCount();
-
     public int GetAuthorCheepCount(string author);
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author);
 }
@@ -17,9 +14,8 @@ public interface ICheepService
 public class CheepService : ICheepService
 {
     private readonly IChirpStorage _chirpStorage;
-
     public int CheepsPerPage => 32;
-
+    
     public CheepService(IChirpStorage chirpStorage)
     {
         _chirpStorage = chirpStorage;

@@ -1,5 +1,3 @@
-using Chirp.Razor.Storage.Types;
-
 namespace Chirp.Razor.Storage;
 
 public interface IChirpStorage

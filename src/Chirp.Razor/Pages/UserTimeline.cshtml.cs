@@ -1,5 +1,4 @@
-﻿using Chirp.Razor.Storage.Types;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.Razor.Pages;
@@ -17,20 +16,26 @@ public class UserTimelineModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet(string author, [FromQuery] int page)
+    public ActionResult OnGet(string author, [FromQuery] int page = 1)
     {
 
         NumOfCheeps = _service.GetAuthorCheepCount(author);
 
-        int maxPage = NumOfCheeps / _service.CheepsPerPage ;
+        int maxPage = (NumOfCheeps / _service.CheepsPerPage) + 1 ;
 
-        if (page < 0 || page > maxPage)
+
+
+        if (page == 0)
+        {
+            page = 1;
+        }
+
+        if (page < 1 || page > maxPage)
         {
             return RedirectToPage();
         }
 
         Cheeps = _service.GetCheepsFromAuthor(page, author);
-        
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }

@@ -16,9 +16,9 @@
                 <li>
                     <p>
                         <strong>
-                            <a href="/@cheep.Author">@cheep.Author</a>
+                            <a href="/@cheep.Author.Name">@cheep.Author.Name</a>
                         </strong>
-                        @cheep.Message
+                        @cheep.Text
                         <small>&mdash; @cheep.GetSerializedTimeStamp()</small>
                     </p>
                 </li>
@@ -31,9 +31,9 @@
     }
 
     <div class="pagination">
-        @for (int i = 0; i <= Math.Ceiling((double) Model.NumOfCheeps / Model.CheepsPerPage)-1; i++)
+        @for (int i = 1; i <= Math.Ceiling((double) Model.NumOfCheeps / Model.CheepsPerPage); i++)
         {
-            <a href="/?page=@i">@(i+1)</a>
+            <a href="/?page=@i">@i</a>
         }
     </div>
 </div>
