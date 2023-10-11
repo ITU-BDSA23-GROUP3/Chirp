@@ -11,7 +11,7 @@ on:
   push:
     branches:
       - main
-      - topic/fix-deployment
+      - 'topic/fix-deployment'
   workflow_dispatch:
 
 jobs:
