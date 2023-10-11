@@ -34,6 +34,15 @@ jobs:
 
       - name: dotnet publish
         run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        
+      - name: Add ef-core tool
+        run: dotnet tool install --global dotnet-ef
+        
+      - name: Seed database
+        run: dotnet ef --project=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} database update
+        
+      - name: Copy database
+        run: cp -r /home/runner/.local/share/chirp.db ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
