@@ -21,7 +21,7 @@ public class CheepService : ICheepService
 
     public List<Cheep> GetCheeps(int pageNumber, string? author = null)
     {
-        return _chirpStorage.QueryCheeps(pageNumber, CheepsPerPage, author);
+        return _chirpStorage.QueryCheeps(pageNumber, CheepsPerPage, author).ToList();
     }
 
     public int GetCheepCount(string? author = null)

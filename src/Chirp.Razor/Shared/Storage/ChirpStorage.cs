@@ -15,7 +15,7 @@ public class ChirpStorage : IChirpStorage
         _db.Database.EnsureCreated();
     }
     
-    public int CountCheeps()
+    public int QueryCheepCount(string? author = null)
     {
         return string.IsNullOrEmpty(author) ?
             _db.Cheeps.Count() :
@@ -33,7 +33,7 @@ public class ChirpStorage : IChirpStorage
         _db.SaveChanges();
     }
 
-    public List<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null)
+    public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null)
     {
         int startIndex = pageNumber * amount;
         var queryResult = _db.Cheeps.Skip(startIndex);
@@ -43,6 +43,6 @@ public class ChirpStorage : IChirpStorage
             queryResult = queryResult.Where(c => c.Author.Name == author);
         }
 
-        return queryResult.Include(c => c.Author).Take(amount).ToList();
+        return queryResult.Include(c => c.Author).Take(amount);
     }
 }
