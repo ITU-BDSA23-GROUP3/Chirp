@@ -15,14 +15,13 @@ public class ChirpStorage : IChirpStorage
         _db.Database.EnsureCreated();
     }
     
-    public int CountCheeps()
+    public int QueryCheepCount(string? author = null)
     {
-        return _db.Cheeps.Count();
+        return string.IsNullOrEmpty(author) ?
+            _db.Cheeps.Count() :
+            _db.Cheeps.Count(c => c.Author.Name == author);
     }
-    public int CountCheepsFromAuthor(string author)
-    {
-        return _db.Cheeps.Count(c => c.Author.Name == author);
-    }
+    
     public void StoreCheep(Cheep entity)
     {
         StoreCheeps(new List<Cheep> { entity });
@@ -34,29 +33,16 @@ public class ChirpStorage : IChirpStorage
         _db.SaveChanges();
     }
 
-    public List<Cheep> GetCheepsFromAuthor(int pageNumber, int amount, string author)
+    public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null)
     {
         int startIndex = pageNumber * amount;
-        var cheeps = _db.Cheeps
-            .Skip(startIndex)
-            .Where(c => c.Author.Name == author)
-            .Include(c => c.Author)
-            .Take(amount)
-            .ToList();
+        var queryResult = _db.Cheeps.Skip(startIndex);
 
-        return cheeps;
-    }
+        if (!string.IsNullOrEmpty(author))
+        {
+            queryResult = queryResult.Where(c => c.Author.Name == author);
+        }
 
-    public IEnumerable<Cheep> GetCheepsPerPage(int pageNumber, int amount)
-    {
-        int startIndex = pageNumber * amount;
-
-        var cheeps = _db.Cheeps
-            .Skip(startIndex)
-            .Include(c => c.Author)
-            .Take(amount)
-            .ToList();
-
-        return cheeps;
+        return queryResult.Include(c => c.Author).Take(amount);
     }
 }

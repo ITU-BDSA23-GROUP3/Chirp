@@ -19,11 +19,9 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet(string author, [FromQuery] int page = 1)
     {
 
-        NumOfCheeps = _service.GetAuthorCheepCount(author);
+        NumOfCheeps = _service.GetCheepCount(author);
 
-        int maxPage = (NumOfCheeps / _service.CheepsPerPage) + 1 ;
-
-
+        int maxPage = (NumOfCheeps / _service.CheepsPerPage) + 1;
 
         if (page == 0)
         {
@@ -35,7 +33,7 @@ public class UserTimelineModel : PageModel
             return RedirectToPage();
         }
 
-        Cheeps = _service.GetCheepsFromAuthor(page, author);
+        Cheeps = _service.GetCheeps(page, author);
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }
