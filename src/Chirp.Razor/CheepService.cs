@@ -5,10 +5,8 @@ namespace Chirp.Razor;
 public interface ICheepService
 {
     public int CheepsPerPage { get; }
-    public List<Cheep> GetCheeps(int pageNumber);
-    public int GetCheepCount();
-    public int GetAuthorCheepCount(string author);
-    public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author);
+    public List<Cheep> GetCheeps(int pageNumber, string? author = null);
+    public int GetCheepCount(string? author = null);
 }
 
 public class CheepService : ICheepService
@@ -21,23 +19,13 @@ public class CheepService : ICheepService
         _chirpStorage = chirpStorage;
     }
 
-    public List<Cheep> GetCheeps(int pageNumber)
+    public List<Cheep> GetCheeps(int pageNumber, string? author = null)
     {
-        return _chirpStorage.GetCheepsPerPage(pageNumber, CheepsPerPage).ToList();
+        return _chirpStorage.QueryCheeps(pageNumber, CheepsPerPage, author);
     }
 
-    public int GetCheepCount()
+    public int GetCheepCount(string? author = null)
     {
-        return _chirpStorage.CountCheeps();
-    }
-
-    public int GetAuthorCheepCount(string author)
-    {
-        return _chirpStorage.CountCheepsFromAuthor(author);
-    }
-
-    public List<Cheep> GetCheepsFromAuthor(int pageNumber, string author)
-    {
-        return _chirpStorage.GetCheepsFromAuthor(pageNumber, CheepsPerPage, author);
+        return _chirpStorage.QueryCheepCount(author);
     }
 }
