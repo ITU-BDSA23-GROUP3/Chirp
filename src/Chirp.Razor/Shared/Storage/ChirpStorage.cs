@@ -1,6 +1,5 @@
 using System.Data;
 using Chirp.Razor.Storage;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -8,21 +7,14 @@ namespace Chirp.Razor.Shared.Storage;
 
 public class ChirpStorage : IChirpStorage
 {
-    private readonly IStoragePathHandler _ph;
     private ChirpDBContext _db;
 
-    public ChirpStorage(IStoragePathHandler ph)
+    public ChirpStorage(ChirpDBContext db)
     {
-        _ph = ph;
-        Console.WriteLine("Creating database");
-        CreateDB();
+        _db = db;
+        _db.Database.EnsureCreated();
     }
-    private void CreateDB()
-    {
-        Console.WriteLine($"Now creating database at: {_ph.ChirpDbPath}");
-        _db = new ChirpDBContext();
-        DbInitializer.SeedDatabase(_db);
-    }
+    
     public int CountCheeps()
     {
         return _db.Cheeps.Count();
@@ -38,6 +30,8 @@ public class ChirpStorage : IChirpStorage
 
     public void StoreCheeps(List<Cheep> entities)
     {
+        _db.AddRange(entities);
+        _db.SaveChanges();
     }
 
     public List<Cheep> GetCheepsFromAuthor(int pageNumber, int amount, string author)

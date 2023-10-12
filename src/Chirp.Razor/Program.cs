@@ -2,18 +2,31 @@
 using Chirp.Razor;
 using Chirp.Razor.Shared.Storage;
 using Chirp.Razor.Storage;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+var dbPath = StoragePathHandler.getPathToLocalFolder();
+
 builder.Services
-    .AddSingleton<IStoragePathHandler, StoragePathHandler>()
-    .AddSingleton<IChirpStorage, ChirpStorage>()
-    .AddSingleton<ICheepService, CheepService>();
+    .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}"))
+    .AddScoped<IChirpStorage, ChirpStorage>()
+    .AddScoped<ICheepService, CheepService>()
+;
 
 
 var app = builder.Build();
+
+// Seed database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ChirpDBContext>();
+    DbInitializer.SeedDatabase(context);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
