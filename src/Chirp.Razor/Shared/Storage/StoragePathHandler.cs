@@ -9,7 +9,7 @@ public interface IStoragePathHandler
 public class StoragePathHandler : IStoragePathHandler
 {
     public string DefaultDataPath { get; } = "../../data";
-    public string ChirpDbPath { get; } = Path.Combine(Path.GetTempPath(), "chirp.db");
+    public string ChirpDbPath { get; } = getPathToLocalFolder();
 
     public StoragePathHandler(string? chirpDbPath = null, string? defaultDataPath = null)
     {
@@ -31,6 +31,13 @@ public class StoragePathHandler : IStoragePathHandler
         {
             ChirpDbPath = Path.Combine(DefaultDataPath, "chirp.db");
         }
+    }
+
+    public static string getPathToLocalFolder()
+    {
+        var folder = Environment.SpecialFolder.LocalApplicationData;
+        var path = Environment.GetFolderPath(folder);
+        return System.IO.Path.Join(path, "chirp.db");
     }
 
     public string Combine(string first, string second)
