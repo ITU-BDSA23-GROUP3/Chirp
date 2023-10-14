@@ -2,7 +2,7 @@
 using Xunit;
 using Chirp.Razor.Shared.Storage;
 using Microsoft.Data.Sqlite;
-
+namespace Chirp.Razor.UnitTest;
 public class ChirpStorageTests
 {
     private readonly SqliteConnection _connection;
