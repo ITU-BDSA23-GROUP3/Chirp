@@ -2,6 +2,7 @@
 using Xunit;
 using Chirp.Razor.Shared.Storage;
 using Microsoft.Data.Sqlite;
+using FluentAssertions;
 namespace Chirp.Razor.UnitTest;
 public class ChirpStorageTests
 {
