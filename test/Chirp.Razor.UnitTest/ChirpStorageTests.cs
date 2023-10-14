@@ -95,7 +95,6 @@ public class ChirpStorageTests
         chirpStorage.StoreCheeps(cheeps);
 
         // Assert
-        var storedCheeps = context.Cheeps.ToList();
         context.Cheeps.Should().BeEquivalentTo(cheeps);
     }
 
