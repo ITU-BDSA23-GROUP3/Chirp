@@ -95,10 +95,7 @@ public class ChirpStorageTests
 
         // Assert
         var storedCheeps = context.Cheeps.ToList();
-        for (int i = 0; i < cheeps.Count; i++)
-        {
-            Assert.Equal(cheeps[i].Text, storedCheeps[i].Text);
-        }
+        context.Cheeps.Should().BeEquivalentTo(cheeps);
     }
 
     [Fact]
