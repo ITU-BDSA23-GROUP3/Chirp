@@ -105,10 +105,14 @@ public class ChirpStorageTests
         var chirpStorage = new ChirpStorage(context);
 
         // Arrange
+        var cheepsToStore = new List<Cheep>
+        {
+            new() { AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
+            new() { AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
+            new() { AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
+        };
         context.AddRange(
-            new Cheep { AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
-            new Cheep { AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
-            new Cheep { AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
+            cheepsToStore
         );
         context.SaveChanges();
 
@@ -116,7 +120,7 @@ public class ChirpStorageTests
         var cheeps = chirpStorage.QueryCheeps(0, 32, author: "Jens");
 
         // Assert
-        Assert.Equal(2, cheeps.Count());
+        cheeps.Should().BeEquivalentTo(cheepsToStore.Where(cheep => cheep.AuthorId == 1));
     }
 
     [Fact]
