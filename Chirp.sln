@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor", "src\Chirp.Razor\Chirp.Razor.csproj", "{3C75C65E-17C9-4E3A-A2F0-610ACB7C665A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor.UnitTest", "test\Chirp.Razor.UnitTest\Chirp.Razor.UnitTest.csproj", "{AB49CC7F-48A2-411F-B5AF-70F7781DBC3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.Razor.UnitTest", "test\Chirp.Razor.UnitTest\Chirp.Razor.UnitTest.csproj", "{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +20,9 @@ Global
 		{3C75C65E-17C9-4E3A-A2F0-610ACB7C665A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C75C65E-17C9-4E3A-A2F0-610ACB7C665A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C75C65E-17C9-4E3A-A2F0-610ACB7C665A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB49CC7F-48A2-411F-B5AF-70F7781DBC3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB49CC7F-48A2-411F-B5AF-70F7781DBC3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB49CC7F-48A2-411F-B5AF-70F7781DBC3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB49CC7F-48A2-411F-B5AF-70F7781DBC3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
