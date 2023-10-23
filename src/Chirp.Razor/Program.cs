@@ -17,7 +17,6 @@ builder.Services
     .AddScoped<ICheepService, CheepService>()
 ;
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,8 +29,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+
+// Get an instance of ChirpDBContext
+var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<ChirpDBContext>();
+
+// Add template data to the database
+DbInitializer.SeedDatabase(context);
+context.Database.EnsureCreated();
 
 app.MapRazorPages();
 
