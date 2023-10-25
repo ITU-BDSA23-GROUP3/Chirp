@@ -1,6 +1,6 @@
-using Chirp.Razor.Storage;
+using Chirp.Web.Storage;
 
-namespace Chirp.Razor;
+namespace Chirp.Web;
 
 public interface ICheepService
 {

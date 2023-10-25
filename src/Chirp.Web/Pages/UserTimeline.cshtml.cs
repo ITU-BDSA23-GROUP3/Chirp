@@ -1,25 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Chirp.Razor.Pages;
+namespace Chirp.Web.Pages;
 
-public class PublicModel : PageModel
+public class UserTimelineModel : PageModel
 {
     private readonly ICheepService _service;
-    public List<Cheep> Cheeps { get; set; } = new();
-
+    public List<Cheep> Cheeps { get; set; }
     public int CheepsPerPage;
     public int NumOfCheeps;
 
-    public PublicModel(ICheepService service)
+
+    public UserTimelineModel(ICheepService service)
     {
         _service = service;
     }
 
-    public ActionResult OnGet([FromQuery] int page = 1)
+    public ActionResult OnGet(string author, [FromQuery] int page = 1)
     {
-        NumOfCheeps = _service.GetCheepCount();
-        int maxPage = NumOfCheeps / _service.CheepsPerPage;
+
+        NumOfCheeps = _service.GetCheepCount(author);
+
+        int maxPage = (NumOfCheeps / _service.CheepsPerPage) + 1;
 
         if (page == 0)
         {
@@ -31,8 +33,7 @@ public class PublicModel : PageModel
             return RedirectToPage();
         }
 
-        Cheeps = _service.GetCheeps(page);
-
+        Cheeps = _service.GetCheeps(page, author);
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }

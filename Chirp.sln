@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor", "src\Chirp.Razor\Chirp.Razor.csproj", "{3C75C65E-17C9-4E3A-A2F0-610ACB7C665A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.Razor.UnitTest", "test\Chirp.Razor.UnitTest\Chirp.Razor.UnitTest.csproj", "{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3DD9E6ED-769B-4FA9-8B56-E0DB7F03156D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Web", "src\Chirp.Web\Chirp.Web.csproj", "{C8AAFD6F-3B01-4E40-BBD5-BFEA45E823E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Core", "src\Chirp.Core\Chirp.Core.csproj", "{5F2506C6-1798-4C68-AE3C-11B66B8DD89F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Infrastructure", "src\Chirp.Infrastructure\Chirp.Infrastructure.csproj", "{C5AFC131-D16F-4599-BAB8-6B4DA3E69063}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +30,22 @@ Global
 		{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45C12262-0884-42DA-A8EE-F9FC44DF6A4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8AAFD6F-3B01-4E40-BBD5-BFEA45E823E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8AAFD6F-3B01-4E40-BBD5-BFEA45E823E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8AAFD6F-3B01-4E40-BBD5-BFEA45E823E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8AAFD6F-3B01-4E40-BBD5-BFEA45E823E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F2506C6-1798-4C68-AE3C-11B66B8DD89F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F2506C6-1798-4C68-AE3C-11B66B8DD89F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F2506C6-1798-4C68-AE3C-11B66B8DD89F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F2506C6-1798-4C68-AE3C-11B66B8DD89F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5AFC131-D16F-4599-BAB8-6B4DA3E69063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5AFC131-D16F-4599-BAB8-6B4DA3E69063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5AFC131-D16F-4599-BAB8-6B4DA3E69063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5AFC131-D16F-4599-BAB8-6B4DA3E69063}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C8AAFD6F-3B01-4E40-BBD5-BFEA45E823E9} = {3DD9E6ED-769B-4FA9-8B56-E0DB7F03156D}
+		{5F2506C6-1798-4C68-AE3C-11B66B8DD89F} = {3DD9E6ED-769B-4FA9-8B56-E0DB7F03156D}
+		{C5AFC131-D16F-4599-BAB8-6B4DA3E69063} = {3DD9E6ED-769B-4FA9-8B56-E0DB7F03156D}
 	EndGlobalSection
 EndGlobal

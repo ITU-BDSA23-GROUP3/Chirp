@@ -1,9 +1,10 @@
 using System.Data;
-using Chirp.Razor.Storage;
+using Chirp.Infrastructure.Storage;
+using Chirp.Web.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
-namespace Chirp.Razor.Shared.Storage;
+namespace Chirp.Infrastructure.Storage;
 
 public class ChirpStorage : IChirpStorage
 {

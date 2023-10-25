@@ -1,4 +1,4 @@
-namespace Chirp.Razor.Storage;
+namespace Chirp.Web.Storage;
 
 public interface IChirpStorage
 {
