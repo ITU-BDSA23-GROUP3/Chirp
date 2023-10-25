@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Xunit;
-using Chirp.Razor.Shared.Storage;
 using Microsoft.Data.Sqlite;
 using FluentAssertions;
+using Chirp.Infrastructure.Storage;
+
 namespace Chirp.Razor.UnitTest;
 public class ChirpStorageTests
 {
