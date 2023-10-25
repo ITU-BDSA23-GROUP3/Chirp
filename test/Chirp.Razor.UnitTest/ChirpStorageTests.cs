@@ -34,7 +34,7 @@ public class ChirpStorageTests
     public void QueryCheepCountReturnsCorrectCount()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpStorage(context);
+        var chirpStorage = new ChirpRepository(context);
 
         // Arrange
         context.AddRange(
@@ -53,7 +53,7 @@ public class ChirpStorageTests
     public void StoreCheepSavesCheep()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpStorage(context);
+        var chirpStorage = new ChirpRepository(context);
 
         // Arrange
         var cheep = new Cheep
@@ -76,7 +76,7 @@ public class ChirpStorageTests
     public void StoreCheepsSavesCheeps()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpStorage(context);
+        var chirpStorage = new ChirpRepository(context);
 
         // Arrange
         List<Cheep> cheeps = new List<Cheep>{
@@ -103,7 +103,7 @@ public class ChirpStorageTests
     public void QueryCheepsReturnsCheepsByAuthor()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpStorage(context);
+        var chirpStorage = new ChirpRepository(context);
 
         // Arrange
         var cheepsToStore = new List<Cheep>
@@ -128,7 +128,7 @@ public class ChirpStorageTests
     public void CheepViolatesFKConstraint()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpStorage(context);
+        var chirpStorage = new ChirpRepository(context);
 
         // Arrange
         var cheep = new Cheep

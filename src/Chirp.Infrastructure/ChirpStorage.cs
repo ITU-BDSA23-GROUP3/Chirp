@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Chirp.Infrastructure.Storage;
 
-public class ChirpStorage : IChirpStorage
+public class ChirpRepository : IChirpRepository
 {
     private ChirpDBContext _db;
 
-    public ChirpStorage(ChirpDBContext db)
+    public ChirpRepository(ChirpDBContext db)
     {
         _db = db;
         _db.Database.EnsureCreated();
