@@ -8,7 +8,7 @@
 
     <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.1" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.12" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.13" />
     <ProjectReference Include="..\Chirp.Core\Chirp.Core.csproj" />
     <ProjectReference Include="..\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
   </ItemGroup>
