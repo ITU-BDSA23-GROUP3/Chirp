@@ -1,4 +1,4 @@
-namespace Chirp.Razor.Shared.Storage;
+namespace Chirp.Infrastructure.Storage;
 public interface IStoragePathHandler
 {
     public string DefaultDataPath { get; }

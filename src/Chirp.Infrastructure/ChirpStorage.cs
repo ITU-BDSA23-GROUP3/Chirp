@@ -1,15 +1,16 @@
 using System.Data;
-using Chirp.Razor.Storage;
+using Chirp.Infrastructure.Storage;
+using Chirp.Web.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
-namespace Chirp.Razor.Shared.Storage;
+namespace Chirp.Infrastructure.Storage;
 
-public class ChirpStorage : IChirpStorage
+public class ChirpRepository : IChirpRepository
 {
     private ChirpDBContext _db;
 
-    public ChirpStorage(ChirpDBContext db)
+    public ChirpRepository(ChirpDBContext db)
     {
         _db = db;
         _db.Database.EnsureCreated();

@@ -1,8 +1,9 @@
 
-using Chirp.Razor;
-using Chirp.Razor.Shared.Storage;
-using Chirp.Razor.Storage;
+using Chirp.Web.Storage;
+using Chirp.Web;
+using Chirp.Web.Storage;
 using Microsoft.EntityFrameworkCore;
+using Chirp.Infrastructure.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +14,8 @@ var dbPath = StoragePathHandler.getPathToLocalFolder();
 
 builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}"))
-    .AddScoped<IChirpStorage, ChirpStorage>()
-    .AddScoped<ICheepService, CheepService>()
+    .AddScoped<IChirpRepository, ChirpRepository>()
+    .AddScoped<ICheepService, CheepService>();
 ;
 
 var app = builder.Build();

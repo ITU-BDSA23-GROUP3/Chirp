@@ -1,6 +1,6 @@
-namespace Chirp.Razor.Storage;
+namespace Chirp.Web.Storage;
 
-public interface IChirpStorage
+public interface IChirpRepository
 {
     public void StoreCheep(Cheep entity);
     
