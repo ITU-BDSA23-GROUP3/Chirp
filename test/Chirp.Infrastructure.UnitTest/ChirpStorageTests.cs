@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
 using FluentAssertions;
 using Chirp.Infrastructure.Storage;
 
-namespace Chirp.Razor.UnitTest;
+namespace Chirp.Infrastructure.UnitTest;
 public class ChirpStorageTests
 {
     private readonly SqliteConnection _connection;
