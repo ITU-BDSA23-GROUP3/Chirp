@@ -1,10 +1,18 @@
 using System.Data;
-using Chirp.Infrastructure.Storage;
-using Chirp.Web.Storage;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Chirp.Infrastructure.Storage;
+
+public interface IChirpRepository
+{
+    public void StoreCheep(Cheep entity);
+    
+    public void StoreCheeps(List<Cheep> entities);
+    
+    public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null);
+
+    public int QueryCheepCount(string? author = null);
+}
 
 public class ChirpRepository : IChirpRepository
 {
@@ -30,7 +38,7 @@ public class ChirpRepository : IChirpRepository
 
     public void StoreCheeps(List<Cheep> entities)
     {
-        _db.AddRange(entities);
+        _db.Cheeps.AddRange(entities);
         _db.SaveChanges();
     }
 
