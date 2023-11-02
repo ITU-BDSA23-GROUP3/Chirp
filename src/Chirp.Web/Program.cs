@@ -2,7 +2,6 @@ using Chirp.Web.Storage;
 using Chirp.Web;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Storage;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +18,7 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".Chirp.Session";
+    options.Cookie.Name = ".AspNetCore.Cookies";
     options.IdleTimeout = TimeSpan.FromMinutes(10);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
@@ -43,10 +42,10 @@ builder.Services
     {
         o.ClientId = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientId"] : 
-            builder.Configuration["authentication:github:clientId"];
+            builder.Configuration["clientId"];
         o.ClientSecret = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientSecret"] : 
-            builder.Configuration["authentication:github:clientSecret"];
+            builder.Configuration["clientSecret"];
         o.CallbackPath = "/signin-github";
     });
 
