@@ -1,9 +1,9 @@
-
 using Chirp.Web.Storage;
 using Chirp.Web;
-using Chirp.Web.Storage;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Storage;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +12,46 @@ builder.Services.AddRazorPages();
 
 var dbPath = StoragePathHandler.getPathToLocalFolder();
 
+// Enable this code by setting the property on run, build, publish, etc.
+// E.g., dotnet run -p:DefineConstants=SESSION_COOKIE_SUPPORT
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".Chirp.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+var callBackUrl = builder.Environment.IsDevelopment() ? "http://localhost:1339" : "https://bdsagroup3chirprazor.azurewebsites.net";
+
 builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}"))
     .AddScoped<IChirpRepository, ChirpRepository>()
-    .AddScoped<ICheepService, CheepService>();
-;
+    .AddScoped<ICheepService, CheepService>()
+    .AddScoped<AuthenticationService>()
+    .AddRouting()
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/signin";
+        options.LogoutPath = "/signout";
+    })
+    .AddGitHub(o =>
+    {
+        o.ClientId = builder.Environment.IsDevelopment() ? 
+            builder.Configuration["development:authentication:github:clientId"] : 
+            builder.Configuration["authentication:github:clientId"];
+        o.ClientSecret = builder.Environment.IsDevelopment() ? 
+            builder.Configuration["development:authentication:github:clientSecret"] : 
+            builder.Configuration["authentication:github:clientSecret"];
+        o.CallbackPath = "/signin-github";
+    });
 
 var app = builder.Build();
 
@@ -31,6 +66,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+// Auth
+app.UseAuthentication();
+app.UseAuthorization();
+// app.UseSession();
+
 
 // Get an instance of ChirpDBContext
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<ChirpDBContext>();
@@ -40,5 +80,6 @@ DbInitializer.SeedDatabase(context);
 context.Database.EnsureCreated();
 
 app.MapRazorPages();
+
 
 app.Run();
