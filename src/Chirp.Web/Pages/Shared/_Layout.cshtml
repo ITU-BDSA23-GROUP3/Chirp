@@ -14,7 +14,7 @@
                 <div>
                     <a href="/@(User.Identity.Name)">my timeline</a> |
                     <a href="/">public timeline</a> |
-                    <a href="/Auth?signOut=true" >logout [@(User.Identity.Name)]</a>
+                    <a href="/login/oauth/auth?signOut=true" >logout [@(User.Identity.Name)]</a>
                 </div>
             }
             else
@@ -22,7 +22,7 @@
                 <div>
                     <a href="/">public timeline</a> |
                     <a ... >register</a> |
-                    <a href="/Auth"  >login</a>
+                    <a href="/login/oauth/auth"  >login</a>
                 </div>
             }
         </div>
