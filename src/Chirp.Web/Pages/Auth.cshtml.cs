@@ -7,8 +7,13 @@ namespace Chirp.Web.Pages;
 [Authorize]
 public class Auth : PageModel
 {
-    public ActionResult OnGet()
+    public ActionResult OnGet(bool? signOut)
     {
+        if (User.Identity.IsAuthenticated && signOut != null)
+        {
+            if (signOut.Value)
+                Response.Cookies.Delete(".AspNetCore.Cookies");
+        }
         return RedirectToPage("Public");
     }
 }
