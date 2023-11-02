@@ -1,6 +1,6 @@
 using System.Data;
 using Chirp.Infrastructure.Storage;
-using Chirp.Web.Storage;
+using Chirp.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 

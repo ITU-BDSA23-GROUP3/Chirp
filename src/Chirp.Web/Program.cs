@@ -1,4 +1,4 @@
-using Chirp.Web.Storage;
+using Chirp.Core;
 using Chirp.Web;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Storage;
@@ -27,7 +27,7 @@ builder.Services.AddSession(options =>
 var callBackUrl = builder.Environment.IsDevelopment() ? "http://localhost:1339" : "https://bdsagroup3chirprazor.azurewebsites.net";
 
 builder.Services
-    .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}"))
+    .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}", b => b.MigrationsAssembly("Chirp.Infrastructure")))
     .AddScoped<IChirpRepository, ChirpRepository>()
     .AddScoped<ICheepService, CheepService>()
     .AddRouting()

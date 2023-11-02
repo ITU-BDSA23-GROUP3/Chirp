@@ -43,27 +43,27 @@ jobs:
         run: |
           dotnet publish -c Release -r linux-x64 --self-contained false
 
-          zip -r -j "Chirp.Razor-$tag-linux-x64.zip" src/Chirp.Razor/bin/Release/net7.0/linux-x64/publish/ -x "*.sln" "*.pdb"
+          zip -r -j "Chirp.Web-$tag-linux-x64.zip" src/Chirp.Web/bin/Release/net7.0/linux-x64/publish/ -x "*.sln" "*.pdb"
       - name: Create Windows Release
         run: |
           dotnet publish -c Release -r win-x64 --self-contained false
 
-          zip -r -j "Chirp.Razor-$tag-windows-x64.zip" src/Chirp.Razor/bin/Release/net7.0/win-x64/publish/ -x "*.sln" "*.pdb"
+          zip -r -j "Chirp.Web-$tag-windows-x64.zip" src/Chirp.Web/bin/Release/net7.0/win-x64/publish/ -x "*.sln" "*.pdb"
       - name: Create OSX x64 Release
         run: |
           dotnet publish -c Release -r osx-x64 --self-contained false
 
-          zip -r -j "Chirp.Razor-$tag-osx-x64.zip" src/Chirp.Razor/bin/Release/net7.0/osx-x64/publish/ -x "*.sln" "*.pdb"
+          zip -r -j "Chirp.Web-$tag-osx-x64.zip" src/Chirp.Web/bin/Release/net7.0/osx-x64/publish/ -x "*.sln" "*.pdb"
       - name: Create OSX arm Release
         run: |
           dotnet publish -c Release -r osx-arm64 --self-contained false
 
-          zip -r -j "Chirp.Razor-$tag-osx-arm-x64.zip" src/Chirp.Razor/bin/Release/net7.0/osx-arm64/publish/ -x "*.sln" "*.pdb"
+          zip -r -j "Chirp.Web-$tag-osx-arm-x64.zip" src/Chirp.Web/bin/Release/net7.0/osx-arm64/publish/ -x "*.sln" "*.pdb"
       - name: Upload Release Artifacts
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            Chirp.Razor-${{ env.tag }}-linux-x64.zip
-            Chirp.Razor-${{ env.tag }}-windows-x64.zip
-            Chirp.Razor-${{ env.tag }}-osx-x64.zip
-            Chirp.Razor-${{ env.tag }}-osx-arm-x64.zip
+            Chirp.Web-${{ env.tag }}-linux-x64.zip
+            Chirp.Web-${{ env.tag }}-windows-x64.zip
+            Chirp.Web-${{ env.tag }}-osx-x64.zip
+            Chirp.Web-${{ env.tag }}-osx-arm-x64.zip
