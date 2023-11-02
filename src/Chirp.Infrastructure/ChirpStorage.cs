@@ -13,6 +13,7 @@ public class ChirpRepository : IChirpRepository
     public ChirpRepository(ChirpDBContext db)
     {
         _db = db;
+        _db.Database.EnsureCreated();
     }
     
     public int QueryCheepCount(string? author = null)

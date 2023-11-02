@@ -12,6 +12,5 @@ public class ChirpDBContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Cheep>().Property(x => x.CheepId);
-        modelBuilder.Entity<Author>().Property(x => x.AuthorId);
     }
 }
