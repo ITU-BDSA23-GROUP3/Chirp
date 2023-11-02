@@ -31,17 +31,14 @@ builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}"))
     .AddScoped<IChirpRepository, ChirpRepository>()
     .AddScoped<ICheepService, CheepService>()
-    .AddScoped<AuthenticationService>()
     .AddRouting()
     .AddAuthentication(options =>
     {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = "GitHub";
     })
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/signin";
-        options.LogoutPath = "/signout";
-    })
+    .AddCookie("Cookies")
     .AddGitHub(o =>
     {
         o.ClientId = builder.Environment.IsDevelopment() ? 
@@ -69,7 +66,7 @@ app.UseRouting();
 // Auth
 app.UseAuthentication();
 app.UseAuthorization();
-// app.UseSession();
+app.UseSession();
 
 
 // Get an instance of ChirpDBContext

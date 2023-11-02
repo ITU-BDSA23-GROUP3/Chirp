@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.Web.Pages;
 
+[Authorize]
 public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
