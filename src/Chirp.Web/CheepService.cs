@@ -1,4 +1,4 @@
-using Chirp.Infrastructure.Storage;
+using Chirp.Web.Storage;
 
 namespace Chirp.Web;
 

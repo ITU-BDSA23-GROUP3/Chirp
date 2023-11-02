@@ -1,15 +1,8 @@
 using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Chirp.Web.Storage;
 
 namespace Chirp.Infrastructure.Storage;
-
-public interface IAuthorRepository
-{
-    public IEnumerable<Author> FindAuthorsByName(string name);
-    public IEnumerable<Author> FindAuthorsByEmail(string email);
-    public void CreateAuthor(string name, string email);
-    
-}
 
 public class AuthorRepository : IAuthorRepository
 {
