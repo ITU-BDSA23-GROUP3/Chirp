@@ -14,6 +14,7 @@ var dbPath = StoragePathHandler.getPathToLocalFolder();
 builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}"))
     .AddScoped<IChirpRepository, ChirpRepository>()
+    .AddScoped<IAuthorRepository, AuthorRepository>()
     .AddScoped<ICheepService, CheepService>();
 ;
 
