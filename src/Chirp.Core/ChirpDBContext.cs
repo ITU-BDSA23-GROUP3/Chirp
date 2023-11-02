@@ -11,7 +11,8 @@ public class ChirpDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Cheep>().Property(x => x.CheepId);
+        modelBuilder.Entity<Cheep>().Property(c => c.CheepId);
+        modelBuilder.Entity<Author>().Property(a => a.AuthorId);
     }
 }
 
