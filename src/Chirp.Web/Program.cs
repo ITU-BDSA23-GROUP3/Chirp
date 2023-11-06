@@ -1,4 +1,7 @@
 
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Web;
@@ -10,11 +13,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-var dbPath = StoragePathHandler.getPathToLocalFolder();
-
-// Enable this code by setting the property on run, build, publish, etc.
-// E.g., dotnet run -p:DefineConstants=SESSION_COOKIE_SUPPORT
-
+SecretClientOptions options = new SecretClientOptions()
+{
+    Retry =
+    {
+        Delay= TimeSpan.FromSeconds(2),
+        MaxDelay = TimeSpan.FromSeconds(16),
+        MaxRetries = 5,
+        Mode = RetryMode.Exponential
+    }
+};
+var client = new SecretClient(new Uri("https://ChirpKeyVault.vault.azure.net/"), new DefaultAzureCredential(),options);
+//
+// KeyVaultSecret secretId = client.GetSecret("clientId");
+// KeyVaultSecret secret = client.GetSecret("clientSecret");
+//
+// string secretIdValue = secretId.Value;
+// string secretValue = secret.Value;
+// Console.WriteLine(secretIdValue);
+// Console.WriteLine(secretValue);
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -47,10 +64,10 @@ builder.Services
     {
         o.ClientId = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientId"] : 
-            Environment.GetEnvironmentVariable("clientId", EnvironmentVariableTarget.Machine);
+            client.GetSecret("clientId").Value.Value;
         o.ClientSecret = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientSecret"] : 
-            Environment.GetEnvironmentVariable("clientSecret", EnvironmentVariableTarget.Machine);
+            client.GetSecret("clientSecret").Value.Value;
         o.CallbackPath = "/signin-github";
     });
 
