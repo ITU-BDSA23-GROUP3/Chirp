@@ -4,8 +4,6 @@ using Chirp.Infrastructure;
 using Chirp.Web;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Configuration.ConfigurationBuilders;
-using System.Configuration;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 var builder = WebApplication.CreateBuilder(args);
