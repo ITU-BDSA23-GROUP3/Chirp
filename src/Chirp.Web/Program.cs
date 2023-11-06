@@ -1,8 +1,9 @@
+
 using Chirp.Core;
-using Chirp.Web;
-using Microsoft.EntityFrameworkCore;
-using Chirp.Infrastructure.Storage;
+using Chirp.Infrastructure;
+using ChirpDBContext = Chirp.Infrastructure.ChirpDBContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,7 @@ var callBackUrl = builder.Environment.IsDevelopment() ? "http://localhost:1339" 
 builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}", b => b.MigrationsAssembly("Chirp.Infrastructure")))
     .AddScoped<IChirpRepository, ChirpRepository>()
-    .AddScoped<ICheepService, CheepService>()
+    .AddScoped<IAuthorRepository, AuthorRepository>()
     .AddRouting()
     .AddAuthentication(options =>
     {

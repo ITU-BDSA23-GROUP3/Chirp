@@ -8,7 +8,7 @@ namespace Chirp.Web.Pages;
 public class UserTimelineModel : PageModel
 {
     private readonly ICheepService _service;
-    public List<Cheep> Cheeps { get; set; }
+    public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
     public int CheepsPerPage;
     public int NumOfCheeps;
 

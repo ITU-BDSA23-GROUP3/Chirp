@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Chirp.Core;
+using Chirp.Infrastructure;
+using ChirpDBContext = Chirp.Infrastructure.ChirpDBContext;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Microsoft.Data.Sqlite;
 using FluentAssertions;
-using Chirp.Infrastructure.Storage;
 
 namespace Chirp.Razor.UnitTest;
 public class ChirpStorageTests
@@ -22,12 +24,11 @@ public class ChirpStorageTests
         var context = new ChirpDBContext(_contextOptions);
         context.Database.EnsureCreated();
 
-        context.AddRange(
+        context.Authors.AddRange(
             new Author { AuthorId = 1, Name = "Jens", Email = "test@mail.dk" },
             new Author { AuthorId = 2, Name = "Børge", Email = "wow@dd.dk" }
         );
         context.SaveChanges();
-
     }
 
     [Fact]
@@ -79,16 +80,12 @@ public class ChirpStorageTests
         var chirpStorage = new ChirpRepository(context);
 
         // Arrange
-        List<Cheep> cheeps = new List<Cheep>{
+        var cheeps = new List<Cheep>{
             new Cheep {
-                AuthorId = 1,
-                Text = "How u doin'?",
-                TimeStamp = DateTime.Now
+                AuthorId = 1, Text = "How u doin'?", TimeStamp = DateTime.Now
             },
             new Cheep {
-                AuthorId = 2,
-                Text = "Hey all",
-                TimeStamp = DateTime.Now
+                AuthorId = 2, Text = "Hey all", TimeStamp = DateTime.Now
             }
         };
 
@@ -112,9 +109,7 @@ public class ChirpStorageTests
             new() { AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
             new() { AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
         };
-        context.AddRange(
-            cheepsToStore
-        );
+        context.AddRange(cheepsToStore);
         context.SaveChanges();
 
         // Act
