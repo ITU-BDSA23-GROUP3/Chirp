@@ -45,8 +45,12 @@ builder.Services
     .AddCookie("Cookies")
     .AddGitHub(o =>
     {
-        o.ClientId = "83e68e91eec552fc53c1";
-        o.ClientSecret = "102b0e1cea7db14a270bd7ca3570316c83b2b0c7";
+        o.ClientId = builder.Environment.IsDevelopment() ? 
+            builder.Configuration["development:authentication:github:clientId"] : 
+            Environment.GetEnvironmentVariable("clientId", EnvironmentVariableTarget.User);
+        o.ClientSecret = builder.Environment.IsDevelopment() ? 
+            builder.Configuration["development:authentication:github:clientSecret"] : 
+            Environment.GetEnvironmentVariable("clientSecret", EnvironmentVariableTarget.User);
         o.CallbackPath = "/signin-github";
     });
 
