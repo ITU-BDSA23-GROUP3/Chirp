@@ -1,7 +1,6 @@
 
 using Chirp.Core;
 using Chirp.Infrastructure;
-using ChirpDBContext = Chirp.Infrastructure.ChirpDBContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,10 +24,13 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-var callBackUrl = builder.Environment.IsDevelopment() ? "http://localhost:1339" : "https://bdsagroup3chirprazor.azurewebsites.net";
+IConfigurationRoot configuration = new ConfigurationBuilder()
+    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    .AddJsonFile("appsettings.json")
+    .Build();
 
 builder.Services
-    .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}", b => b.MigrationsAssembly("Chirp.Infrastructure")))
+    .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
     .AddScoped<IChirpRepository, ChirpRepository>()
     .AddScoped<IAuthorRepository, AuthorRepository>()
     .AddRouting()
