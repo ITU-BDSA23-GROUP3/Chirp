@@ -1,8 +1,7 @@
-using System.Data;
-using Chirp.Web.Storage;
+using Chirp.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chirp.Infrastructure.Storage;
+namespace Chirp.Infrastructure;
 
 public class ChirpRepository : IChirpRepository
 {

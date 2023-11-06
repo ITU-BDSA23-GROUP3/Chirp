@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+namespace Chirp.Core;
 public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }

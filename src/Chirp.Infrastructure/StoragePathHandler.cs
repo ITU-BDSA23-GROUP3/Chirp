@@ -1,4 +1,4 @@
-namespace Chirp.Infrastructure.Storage;
+namespace Chirp.Infrastructure;
 
 public interface IStoragePathHandler
 {

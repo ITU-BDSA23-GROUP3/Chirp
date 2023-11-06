@@ -1,8 +1,6 @@
-using System.Data;
-using Microsoft.EntityFrameworkCore;
-using Chirp.Web.Storage;
+using Chirp.Core;
 
-namespace Chirp.Infrastructure.Storage;
+namespace Chirp.Infrastructure;
 
 public class AuthorRepository : IAuthorRepository
 {

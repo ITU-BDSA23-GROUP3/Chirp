@@ -1,8 +1,9 @@
+
 using Chirp.Core;
-using Chirp.Web;
-using Microsoft.EntityFrameworkCore;
-using Chirp.Infrastructure.Storage;
+using Chirp.Infrastructure;
+using ChirpDBContext = Chirp.Infrastructure.ChirpDBContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

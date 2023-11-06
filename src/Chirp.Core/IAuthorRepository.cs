@@ -1,4 +1,4 @@
-namespace Chirp.Web.Storage;
+namespace Chirp.Core;
 
 public interface IAuthorRepository
 {
