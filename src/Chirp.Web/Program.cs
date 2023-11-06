@@ -1,6 +1,7 @@
 
 using Chirp.Core;
 using Chirp.Infrastructure;
+using Chirp.Web;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,7 @@ builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
     .AddScoped<IChirpRepository, ChirpRepository>()
     .AddScoped<IAuthorRepository, AuthorRepository>()
+    .AddScoped<ICheepService, CheepService>()
     .AddRouting()
     .AddAuthentication(options =>
     {
