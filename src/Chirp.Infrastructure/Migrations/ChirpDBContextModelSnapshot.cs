@@ -24,10 +24,7 @@ namespace Chirp.Infrastructure.Migrations
             modelBuilder.Entity("Chirp.Core.Author", b =>
                 {
                     b.Property<int>("AuthorId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuthorId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -45,10 +42,7 @@ namespace Chirp.Infrastructure.Migrations
             modelBuilder.Entity("Chirp.Core.Cheep", b =>
                 {
                     b.Property<int>("CheepId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CheepId"));
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");

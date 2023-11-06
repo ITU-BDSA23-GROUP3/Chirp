@@ -13,7 +13,7 @@ public class ChirpDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Cheep>().Property(x => x.CheepId);
-        modelBuilder.Entity<Author>().Property(x => x.AuthorId);
+        modelBuilder.Entity<Cheep>().Property(e => e.CheepId).ValueGeneratedNever();
+        modelBuilder.Entity<Author>().Property(x => x.AuthorId).ValueGeneratedNever();
     }
 }
