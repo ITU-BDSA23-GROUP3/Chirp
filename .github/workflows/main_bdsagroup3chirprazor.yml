@@ -31,7 +31,7 @@ jobs:
         run: rm -rf ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/Migrations
       
       - name: Migrations 
-        run: dotnet ef migrations add InitialMigrations --project ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }} --startup-project ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: dotnet ef migrations add InitialMigrations --project ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/ --startup-project ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/
 
       - name: Build with dotnet
         run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
