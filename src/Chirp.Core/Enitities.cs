@@ -1,4 +1,6 @@
 
+namespace Chirp.Core;
+
 public class Author
 {
     public int AuthorId { get; set; }

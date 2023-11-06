@@ -1,3 +1,4 @@
+using Chirp.Core;
 using Microsoft.EntityFrameworkCore;
 
 public class ChirpDBContext : DbContext
@@ -6,6 +7,7 @@ public class ChirpDBContext : DbContext
     public DbSet<Author> Authors { get; set; }
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
     { 
+        Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

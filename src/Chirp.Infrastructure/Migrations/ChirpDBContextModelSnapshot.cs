@@ -21,7 +21,7 @@ namespace Chirp.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Author", b =>
+            modelBuilder.Entity("Chirp.Core.Author", b =>
                 {
                     b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace Chirp.Infrastructure.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("Cheep", b =>
+            modelBuilder.Entity("Chirp.Core.Cheep", b =>
                 {
                     b.Property<int>("CheepId")
                         .ValueGeneratedOnAdd()
@@ -67,9 +67,9 @@ namespace Chirp.Infrastructure.Migrations
                     b.ToTable("Cheeps");
                 });
 
-            modelBuilder.Entity("Cheep", b =>
+            modelBuilder.Entity("Chirp.Core.Cheep", b =>
                 {
-                    b.HasOne("Author", "Author")
+                    b.HasOne("Chirp.Core.Author", "Author")
                         .WithMany("Cheeps")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -78,7 +78,7 @@ namespace Chirp.Infrastructure.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Author", b =>
+            modelBuilder.Entity("Chirp.Core.Author", b =>
                 {
                     b.Navigation("Cheeps");
                 });

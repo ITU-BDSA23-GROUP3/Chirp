@@ -1,5 +1,6 @@
 using System;
 using Chirp.Core;
+using Microsoft.EntityFrameworkCore;
 
 public static class DbInitializer
 {
@@ -7,6 +8,7 @@ public static class DbInitializer
     {
         if (!(chirpContext.Authors.Any() && chirpContext.Cheeps.Any()))
         {
+            chirpContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Authors ON");
             var a1 = new Author() { AuthorId = 1, Name = "Roger Histand", Email = "Roger+Histand@hotmail.com", Cheeps = new List<Cheep>() };
             var a2 = new Author() { AuthorId = 2, Name = "Luanna Muro", Email = "Luanna-Muro@ku.dk", Cheeps = new List<Cheep>() };
             var a3 = new Author() { AuthorId = 3, Name = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com", Cheeps = new List<Cheep>() };
@@ -695,8 +697,8 @@ public static class DbInitializer
             a11.Cheeps = new List<Cheep>() { c656 };
             a12.Cheeps = new List<Cheep>() { c657 };
 
-            chirpContext.Authors.AddRange(authors);
-            chirpContext.Cheeps.AddRange(cheeps);
+            //chirpContext.Authors.AddRange(authors);
+            //chirpContext.Cheeps.AddRange(cheeps);
             chirpContext.SaveChanges();
         }
     }
