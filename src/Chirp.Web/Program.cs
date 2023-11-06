@@ -1,4 +1,4 @@
-
+using System.Configuration;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
@@ -23,15 +23,23 @@ SecretClientOptions options = new SecretClientOptions()
         Mode = RetryMode.Exponential
     }
 };
-var client = new SecretClient(new Uri("https://ChirpKeyVault.vault.azure.net/"), new DefaultAzureCredential(),options);
-//
-// KeyVaultSecret secretId = client.GetSecret("clientId");
-// KeyVaultSecret secret = client.GetSecret("clientSecret");
-//
-// string secretIdValue = secretId.Value;
-// string secretValue = secret.Value;
-// Console.WriteLine(secretIdValue);
-// Console.WriteLine(secretValue);
+
+string clientId;
+string clientSecret;
+
+// Creates a secret client which connects to our azure key vault
+if (!builder.Environment.IsDevelopment())
+{
+    var client = new SecretClient(new Uri("https://ChirpKeyVault.vault.azure.net/"), new DefaultAzureCredential(),options);
+    clientId = client.GetSecret("clientId").Value.Value;
+    clientSecret = client.GetSecret("clientSecret").Value.Value;
+}
+else
+{
+    clientId = builder.Configuration["development:authentication:github:clientId"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientId to be set but found null");
+    clientSecret = builder.Configuration["development:authentication:github:clientSecret"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientSecret to be set but found null");
+}
+
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -62,12 +70,8 @@ builder.Services
     .AddCookie("Cookies")
     .AddGitHub(o =>
     {
-        o.ClientId = builder.Environment.IsDevelopment() ? 
-            builder.Configuration["development:authentication:github:clientId"] : 
-            client.GetSecret("clientId").Value.Value;
-        o.ClientSecret = builder.Environment.IsDevelopment() ? 
-            builder.Configuration["development:authentication:github:clientSecret"] : 
-            client.GetSecret("clientSecret").Value.Value;
+        o.ClientId = clientId;
+        o.ClientSecret = clientSecret;
         o.CallbackPath = "/signin-github";
     });
 
