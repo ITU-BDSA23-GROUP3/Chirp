@@ -4,7 +4,6 @@ using Chirp.Infrastructure;
 using Chirp.Web;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,10 +47,10 @@ builder.Services
     {
         o.ClientId = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientId"] : 
-            ConfigurationManager.AppSettings["clientId"];
+            Environment.GetEnvironmentVariable("clientId", EnvironmentVariableTarget.Machine);
         o.ClientSecret = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientSecret"] : 
-            ConfigurationManager.AppSettings["clientSecret"];
+            Environment.GetEnvironmentVariable("clientSecret", EnvironmentVariableTarget.Machine);
         o.CallbackPath = "/signin-github";
     });
 
