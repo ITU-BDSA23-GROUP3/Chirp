@@ -24,20 +24,28 @@ SecretClientOptions options = new SecretClientOptions()
     }
 };
 
+IConfigurationRoot configuration = new ConfigurationBuilder()
+    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    .AddJsonFile("appsettings.json")
+    .Build();
+
 string clientId;
 string clientSecret;
-
+string connectionString;
 // Creates a secret client which connects to our azure key vault
 if (!builder.Environment.IsDevelopment())
 {
     var client = new SecretClient(new Uri("https://ChirpKeyVault.vault.azure.net/"), new DefaultAzureCredential(),options);
     clientId = client.GetSecret("clientId").Value.Value;
     clientSecret = client.GetSecret("clientSecret").Value.Value;
+    var dbPassword = client.GetSecret("dbPassword").Value.Value;
+    connectionString = $"{configuration.GetConnectionString("DefaultConnection")}Password={dbPassword};";
 }
 else
 {
     clientId = builder.Configuration["development:authentication:github:clientId"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientId to be set but found null");
     clientSecret = builder.Configuration["development:authentication:github:clientSecret"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientSecret to be set but found null");
+    connectionString = configuration.GetConnectionString("DefaultConnection");
 }
 
 builder.Services.AddDistributedMemoryCache();
@@ -50,13 +58,11 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-IConfigurationRoot configuration = new ConfigurationBuilder()
-    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-    .AddJsonFile("appsettings.json")
-    .Build();
+
+
 
 builder.Services
-    .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
+    .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(connectionString))
     .AddScoped<IChirpRepository, ChirpRepository>()
     .AddScoped<IAuthorRepository, AuthorRepository>()
     .AddScoped<ICheepService, CheepService>()
