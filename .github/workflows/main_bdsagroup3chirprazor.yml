@@ -5,6 +5,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirprazor
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.Web'
+  AZURE_INFRASTRUCTURE_PACKAGE_PATH: './src/Chirp.Infrastructure'
 
 
 on:
@@ -25,6 +26,12 @@ jobs:
         with:
           dotnet-version: '7.x'
           include-prerelease: true
+      
+      - name: Remove potential migrations
+        run: rm -rf ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/Migrations
+      
+      - name: Migrations 
+        run: dotnet ef migrations add InitialMigrations --project ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }} --startup-project ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Build with dotnet
         run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
