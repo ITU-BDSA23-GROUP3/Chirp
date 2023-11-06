@@ -1,9 +1,6 @@
 using Chirp.Core;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using Chirp.Web;
+using Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Chirp.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 

@@ -1,6 +1,5 @@
 using Chirp.Core;
 
-namespace Chirp.Web;
 
 public interface ICheepService
 {
