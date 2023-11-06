@@ -29,15 +29,12 @@ public class AuthorRepository : IAuthorRepository
     public void CreateAuthor(string name, string email)
     {
         var authorCheck = _db.Authors
-            .Where(a => a.Name == name)
-            .Where(a => a.Email == email);
+            .Where(a => a.Name == name && a.Email == email);
 
         if (authorCheck.Any() == false){
             var author = new Author { Name = name, Email = email };
             _db.Authors.Add(author);
             _db.SaveChanges();
-        } else {
-            // Author already exists
         }
     }
     
