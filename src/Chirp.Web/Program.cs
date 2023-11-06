@@ -47,10 +47,10 @@ builder.Services
     {
         o.ClientId = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientId"] : 
-            builder.Configuration["clientId"];
+            Environment.GetEnvironmentVariable("clientId");
         o.ClientSecret = builder.Environment.IsDevelopment() ? 
             builder.Configuration["development:authentication:github:clientSecret"] : 
-            builder.Configuration["clientSecret"];
+            Environment.GetEnvironmentVariable("clientSecret");
         o.CallbackPath = "/signin-github";
     });
 
