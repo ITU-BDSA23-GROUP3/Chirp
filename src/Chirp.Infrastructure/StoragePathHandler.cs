@@ -1,4 +1,5 @@
 namespace Chirp.Infrastructure.Storage;
+
 public interface IStoragePathHandler
 {
     public string DefaultDataPath { get; }
