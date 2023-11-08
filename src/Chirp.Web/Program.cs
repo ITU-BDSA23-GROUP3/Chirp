@@ -26,7 +26,7 @@ SecretClientOptions options = new SecretClientOptions()
 
 IConfigurationRoot configuration = new ConfigurationBuilder()
     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-    .AddJsonFile("appsettings.json")
+    .AddJsonFile(builder.Environment.IsDevelopment() ? "appsettings.Development.json" :"appsettings.json")
     .Build();
 
 string clientId;
