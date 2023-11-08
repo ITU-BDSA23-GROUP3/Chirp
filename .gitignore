@@ -12,4 +12,4 @@ Chirp/obj/project.nuget.cache
 src/*/bin
 test/*/bin
 Chirp.sln.DotSettings.user
-/src/Chirp.Infrastructure/Migrations
+/src/Chirp.Infrastructure/Migrations/
