@@ -59,8 +59,6 @@ builder.Services.AddSession(options =>
 });
 
 
-
-
 builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(connectionString))
     .AddScoped<IChirpRepository, ChirpRepository>()
@@ -99,11 +97,11 @@ app.UseCookiePolicy(new CookiePolicyOptions()
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
 // Auth
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
-
 
 // Get an instance of ChirpDBContext
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<ChirpDBContext>();
