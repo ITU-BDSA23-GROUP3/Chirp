@@ -22,10 +22,6 @@ public class ChirpRepository : IChirpRepository
     
     public void StoreCheep(Cheep entity)
     {
-        if(entity.AuthorId == 0)
-        {
-            throw new DbUpdateException("AuthorId must be set");
-        }
         StoreCheeps(new List<Cheep> { entity });
     }
 

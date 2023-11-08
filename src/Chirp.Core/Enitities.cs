@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Core;
@@ -26,11 +25,9 @@ public class Author
     public ICollection<Cheep> Cheeps { get; set; }
 }
 
-
 public class Cheep
 {
     public int CheepId { get; set; }
-
     public int AuthorId { get; set; }
     public Author Author { get; set; }
     public required string Text { get; set; }
