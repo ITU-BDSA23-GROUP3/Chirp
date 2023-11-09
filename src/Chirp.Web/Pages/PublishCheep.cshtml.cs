@@ -9,9 +9,11 @@ public class PublishCheep : PageModel
 {
     private readonly ICheepRepository _cheepRepository;
     private readonly IAuthorRepository _authorRepository;
+    private ChirpDBContext _db;
 
-    public PublishCheep(ICheepRepository cheepRepository, IAuthorRepository authorRepository)
+    public PublishCheep(ChirpDBContext db, ICheepRepository cheepRepository, IAuthorRepository authorRepository)
     {
+        _db = db;
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
     }
@@ -30,8 +32,8 @@ public class PublishCheep : PageModel
 
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
         var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        var cheepId = _cheepRepository.QueryCheepCount() + 1;
-        _cheepRepository.StoreCheep(new Cheep { AuthorId = authorId, CheepId = cheepId, Text = Text, TimeStamp = DateTime.Now });
+        var newCheepId = _db.Cheeps.Max(cheep => cheep.CheepId) + 1;
+        _cheepRepository.StoreCheep(new Cheep { AuthorId = authorId, CheepId = newCheepId, Text = Text, TimeStamp = DateTime.Now });
         return Page();
     }
 }
