@@ -23,7 +23,7 @@ public class UserTimelineModel : PageModel
 
         NumOfCheeps = _service.GetCheepCount(author);
 
-        int maxPage = (NumOfCheeps / _service.CheepsPerPage) + 1;
+        int maxPage = (int) Math.Ceiling((double) NumOfCheeps / _service.CheepsPerPage);
 
         if (page == 0)
         {

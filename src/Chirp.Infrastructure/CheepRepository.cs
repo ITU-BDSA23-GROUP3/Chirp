@@ -33,14 +33,17 @@ public class CheepRepository : ICheepRepository
 
     public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null)
     {
-        int startIndex = pageNumber * amount;
-        var queryResult = _db.Cheeps.Skip(startIndex);
+        int startIndex = (pageNumber -1) * amount;
+        
+        IQueryable<Cheep> queryResult;
 
         if (!string.IsNullOrEmpty(author))
         {
-            queryResult = queryResult.Where(c => c.Author.Name == author);
+            queryResult = _db.Cheeps.Where(c => c.Author.Name == author);
+        } else {
+            queryResult = _db.Cheeps;
         }
 
-        return queryResult.Include(c => c.Author).Take(amount);
+        return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
     }
 }
