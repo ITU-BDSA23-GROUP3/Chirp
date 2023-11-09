@@ -29,11 +29,13 @@ public class AuthorRepository : IAuthorRepository
         var authorCheck = _db.Authors
             .Where(a => a.Name == name && a.Email == email);
 
-        if (authorCheck.Any() == false){
-            var author = new Author { Name = name, Email = email };
+        var numOfAuthors = _db.Authors.Count();
+
+        if (authorCheck.Any() == false)
+        {
+            var author = new Author { AuthorId = numOfAuthors+1, Name = name, Email = email };
             _db.Authors.Add(author);
             _db.SaveChanges();
         }
     }
-    
 }
