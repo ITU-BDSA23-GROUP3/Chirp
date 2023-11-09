@@ -31,8 +31,8 @@ public class AuthorRepository : IAuthorRepository
 
 
         if (authorCheck.Any() == false)
-        {
-            var newAuthorId = _db.Authors.Max(author => author.AuthorId) + 1;
+        {   
+            int newAuthorId = _db.Authors.Count() == 0 ? 1 : _db.Authors.Max(author => author.AuthorId) + 1;
             var author = new Author { AuthorId = newAuthorId, Name = name, Email = email };
             _db.Authors.Add(author);
             _db.SaveChanges();
