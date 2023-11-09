@@ -38,8 +38,7 @@ if (!builder.Environment.IsDevelopment())
     var client = new SecretClient(new Uri("https://ChirpKeyVault.vault.azure.net/"), new DefaultAzureCredential(),options);
     clientId = client.GetSecret("clientId").Value.Value;
     clientSecret = client.GetSecret("clientSecret").Value.Value;
-    var dbPassword = client.GetSecret("dbPassword").Value.Value;
-    connectionString = $"{configuration.GetConnectionString("DefaultConnection")}Password={dbPassword};";
+    connectionString = client.GetSecret("bdsagroup3-chirpdb").Value.Value;
 }
 else
 {
