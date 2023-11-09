@@ -28,7 +28,7 @@ public class PublishCheep : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
 
-        // Missing validation for less than X characters (both client and server side)
+        if(Text.Length > 180) Text = Text.Substring(0, 180);
 
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
         var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
