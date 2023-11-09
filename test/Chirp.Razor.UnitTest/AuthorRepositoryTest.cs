@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Xunit;
 namespace Chirp.Razor.UnitTest;
 
-public class AuthorTest
+public class AuthorRepositoryTest
 {
     private readonly SqliteConnection _connection;
     private readonly DbContextOptions<ChirpDBContext> _contextOptions;
 
-    public AuthorTest()
+    public AuthorRepositoryTest()
     {
         _connection = new SqliteConnection("Filename=:memory:");
         _connection.Open();
@@ -22,12 +22,6 @@ public class AuthorTest
 
         var context = new ChirpDBContext(_contextOptions);
         context.Database.EnsureCreated();
-
-        context.Authors.AddRange(
-            new Author { AuthorId = 1, Name = "Jens", Email = "test@mail.dk" },
-            new Author { AuthorId = 2, Name = "Børge", Email = "wow@dd.dk" }
-        );
-        context.SaveChanges();
     }
     
     [Fact]
@@ -37,8 +31,6 @@ public class AuthorTest
         var authorRepository = new AuthorRepository(context);
 
         // Arrange
-        var authorsBefore = context.Authors.Count();
-
         var newAuthor = new Author
         {
             Name = "Name and",
@@ -49,7 +41,7 @@ public class AuthorTest
         authorRepository.CreateAuthor(newAuthor.Name, newAuthor.Email);
 
         // Assert
-        context.Authors.Should().HaveCount(authorsBefore+1);
+        context.Authors.Should().HaveCount(1);
     }
 
     [Fact]
@@ -61,9 +53,10 @@ public class AuthorTest
         // Arrange
         var authorsWithTheSameName = new List<Author>
         {
-            new () { Name = "Ida", Email = "ida1@" },
-            new () { Name = "Ida", Email = "ida2@" }
+            new () { AuthorId = 1, Name = "Ida", Email = "ida1@mail.com" },
+            new () { AuthorId = 3, Name = "Ida", Email = "ida2@mail.com" }
         };
+        
         context.Authors.AddRange(authorsWithTheSameName);
         context.SaveChanges();
 
