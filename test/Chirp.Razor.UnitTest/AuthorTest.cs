@@ -1,6 +1,5 @@
 using Chirp.Core;
 using Chirp.Infrastructure;
-using ChirpDBContext = Chirp.Infrastructure.ChirpDBContext;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

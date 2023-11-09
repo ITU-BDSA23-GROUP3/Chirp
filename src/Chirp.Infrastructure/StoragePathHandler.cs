@@ -4,9 +4,9 @@ public interface IStoragePathHandler
 {
     public string DefaultDataPath { get; }
     public string ChirpDbPath { get; }
-
     public string Combine(string first, string second);
 }
+
 public class StoragePathHandler : IStoragePathHandler
 {
     public string DefaultDataPath { get; } = "../../data";

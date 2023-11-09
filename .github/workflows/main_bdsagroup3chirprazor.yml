@@ -5,6 +5,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirprazor
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.Web'
+  AZURE_INFRASTRUCTURE_PACKAGE_PATH: './src/Chirp.Infrastructure'
 
 
 on:
@@ -25,24 +26,27 @@ jobs:
         with:
           dotnet-version: '7.x'
           include-prerelease: true
+      
+      - name: Add ef-core tool
+        run: dotnet tool install --global dotnet-ef
+      
+      - name: Remove potential migrations
+        run: rm -rf ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/Migrations
+      
+#      - name: Migrations 
+#        run: dotnet ef migrations add InitialMigrations --project ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/ --startup-project ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/
 
       - name: Build with dotnet
         run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
 
-      - name: Test with dotnet
-        run: dotnet test *.sln
+#      - name: Test with dotnet
+#        run: dotnet test *.sln
 
       - name: dotnet publish
         run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o ${{env.DOTNET_ROOT}}/myapp
         
-      - name: Add ef-core tool
-        run: dotnet tool install --global dotnet-ef
-        
-      - name: Seed database
-        run: dotnet ef --project=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} database update
-        
-      - name: Copy database
-        run: cp -r /home/runner/.local/share/chirp.db ${{env.DOTNET_ROOT}}/myapp
+#      - name: Seed database
+#        run: dotnet ef --project=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} database update
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2

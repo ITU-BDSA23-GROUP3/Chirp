@@ -1,7 +1,10 @@
-
+using System.Configuration;
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Chirp.Core;
 using Chirp.Infrastructure;
-using ChirpDBContext = Chirp.Infrastructure.ChirpDBContext;
+using Chirp.Web;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +13,40 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-var dbPath = StoragePathHandler.getPathToLocalFolder();
+SecretClientOptions options = new SecretClientOptions()
+{
+    Retry =
+    {
+        Delay= TimeSpan.FromSeconds(2),
+        MaxDelay = TimeSpan.FromSeconds(16),
+        MaxRetries = 5,
+        Mode = RetryMode.Exponential
+    }
+};
 
-// Enable this code by setting the property on run, build, publish, etc.
-// E.g., dotnet run -p:DefineConstants=SESSION_COOKIE_SUPPORT
+IConfigurationRoot configuration = new ConfigurationBuilder()
+    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    .AddJsonFile(builder.Environment.IsDevelopment() ? "appsettings.Development.json" :"appsettings.json")
+    .Build();
+
+string clientId;
+string clientSecret;
+string connectionString;
+// Creates a secret client which connects to our azure key vault
+if (!builder.Environment.IsDevelopment())
+{
+    var client = new SecretClient(new Uri("https://ChirpKeyVault.vault.azure.net/"), new DefaultAzureCredential(),options);
+    clientId = client.GetSecret("clientId").Value.Value;
+    clientSecret = client.GetSecret("clientSecret").Value.Value;
+    var dbPassword = client.GetSecret("dbPassword").Value.Value;
+    connectionString = $"{configuration.GetConnectionString("DefaultConnection")}Password={dbPassword};";
+}
+else
+{
+    clientId = builder.Configuration["development:authentication:github:clientId"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientId to be set but found null");
+    clientSecret = builder.Configuration["development:authentication:github:clientSecret"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientSecret to be set but found null");
+    connectionString = configuration.GetConnectionString("DefaultConnection");
+}
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -25,12 +58,12 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-var callBackUrl = builder.Environment.IsDevelopment() ? "http://localhost:1339" : "https://bdsagroup3chirprazor.azurewebsites.net";
 
 builder.Services
-    .AddDbContext<ChirpDBContext>(options => options.UseSqlite($"Data Source={dbPath}", b => b.MigrationsAssembly("Chirp.Infrastructure")))
+    .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(connectionString))
     .AddScoped<IChirpRepository, ChirpRepository>()
     .AddScoped<IAuthorRepository, AuthorRepository>()
+    .AddScoped<ICheepService, CheepService>()
     .AddRouting()
     .AddAuthentication(options =>
     {
@@ -41,12 +74,8 @@ builder.Services
     .AddCookie("Cookies")
     .AddGitHub(o =>
     {
-        o.ClientId = builder.Environment.IsDevelopment() ? 
-            builder.Configuration["development:authentication:github:clientId"] : 
-            builder.Configuration["clientId"];
-        o.ClientSecret = builder.Environment.IsDevelopment() ? 
-            builder.Configuration["development:authentication:github:clientSecret"] : 
-            builder.Configuration["clientSecret"];
+        o.ClientId = clientId;
+        o.ClientSecret = clientSecret;
         o.CallbackPath = "/signin-github";
     });
 
@@ -68,11 +97,11 @@ app.UseCookiePolicy(new CookiePolicyOptions()
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
 // Auth
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
-
 
 // Get an instance of ChirpDBContext
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<ChirpDBContext>();
