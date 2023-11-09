@@ -6,12 +6,12 @@ using Microsoft.Data.Sqlite;
 using FluentAssertions;
 
 namespace Chirp.Razor.UnitTest;
-public class ChirpStorageTests
+public class CheepRepositoryTest
 {
     private readonly SqliteConnection _connection;
     private readonly DbContextOptions<ChirpDBContext> _contextOptions;
 
-    public ChirpStorageTests()
+    public CheepRepositoryTest()
     {
         _connection = new SqliteConnection("Filename=:memory:");
         _connection.Open();
@@ -34,7 +34,7 @@ public class ChirpStorageTests
     public void QueryCheepCountReturnsCorrectCount()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpRepository(context);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         context.AddRange(
@@ -53,7 +53,7 @@ public class ChirpStorageTests
     public void StoreCheepSavesCheep()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpRepository(context);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var cheep = new Cheep
@@ -76,15 +76,15 @@ public class ChirpStorageTests
     public void StoreCheepsSavesCheeps()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpRepository(context);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var cheeps = new List<Cheep>{
             new Cheep {
-                AuthorId = 1, Text = "How u doin'?", TimeStamp = DateTime.Now
+                CheepId = 1, AuthorId = 1, Text = "How u doin'?", TimeStamp = DateTime.Now
             },
             new Cheep {
-                AuthorId = 2, Text = "Hey all", TimeStamp = DateTime.Now
+                CheepId = 2, AuthorId = 2, Text = "Hey all", TimeStamp = DateTime.Now
             }
         };
 
@@ -99,14 +99,14 @@ public class ChirpStorageTests
     public void QueryCheepsReturnsCheepsByAuthor()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpRepository(context);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var cheepsToStore = new List<Cheep>
         {
-            new() { AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
-            new() { AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
-            new() { AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
+            new() { CheepId = 1, AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
+            new() { CheepId = 2, AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
+            new() { CheepId = 3, AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
         };
         context.AddRange(cheepsToStore);
         context.SaveChanges();
@@ -122,7 +122,7 @@ public class ChirpStorageTests
     public void CheepViolatesFKConstraint()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new ChirpRepository(context);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var cheep = new Cheep

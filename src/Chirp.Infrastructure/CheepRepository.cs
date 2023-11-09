@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure;
 
-public class ChirpRepository : IChirpRepository
+public class CheepRepository : ICheepRepository
 {
     private ChirpDBContext _db;
 
-    public ChirpRepository(ChirpDBContext db)
+    public CheepRepository(ChirpDBContext db)
     {
         _db = db;
         _db.Database.EnsureCreated();

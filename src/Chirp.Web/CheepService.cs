@@ -11,10 +11,10 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    private readonly IChirpRepository _chirpStorage;
+    private readonly ICheepRepository _chirpStorage;
     public int CheepsPerPage => 32;
     
-    public CheepService(IChirpRepository chirpStorage)
+    public CheepService(ICheepRepository chirpStorage)
     {
         _chirpStorage = chirpStorage;
     }

@@ -1,6 +1,6 @@
 namespace Chirp.Core;
 
-public interface IChirpRepository
+public interface ICheepRepository
 {
     public void StoreCheep(Cheep entity);
     public void StoreCheeps(List<Cheep> entities);
