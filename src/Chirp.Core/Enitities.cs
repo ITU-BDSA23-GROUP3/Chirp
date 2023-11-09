@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Core;
 
