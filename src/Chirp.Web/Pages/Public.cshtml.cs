@@ -31,7 +31,7 @@ public class PublicModel : PageModel
     public ActionResult OnGet([FromQuery] int page = 1)
     {
         NumOfCheeps = _service.GetCheepCount();
-        int maxPage = (int)Math.Floor((double)NumOfCheeps / _service.CheepsPerPage);
+        int maxPage = (int)Math.Ceiling((double)NumOfCheeps / _service.CheepsPerPage);
 
         if (page == 0)
         {
