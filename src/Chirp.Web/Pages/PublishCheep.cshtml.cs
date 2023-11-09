@@ -8,26 +8,28 @@ namespace Chirp.Web.Pages;
 public class PublishCheep : PageModel
 {
     private readonly ICheepRepository _cheepRepository;
-    private readonly IAuthorRepository _authorRepository;
+
     private ChirpDBContext _db;
 
+    private readonly IAuthorRepository _authorRepository;
+    
+    [BindProperty]
+    public string? Text { get; set; }
     public PublishCheep(ChirpDBContext db, ICheepRepository cheepRepository, IAuthorRepository authorRepository)
     {
         _db = db;
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
     }
+
     public IActionResult OnGet()
     {
         return Page();
     }
 
-    [BindProperty]
-    public string? Text { get; set; }
 
     public async Task<IActionResult> OnPostAsync()
     {
-
         if(Text.Length > 180) Text = Text.Substring(0, 180);
 
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");

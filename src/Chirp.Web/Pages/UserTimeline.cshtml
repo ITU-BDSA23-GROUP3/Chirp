@@ -1,15 +1,25 @@
 ﻿@page "/{author}"
 @model Chirp.Web.Pages.UserTimelineModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
-
 }
 
 <div>
     <h2> @routeName's Timeline </h2>
-
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="cheepbox">
+            <h3>What's on your mind, @(User.Identity.Name)?</h3>
+            <form method="post">
+                <input style="float: left" asp-for="Text">
+                <input type="submit">
+            </form>
+        </div>
+    }
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
