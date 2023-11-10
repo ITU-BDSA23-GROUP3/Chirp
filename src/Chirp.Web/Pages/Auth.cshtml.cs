@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Chirp.Web.Pages;
 
 [Authorize]
-public class Auth : PageModel
+public class AuthModel : PageModel
 {
     public ActionResult OnGet(bool? signOut)
     {

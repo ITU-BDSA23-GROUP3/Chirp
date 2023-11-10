@@ -1,6 +1,5 @@
 ﻿@page "/{author}"
 @model Chirp.Web.Pages.UserTimelineModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Chirp!";
@@ -10,42 +9,5 @@
 
 <div>
     <h2> @routeName's Timeline </h2>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <div class="cheepbox">
-            <h3>What's on your mind, @(User.Identity.Name)?</h3>
-            <form method="post">
-                <input style="float: left" asp-for="Text">
-                <input type="submit">
-            </form>
-        </div>
-    }
-    @if (Model.Cheeps.Any())
-    {
-        <ul id="messagelist" class="cheeps">
-            @foreach (var cheep in Model.Cheeps)
-            {
-                <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.Author.Name">@cheep.Author.Name</a>
-                        </strong>
-                        @cheep.Text
-                        <small>&mdash; @cheep.GetSerializedTimeStamp()</small>
-                    </p>
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <em>There are no cheeps so far.</em>
-    }
-
-    <div class="pagination">
-        @for (int i = 1; i <= Math.Ceiling((double) Model.NumOfCheeps / Model.CheepsPerPage); i++)
-        {
-            <a href="/@routeName/?page=@i">@i</a>
-        }
-    </div>
+    @await Html.PartialAsync("Shared/_CheepList")
 </div>

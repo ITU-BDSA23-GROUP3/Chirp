@@ -1,10 +1,10 @@
 namespace Chirp.Web.Pages;
 
-public class ResetTables : PageModel
+public class ResetTablesModel : PageModel
 {
 
     private ChirpDBContext _db;
-    public ResetTables(ChirpDBContext db)
+    public ResetTablesModel(ChirpDBContext db)
     {
         _db = db;
     }
