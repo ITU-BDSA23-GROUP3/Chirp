@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Chirp.Infrastructure;
 namespace Chirp.Web.Pages;
 
 public class ResetTables : PageModel

@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Chirp.Core;
-using Chirp.Infrastructure;
-
-namespace Chirp.Web.Pages;
+﻿namespace Chirp.Web.Pages;
 
 public class UserTimelineModel : PageModel
 {
@@ -25,6 +19,7 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author, [FromQuery] int page = 1)
     {
+        _authorRepository.CreateAuthor(author, "example@mail.com");
 
         NumOfCheeps = _service.GetCheepCount(author);
 
@@ -35,7 +30,7 @@ public class UserTimelineModel : PageModel
             page = 1;
         }
 
-        if (page < 1 || page > maxPage)
+        if ((page < 1 || page > maxPage) && _cheepRepository.QueryCheepCount(author) != 0)
         {
             return RedirectToPage();
         }
