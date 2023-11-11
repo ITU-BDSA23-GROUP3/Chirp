@@ -29,4 +29,25 @@ public class TimelineModel : PageModel
         return RedirectToPage();
 
     }
+
+    public ActionResult OnGet(string? author, [FromQuery] int page = 1)
+    {
+        NumOfCheeps = _service.GetCheepCount(author);
+
+        int maxPage = (int) Math.Ceiling((double) NumOfCheeps / _service.CheepsPerPage);
+
+        if (page == 0)
+        {
+            page = 1;
+        }
+
+        if ((page < 1 || page > maxPage) && _cheepRepository.QueryCheepCount(author) != 0)
+        {
+            return RedirectToPage();
+        }
+
+        Cheeps = _service.GetCheeps(page, author);
+        CheepsPerPage = _service.CheepsPerPage;
+        return Page();
+    }
 }
