@@ -5,7 +5,7 @@ using Xunit;
 using Microsoft.Data.Sqlite;
 using FluentAssertions;
 
-namespace Chirp.Razor.UnitTest;
+namespace Chirp.Infrastructure.UnitTest;
 public class CheepRepositoryTest
 {
     private readonly SqliteConnection _connection;

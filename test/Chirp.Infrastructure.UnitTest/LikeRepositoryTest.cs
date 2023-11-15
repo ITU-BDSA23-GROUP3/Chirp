@@ -5,7 +5,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace Chirp.Razor.UnitTest
+namespace Chirp.Infrastructure.UnitTest
 {
     public class LikeRepositoryTest
     {
