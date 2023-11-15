@@ -12,6 +12,7 @@ public class ResetTablesModel : PageModel
     {
         _db.Cheeps.RemoveRange(_db.Cheeps);
         _db.Authors.RemoveRange(_db.Authors);
+        _db.Likes.RemoveRange(_db.Likes);
         _db.SaveChanges();
 
         DbInitializer.SeedDatabase(_db);

@@ -9,18 +9,55 @@ public class TimelineModel : PageModel
     protected ChirpDBContext _db;
     protected readonly ICheepRepository _cheepRepository;
     protected readonly IAuthorRepository _authorRepository;
-    public TimelineModel(ChirpDBContext db, ICheepRepository cheepRepository, IAuthorRepository authorRepository, ICheepService service)
+    protected readonly ILikeRepository _likeRepository;
+    public TimelineModel(ChirpDBContext db, ICheepRepository cheepRepository, IAuthorRepository authorRepository, ICheepService service, ILikeRepository likeRepository)
     {
         _db = db;
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
         _service = service;
+        _likeRepository = likeRepository;
+    }
+
+    public bool AuthorLikesCheep(string name, int cheepId)
+    {
+        var authors = _authorRepository.FindAuthorsByName(name);
+        if (!authors.Any()) return false;
+        return _likeRepository.LikeExists(authors.First().AuthorId, cheepId);
+    }
+
+    public int GetLikeCount(int cheepId) {
+        return _likeRepository.FindLikeCountByCheepId(cheepId);
+    }
+
+    public IActionResult OnPostLike(int cheepId)
+    {
+        if(!User.Identity.IsAuthenticated) return Page();
+
+        // Ugly code still needed
+        _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
+
+        int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
+        _likeRepository.LikeCheep(authorId, cheepId);
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostRemoveLike(int cheepId)
+    {
+        if(!User.Identity.IsAuthenticated) return Page();
+
+        // Ugly code still needed
+        _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
+
+        int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
+        _likeRepository.UnlikeCheep(authorId, cheepId);
+        return RedirectToPage();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
         string text = Request.Form["Text"];
-        if (text.Length > 180) text = text.Substring(0, 180);
+        if (text.Length > 160) text = text.Substring(0, 160);
 
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
         var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;

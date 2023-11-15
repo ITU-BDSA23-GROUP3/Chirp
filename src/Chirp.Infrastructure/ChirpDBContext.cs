@@ -6,6 +6,8 @@ public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
+    public DbSet<Like> Likes { get; set; }
+
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
     {
     }
@@ -15,5 +17,6 @@ public class ChirpDBContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Cheep>().Property(x => x.CheepId).ValueGeneratedNever();
         modelBuilder.Entity<Author>().Property(x => x.AuthorId).ValueGeneratedNever();
+        modelBuilder.Entity<Like>().HasKey(x => new { x.AuthorId, x.CheepId });
     }
 }

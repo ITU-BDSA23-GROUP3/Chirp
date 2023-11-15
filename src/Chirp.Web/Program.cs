@@ -62,6 +62,7 @@ builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(connectionString))
     .AddScoped<ICheepRepository, CheepRepository>()
     .AddScoped<IAuthorRepository, AuthorRepository>()
+    .AddScoped<ILikeRepository, LikeRepository>()
     .AddScoped<ICheepService, CheepService>()
     .AddRouting()
     .AddAuthentication(options =>
