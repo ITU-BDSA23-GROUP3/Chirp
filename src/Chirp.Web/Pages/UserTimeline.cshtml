@@ -1,13 +1,33 @@
 ﻿@page "/{author}"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model Chirp.Web.Pages.TimelineModel
 
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    var routeName = HttpContext.GetRouteValue("author");
+    var routeName = HttpContext.GetRouteValue("author").ToString();
 }
 
 <div>
     <h2> @routeName's Timeline </h2>
+
+    @if (User.Identity.IsAuthenticated && !User.Identity.Name.Equals(routeName))
+    {
+        @if (Model.AuthorFollowsAuthor(User.Identity.Name, routeName))
+        {
+            <form method="post" asp-page-handler="Unfollow" asp-route-routeName="@routeName">
+                <button type="submit">Unfollow</button>
+            </form>
+        }
+        else
+        {
+            <form method="post" asp-page-handler="Follow" asp-route-routeName="@routeName">
+                <button type="submit">Follow</button>
+            </form>
+        }
+    }
+
+    <p>Following: @Model.GetFollowingCount(routeName) Followers: @Model.GetFollowersCount(routeName)</p>
+
     @await Html.PartialAsync("Shared/_CheepList")
 </div>

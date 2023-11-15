@@ -24,37 +24,17 @@
                     @cheep.Text
                     <small>&mdash; @cheep.GetSerializedTimeStamp()</small>
                 </p>
-
                 @if (User.Identity.IsAuthenticated)
                 {
-                    @if (Model.AuthorLikesCheep(User.Identity.Name, cheep.CheepId))
-                    {
-                        <!-- Display the "Unlike" button -->
-                        <form method="post" asp-page-handler="RemoveLike" asp-route-cheepId="@cheep.CheepId">
-                            <button type="submit">Unlike</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <!-- Display the "Like" button -->
-                        <form method="post" asp-page-handler="Like" asp-route-cheepId="@cheep.CheepId">
-                            <button type="submit">Like</button>
-                        </form>
-                    }
+                    <form method="post"
+                        asp-page-handler="@((Model.AuthorLikesCheep(User.Identity.Name, cheep.CheepId)) ? "Unlike" : "Like")"
+                        asp-route-cheepId="@cheep.CheepId">
+                        <button type="submit">@((Model.AuthorLikesCheep(User.Identity.Name, cheep.CheepId)) ? "Unlike" : "Like")</button>
+                    </form>
                 }
+                @{ViewData["cheepLikes"] = Model.GetLikeCount(cheep.CheepId).ToString();}
+                <p>@ViewData["cheepLikes"] @((ViewData["cheepLikes"] == "1") ? "person likes" : "people like") this.</p>
 
-                @{
-                    ViewData["cheepLikes"] = Model.GetLikeCount(cheep.CheepId).ToString();
-                }
-
-                @if (ViewData["cheepLikes"] == "1")
-                {
-                    <p>@ViewData["cheepLikes"] person likes this.</p>
-                }
-                else
-                {
-                    <p>@ViewData["cheepLikes"] people like this.</p>
-                }
             </li>
         }
     </ul>

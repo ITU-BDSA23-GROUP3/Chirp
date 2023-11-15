@@ -63,6 +63,7 @@ builder.Services
     .AddScoped<ICheepRepository, CheepRepository>()
     .AddScoped<IAuthorRepository, AuthorRepository>()
     .AddScoped<ILikeRepository, LikeRepository>()
+    .AddScoped<IFollowRepository, FollowRepository>()
     .AddScoped<ICheepService, CheepService>()
     .AddRouting()
     .AddAuthentication(options =>

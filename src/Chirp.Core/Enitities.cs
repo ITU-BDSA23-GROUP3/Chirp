@@ -36,3 +36,9 @@ public class Like
     public int AuthorId { get; set; }
     public int CheepId { get; set; }
 }
+
+public class Follow
+{
+    public int FollowerId { get; set; }
+    public int FollowedId { get; set; }
+}
