@@ -45,6 +45,11 @@ public class TimelineModel : PageModel
         return _likeRepository.FindLikeCountByCheepId(cheepId);
     }
 
+    public bool LikesOwnCheep(string authorName, int cheepId) {
+        var authorId = _authorRepository.FindAuthorsByName(authorName).First().AuthorId;
+        return _likeRepository.LikesOwnCheep(authorId, cheepId);
+    }
+
     public IActionResult OnPostLike(int cheepId)
     {
         if (!User.Identity.IsAuthenticated) return Page();

@@ -8,4 +8,5 @@ public interface ILikeRepository
     public IEnumerable<Like> FindLikesByCheepId(int cheepId);
     public IEnumerable<Like> FindLikesByAuthorId(int authorId);
     public int FindLikeCountByCheepId(int cheepId);
+    public bool LikesOwnCheep(int authorId, int cheepId);
 }

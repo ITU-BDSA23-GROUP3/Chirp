@@ -17,13 +17,6 @@ public class CheepRepository : ICheepRepository
         _authorRepository = authorRepository;
     }
     
-    public int QueryCheepCount(string? author = null)
-    {
-        return string.IsNullOrEmpty(author) ?
-            _db.Cheeps.Count() :
-            _db.Cheeps.Count(c => c.Author.Name == author);
-    }
-    
     public void StoreCheep(Cheep entity)
     {
         StoreCheeps(new List<Cheep> { entity });
@@ -52,5 +45,22 @@ public class CheepRepository : ICheepRepository
         }
 
         return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
+    }
+        
+    public int QueryCheepCount(string? author = null)
+    {
+        IQueryable<Cheep> queryResult;
+
+        if (!string.IsNullOrEmpty(author))
+        {
+            _authorRepository.CreateAuthor(author, "example@mail.com");
+            var authorId = _authorRepository.FindAuthorsByName(author).First().AuthorId;
+            var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
+        } else {
+            queryResult = _db.Cheeps;
+        }
+
+        return queryResult.Count();
     }
 }

@@ -12,10 +12,23 @@ public class LikeRepository : ILikeRepository
         _db.Database.EnsureCreated();
     }
 
+    public bool LikesOwnCheep(int authorId, int cheepId)
+    {
+        var cheep = _db.Cheeps.Where(c => c.CheepId == cheepId).First();
+        return cheep.AuthorId == authorId;
+    }
+
     public void LikeCheep(int authorId, int cheepId)
     {
         // In case the like already exists, do nothing
         if (LikeExists(authorId, cheepId)) return;
+
+        // Check if cheep is owned by author
+        var cheep = _db.Cheeps.Where(c => c.CheepId == cheepId).First();
+        if (LikesOwnCheep(authorId, cheepId))
+        {
+            throw new Exception("Liking your own cheeps is not allowed!");
+        }
 
         _db.Likes.Add(new Like { AuthorId = authorId, CheepId = cheepId });
         _db.SaveChanges();

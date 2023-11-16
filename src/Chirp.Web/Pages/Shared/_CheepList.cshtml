@@ -24,7 +24,7 @@
                     @cheep.Text
                     <small>&mdash; @cheep.GetSerializedTimeStamp()</small>
                 </p>
-                @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated && !Model.LikesOwnCheep(User.Identity.Name, cheep.CheepId))
                 {
                     <form method="post"
                         asp-page-handler="@((Model.AuthorLikesCheep(User.Identity.Name, cheep.CheepId)) ? "Unlike" : "Like")"
