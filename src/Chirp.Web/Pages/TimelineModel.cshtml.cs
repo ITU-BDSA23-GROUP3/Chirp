@@ -46,8 +46,9 @@ public class TimelineModel : PageModel
     }
 
     public bool LikesOwnCheep(string authorName, int cheepId) {
-        var authorId = _authorRepository.FindAuthorsByName(authorName).First().AuthorId;
-        return _likeRepository.LikesOwnCheep(authorId, cheepId);
+        var authors = _authorRepository.FindAuthorsByName(authorName);
+        if(!authors.Any()) return false;
+        return _likeRepository.LikesOwnCheep(authors.First().AuthorId, cheepId);
     }
 
     public IActionResult OnPostLike(int cheepId)
