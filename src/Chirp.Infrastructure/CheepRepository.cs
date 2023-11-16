@@ -17,10 +17,10 @@ public class CheepRepository : ICheepRepository
         _authorRepository = authorRepository;
     }
     
-    public void StoreCheep(int authorId, string text)
+    public void StoreCheep(Cheep cheep)
     {   
         var newCheepId = _db.Cheeps.Any() ? _db.Cheeps.Max(cheep => cheep.CheepId) + 1 : 1;
-        StoreCheeps(new List<Cheep> { new Cheep { AuthorId= authorId, CheepId = newCheepId, Text = text, TimeStamp = DateTime.Now} });
+        StoreCheeps(new List<Cheep> { new Cheep { AuthorId= cheep.AuthorId, CheepId = newCheepId, Text = cheep.Text, TimeStamp = cheep.TimeStamp} });
     }
 
     public void StoreCheeps(List<Cheep> entities)

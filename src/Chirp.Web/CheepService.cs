@@ -7,7 +7,7 @@ public interface ICheepService
     public int CheepsPerPage { get; }
     public List<Cheep> GetCheeps(int pageNumber, string? author = null);
     public int GetCheepCount(string? author = null);
-    public void StoreCheep(int authorId, string text);
+    public void StoreCheep(Cheep cheep);
 }
 
 public class CheepService : ICheepService
@@ -30,8 +30,8 @@ public class CheepService : ICheepService
         return _chirpStorage.QueryCheepCount(author);
     }
 
-    public void StoreCheep(int authorId, string text)
+    public void StoreCheep(Cheep cheep)
     {
-        _chirpStorage.StoreCheep(authorId, text);
+        _chirpStorage.StoreCheep(new Cheep { AuthorId = cheep.AuthorId, Text = cheep.Text, TimeStamp = DateTime.Now });
     }
 }

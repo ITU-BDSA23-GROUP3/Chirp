@@ -61,18 +61,19 @@ public class CheepRepositoryTest
         var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
-        var cheep = new {
-            authorId = 1,
-            text = "Another test cheep!"
+        var cheep = new Cheep {
+            AuthorId = 1,
+            Text = "Another test cheep!",
+            TimeStamp = DateTime.Now
         };
 
         // Act
-        chirpStorage.StoreCheep(cheep.authorId, cheep.text);
+        chirpStorage.StoreCheep(cheep);
 
         // Assert
         var storedCheep = context.Cheeps.FirstOrDefault();
         Assert.NotNull(storedCheep);
-        Assert.Equal(cheep.text, storedCheep.Text);
+        Assert.Equal(cheep.Text, storedCheep.Text);
     }
 
     [Fact]

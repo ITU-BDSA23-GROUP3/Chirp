@@ -23,7 +23,7 @@ public class TimelineModel : PageModel
         if (text.Length > 160) text = text.Substring(0, 160);
 
         var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        _service.StoreCheep(authorId, text);
+        _service.StoreCheep( new Cheep {AuthorId = authorId, Text=text, TimeStamp = DateTime.Now} );
         return RedirectToPage();
     }
 
