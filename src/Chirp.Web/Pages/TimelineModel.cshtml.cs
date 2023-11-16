@@ -36,7 +36,7 @@ public class TimelineModel : PageModel
     public bool AuthorLikesCheep(string name, int cheepId)
     {
         var authors = _authorRepository.FindAuthorsByName(name);
-        if (!authors.Any()) throw new Exception("Author is not registered in Database!");
+        if (!authors.Any()) return false; // Should never happen
         return _likeRepository.LikeExists(authors.First().AuthorId, cheepId);
     }
 
@@ -79,10 +79,10 @@ public class TimelineModel : PageModel
     public bool AuthorFollowsAuthor(string followerName, string followedName)
     {
         var followers = _authorRepository.FindAuthorsByName(followerName);
-        if (!followers.Any()) throw new Exception("Follower of Author is not registered in Database!");
+        if (!followers.Any()) return false; // Should never happen
 
         var followed = _authorRepository.FindAuthorsByName(followedName);
-        if (!followed.Any()) throw new Exception("Followed Author is not registered in Database!");
+        if (!followed.Any()) return false; // Should never happen
 
         return _followRepository.FollowExists(followers.First().AuthorId, followed.First().AuthorId);
     }

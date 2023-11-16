@@ -36,9 +36,8 @@ public class AuthorRepository : IAuthorRepository
             _db.Authors.Add(author);
             _db.SaveChanges();
 
-            return authorCheck.First();
         }
-
-        return null;
+        
+        return authorCheck.First();
     }
 }
