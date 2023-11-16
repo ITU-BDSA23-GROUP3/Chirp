@@ -4,6 +4,6 @@ public interface IAuthorRepository
 {
     public IEnumerable<Author> FindAuthorsByName(string name);
     public IEnumerable<Author> FindAuthorsByEmail(string email);
-    public Author? CreateAuthor(string name, string email);
+    public Author CreateAuthor(string name, string email);
     
 }

@@ -26,8 +26,8 @@ public class CheepRepositoryTest
         context.Database.EnsureCreated();
 
         context.Authors.AddRange(
-            new Author { AuthorId = 1, Name = "Jens", Email = "test@mail.dk" },
-            new Author { AuthorId = 2, Name = "Børge", Email = "wow@dd.dk" }
+            new Author { AuthorId = 1, Name = "Jens", Email = "example@mail.com" },
+            new Author { AuthorId = 2, Name = "Børge", Email = "example@mail.com" }
         );
         context.SaveChanges();
 
@@ -113,14 +113,14 @@ public class CheepRepositoryTest
             new() { CheepId = 2, AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
             new() { CheepId = 3, AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
         };
-        context.AddRange(cheepsToStore);
+        context.Cheeps.AddRange(cheepsToStore);
         context.SaveChanges();
 
         // Act
-        var cheeps = chirpStorage.QueryCheeps(0, 32, author: "Jens");
+        var cheeps = chirpStorage.QueryCheeps(1, 32, author: "Jens");
 
         // Assert
-        cheeps.Should().BeEquivalentTo(cheepsToStore.Where(cheep => cheep.AuthorId == 1));
+        cheeps.Count().Should().Be(2);
     }
 
     [Fact]

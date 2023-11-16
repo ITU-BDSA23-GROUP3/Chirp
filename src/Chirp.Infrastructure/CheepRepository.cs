@@ -40,7 +40,7 @@ public class CheepRepository : ICheepRepository
         } else {
             var authorId = _authorRepository.CreateAuthor(author, "example@mail.com").AuthorId;
             var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
-            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
+            queryResult = _db.Cheeps.Where(c => c.AuthorId == authorId);
         }
 
         return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
