@@ -1,5 +1,6 @@
 rm -rf ./src/Chirp.Infrastructure/Migrations
 docker compose down
+python3 setup.py
 dotnet ef migrations add InitialMigrations --project ./src/Chirp.Infrastructure/ --startup-project ./src/Chirp.Web/
 docker compose -f compose.yaml -p chirp up -d db
 sleep 5

@@ -17,6 +17,21 @@ services:
       - 1433
     volumes:
       - db:/var/opt/sqlserver/data
+  webapp:
+    build:
+      context: .
+      dockerfile: ./src/Chirp.Web/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - USER_SECRETS_ID=c82fceda-b27c-4d6c-ad3e-302f7d63b4d1
+    volumes:
+#      - $APPDATA/Microsoft/UserSecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID
+      - $USERSECRETSPATH/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID
+    ports:
+      - '80:80'
+    links:
+      - db
 volumes:
   db:
     driver: local
