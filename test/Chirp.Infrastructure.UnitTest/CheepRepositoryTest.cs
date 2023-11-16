@@ -61,20 +61,18 @@ public class CheepRepositoryTest
         var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
-        var cheep = new Cheep
-        {
-            AuthorId = 1,
-            Text = "Another test cheep!",
-            TimeStamp = DateTime.Now
+        var cheep = new {
+            authorId = 1,
+            text = "Another test cheep!"
         };
 
         // Act
-        chirpStorage.StoreCheep(cheep);
+        chirpStorage.StoreCheep(cheep.authorId, cheep.text);
 
         // Assert
         var storedCheep = context.Cheeps.FirstOrDefault();
         Assert.NotNull(storedCheep);
-        Assert.Equal(cheep.Text, storedCheep.Text);
+        Assert.Equal(cheep.text, storedCheep.Text);
     }
 
     [Fact]
@@ -121,22 +119,5 @@ public class CheepRepositoryTest
 
         // Assert
         cheeps.Count().Should().Be(2);
-    }
-
-    [Fact]
-    public void CheepViolatesFKConstraint()
-    {
-        var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
-
-        // Arrange
-        var cheep = new Cheep
-        {
-            Text = "A Cheep without AuthorId",
-            TimeStamp = DateTime.Now
-        };
-
-        // Act and Assert
-        Assert.Throws<DbUpdateException>(() => chirpStorage.StoreCheep(cheep));
     }
 }

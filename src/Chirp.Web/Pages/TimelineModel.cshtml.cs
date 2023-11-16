@@ -6,15 +6,11 @@ public class TimelineModel : PageModel
     public int CheepsPerPage;
     public int NumOfCheeps;
     protected readonly ICheepService _service;
-    protected ChirpDBContext _db;
-    protected readonly ICheepRepository _cheepRepository;
     protected readonly IAuthorRepository _authorRepository;
     protected readonly ILikeRepository _likeRepository;
     protected readonly IFollowRepository _followRepository;
-    public TimelineModel(ChirpDBContext db, ICheepRepository cheepRepository, IAuthorRepository authorRepository, ICheepService service, ILikeRepository likeRepository, IFollowRepository followRepository)
+    public TimelineModel(IAuthorRepository authorRepository, ICheepService service, ILikeRepository likeRepository, IFollowRepository followRepository)
     {
-        _db = db;
-        _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
         _service = service;
         _likeRepository = likeRepository;
@@ -27,8 +23,7 @@ public class TimelineModel : PageModel
         if (text.Length > 160) text = text.Substring(0, 160);
 
         var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        var newCheepId = _db.Cheeps.Max(cheep => cheep.CheepId) + 1;
-        _cheepRepository.StoreCheep(new Cheep { AuthorId = authorId, CheepId = newCheepId, Text = text, TimeStamp = DateTime.Now });
+        _service.StoreCheep(authorId, text);
         return RedirectToPage();
     }
 
@@ -129,7 +124,7 @@ public class TimelineModel : PageModel
             page = 1;
         }
 
-        if ((page < 1 || page > maxPage) && _cheepRepository.QueryCheepCount(author) != 0)
+        if ((page < 1 || page > maxPage) && _service.GetCheepCount(author) != 0)
         {
             return RedirectToPage();
         }

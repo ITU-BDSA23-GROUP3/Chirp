@@ -17,9 +17,10 @@ public class CheepRepository : ICheepRepository
         _authorRepository = authorRepository;
     }
     
-    public void StoreCheep(Cheep entity)
-    {
-        StoreCheeps(new List<Cheep> { entity });
+    public void StoreCheep(int authorId, string text)
+    {   
+        var newCheepId = _db.Cheeps.Any() ? _db.Cheeps.Max(cheep => cheep.CheepId) + 1 : 1;
+        StoreCheeps(new List<Cheep> { new Cheep { AuthorId= authorId, CheepId = newCheepId, Text = text, TimeStamp = DateTime.Now} });
     }
 
     public void StoreCheeps(List<Cheep> entities)
