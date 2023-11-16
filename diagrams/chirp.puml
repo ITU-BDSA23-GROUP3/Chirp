@@ -1,0 +1,90 @@
+@startuml
+package Chirp.Core {
+    interface IAuthorRepository {
+        {method} FindAuthorsByName
+        {method} FindAuthorsByEmail
+        {method} CreateAuthor
+        
+    }
+    interface ICheepRepository {
+        {method} StoreCheep
+        {method} StoreCheeps
+        {method} QueryCheeps
+        {method} QueryCheepCount
+    }
+    class Author
+    {
+        AuthorId
+        Name
+        Email
+        Cheeps
+    }
+    
+    class Cheep
+    {
+        CheepId
+        AuthorId
+        Author
+        Text
+        TimeStamp
+        {method}GetSerializedTimeStamp
+        {method}ToString
+    }
+    Author o-- IAuthorRepository
+    Cheep o-- ICheepRepository
+}
+
+package Chirp.Infrastructure {
+    class AuthorRepository {
+    }
+    
+    class CheepRepository {
+    }
+    
+    class ChirpDBContext{
+        Cheeps
+        Authors
+    }
+
+    IAuthorRepository ..|> AuthorRepository
+    ICheepRepository ..|> CheepRepository
+    AuthorRepository --> ChirpDBContext
+    CheepRepository --> ChirpDBContext
+}
+
+package Chirp.Web {
+    interface ICheepService {
+        CheepsPerPage
+        {method} GetCheeps
+        {method} GetCheepCount
+    }
+    
+    class CheepService {
+    }
+    
+    class TimelineModel {
+        {method} OnPostAsync
+        {method} OnGet
+    }
+    
+    class AuthModel {
+        {method} OnGet
+    }
+    
+    class ResetTablesModel{
+        {method} OnPost
+    }
+    
+    entity _Layout{}
+    
+    ICheepService ..|> CheepService
+    CheepService --> ICheepRepository
+    TimelineModel -up-> ICheepRepository
+    TimelineModel -up-> IAuthorRepository
+    TimelineModel -up-> ChirpDBContext
+    TimelineModel -right-> ICheepService
+    _Layout --* AuthModel
+    _Layout --* ResetTablesModel
+    
+}
+@enduml
