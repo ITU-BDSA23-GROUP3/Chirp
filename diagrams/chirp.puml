@@ -62,7 +62,29 @@ package Chirp.Web {
     class CheepService {
     }
     
+    class TimelineModel {
+        {method} OnPostAsync
+        {method} OnGet
+    }
+    
+    class AuthModel {
+        {method} OnGet
+    }
+    
+    class ResetTablesModel{
+        {method} OnPost
+    }
+    
+    entity _Layout{}
+    
     ICheepService ..|> CheepService
     CheepService --> ICheepRepository
+    TimelineModel -up-> ICheepRepository
+    TimelineModel -up-> IAuthorRepository
+    TimelineModel -up-> ChirpDBContext
+    TimelineModel -right-> ICheepService
+    _Layout --* AuthModel
+    _Layout --* ResetTablesModel
+    
 }
 @enduml
