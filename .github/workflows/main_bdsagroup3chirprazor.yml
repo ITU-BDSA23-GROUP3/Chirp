@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - main
+      - topic/fixworkflow
   workflow_dispatch:
 
 jobs:
@@ -26,9 +27,9 @@ jobs:
         with:
           dotnet-version: '7.x'
           include-prerelease: true
-      
+      #use dotnet 7.x
       - name: Add ef-core tool
-        run: dotnet tool install --global dotnet-ef
+        run: dotnet tool install --global dotnet-ef --version 7.0.14
       
       - name: Remove potential migrations
         run: rm -rf ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/Migrations
