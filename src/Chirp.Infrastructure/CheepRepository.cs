@@ -34,14 +34,13 @@ public class CheepRepository : ICheepRepository
         
         IQueryable<Cheep> queryResult;
 
-        if (!string.IsNullOrEmpty(author))
+        if (string.IsNullOrEmpty(author))
         {
-            _authorRepository.CreateAuthor(author, "example@mail.com");
-            var authorId = _authorRepository.FindAuthorsByName(author).First().AuthorId;
+            queryResult = _db.Cheeps;
+        } else {
+            var authorId = _authorRepository.CreateAuthor(author, "example@mail.com").AuthorId;
             var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
             queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
-        } else {
-            queryResult = _db.Cheeps;
         }
 
         return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
@@ -51,14 +50,13 @@ public class CheepRepository : ICheepRepository
     {
         IQueryable<Cheep> queryResult;
 
-        if (!string.IsNullOrEmpty(author))
+        if (string.IsNullOrEmpty(author))
         {
-            _authorRepository.CreateAuthor(author, "example@mail.com");
-            var authorId = _authorRepository.FindAuthorsByName(author).First().AuthorId;
+            queryResult = _db.Cheeps;
+        } else {
+            var authorId = _authorRepository.CreateAuthor(author, "example@mail.com").AuthorId;
             var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
             queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
-        } else {
-            queryResult = _db.Cheeps;
         }
 
         return queryResult.Count();

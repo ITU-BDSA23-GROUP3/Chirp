@@ -36,7 +36,7 @@ public class TimelineModel : PageModel
     public bool AuthorLikesCheep(string name, int cheepId)
     {
         var authors = _authorRepository.FindAuthorsByName(name);
-        if (!authors.Any()) return false; // Should never happen
+        if (!authors.Any()) throw new Exception("Author is not registered in Database!");
         return _likeRepository.LikeExists(authors.First().AuthorId, cheepId);
     }
 
@@ -45,9 +45,10 @@ public class TimelineModel : PageModel
         return _likeRepository.FindLikeCountByCheepId(cheepId);
     }
 
-    public bool LikesOwnCheep(string authorName, int cheepId) {
+    public bool LikesOwnCheep(string authorName, int cheepId)
+    {
         var authors = _authorRepository.FindAuthorsByName(authorName);
-        if(!authors.Any()) return false;
+        if (!authors.Any()) return false;
         return _likeRepository.LikesOwnCheep(authors.First().AuthorId, cheepId);
     }
 
@@ -55,7 +56,7 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        // Ugly code still needed
+        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
 
         int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
@@ -67,7 +68,7 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        // Ugly code still needed
+        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
 
         int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
@@ -78,10 +79,10 @@ public class TimelineModel : PageModel
     public bool AuthorFollowsAuthor(string followerName, string followedName)
     {
         var followers = _authorRepository.FindAuthorsByName(followerName);
-        if (!followers.Any()) return false; // Should never happen
+        if (!followers.Any()) throw new Exception("Follower of Author is not registered in Database!");
 
         var followed = _authorRepository.FindAuthorsByName(followedName);
-        if (!followed.Any()) return false; // Should never happen
+        if (!followed.Any()) throw new Exception("Followed Author is not registered in Database!");
 
         return _followRepository.FollowExists(followers.First().AuthorId, followed.First().AuthorId);
     }
@@ -89,16 +90,16 @@ public class TimelineModel : PageModel
     public int GetFollowersCount(string routeName)
     {
         var authors = _authorRepository.FindAuthorsByName(routeName);
-        if(!authors.Any()) return 0;
-        
+        if (!authors.Any()) return 0;
+
         return _followRepository.FindFollowersCountByAuthorId(authors.First().AuthorId);
     }
 
     public int GetFollowingCount(string routeName)
     {
         var authors = _authorRepository.FindAuthorsByName(routeName);
-        if(!authors.Any()) return 0;
-        
+        if (!authors.Any()) return 0;
+
         return _followRepository.FindFollowingCountByAuthorId(authors.First().AuthorId);
     }
 
@@ -106,7 +107,7 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        // Ugly code still needed
+        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
 
         int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
@@ -120,7 +121,7 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        // Ugly code still needed
+        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
         _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
 
         int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
