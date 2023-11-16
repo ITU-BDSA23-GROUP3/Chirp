@@ -10,6 +10,8 @@ public class CheepRepositoryTest
 {
     private readonly SqliteConnection _connection;
     private readonly DbContextOptions<ChirpDBContext> _contextOptions;
+    private IFollowRepository followRepository;
+    private IAuthorRepository authorRepository;
 
     public CheepRepositoryTest()
     {
@@ -28,13 +30,16 @@ public class CheepRepositoryTest
             new Author { AuthorId = 2, Name = "Børge", Email = "wow@dd.dk" }
         );
         context.SaveChanges();
+
+        followRepository = new FollowRepository(context);
+        authorRepository = new AuthorRepository(context);
     }
 
     [Fact]
     public void QueryCheepCountReturnsCorrectCount()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         context.AddRange(
@@ -53,7 +58,7 @@ public class CheepRepositoryTest
     public void StoreCheepSavesCheep()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         var cheep = new Cheep
@@ -76,7 +81,7 @@ public class CheepRepositoryTest
     public void StoreCheepsSavesCheeps()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         var cheeps = new List<Cheep>{
@@ -99,7 +104,7 @@ public class CheepRepositoryTest
     public void QueryCheepsReturnsCheepsByAuthor()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         var cheepsToStore = new List<Cheep>
@@ -122,7 +127,7 @@ public class CheepRepositoryTest
     public void CheepViolatesFKConstraint()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         var cheep = new Cheep

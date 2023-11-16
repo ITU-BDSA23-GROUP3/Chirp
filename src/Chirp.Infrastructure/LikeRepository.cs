@@ -14,8 +14,9 @@ public class LikeRepository : ILikeRepository
 
     public bool LikesOwnCheep(int authorId, int cheepId)
     {
-        var cheep = _db.Cheeps.Where(c => c.CheepId == cheepId).First();
-        return cheep.AuthorId == authorId;
+        var cheeps = _db.Cheeps.Where(c => c.CheepId == cheepId);
+        if(!cheeps.Any()) return false;
+        return cheeps.First().AuthorId == authorId;
     }
 
     public void LikeCheep(int authorId, int cheepId)
@@ -24,7 +25,6 @@ public class LikeRepository : ILikeRepository
         if (LikeExists(authorId, cheepId)) return;
 
         // Check if cheep is owned by author
-        var cheep = _db.Cheeps.Where(c => c.CheepId == cheepId).First();
         if (LikesOwnCheep(authorId, cheepId))
         {
             throw new Exception("Liking your own cheeps is not allowed!");
