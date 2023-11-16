@@ -78,6 +78,7 @@ builder.Services
         o.ClientId = clientId;
         o.ClientSecret = clientSecret;
         o.CallbackPath = "/signin-github";
+        o.Scope.Add("user:email");
     });
 
 var app = builder.Build();

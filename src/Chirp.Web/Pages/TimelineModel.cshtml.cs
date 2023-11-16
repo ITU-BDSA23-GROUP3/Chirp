@@ -26,7 +26,6 @@ public class TimelineModel : PageModel
         string text = Request.Form["Text"];
         if (text.Length > 160) text = text.Substring(0, 160);
 
-        _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
         var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
         var newCheepId = _db.Cheeps.Max(cheep => cheep.CheepId) + 1;
         _cheepRepository.StoreCheep(new Cheep { AuthorId = authorId, CheepId = newCheepId, Text = text, TimeStamp = DateTime.Now });
@@ -56,9 +55,6 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
-        _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
-
         int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
         _likeRepository.LikeCheep(authorId, cheepId);
         return RedirectToPage();
@@ -67,9 +63,6 @@ public class TimelineModel : PageModel
     public IActionResult OnPostUnlike(int cheepId)
     {
         if (!User.Identity.IsAuthenticated) return Page();
-
-        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
-        _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
 
         int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
         _likeRepository.UnlikeCheep(authorId, cheepId);
@@ -107,9 +100,6 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
-        _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
-
         int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
         int followedId = _authorRepository.FindAuthorsByName(routeName).First().AuthorId;
 
@@ -120,9 +110,6 @@ public class TimelineModel : PageModel
     public IActionResult OnPostUnfollow(string routeName)
     {
         if (!User.Identity.IsAuthenticated) return Page();
-
-        // Ugly command needed since user is not automatically creates as author on login: github.com/ITU-BDSA23-GROUP3/Chirp/issues/129
-        _authorRepository.CreateAuthor(User.Identity.Name, "example@mail.com");
 
         int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
         int followedId = _authorRepository.FindAuthorsByName(routeName).First().AuthorId;

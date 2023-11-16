@@ -24,11 +24,10 @@ public class AuthorRepository : IAuthorRepository
         return authorCheck;
     }
 
-    public Author CreateAuthor(string name, string email)
+    public void CreateAuthor(string name, string email)
     {
         var authorCheck = _db.Authors
             .Where(a => a.Name == name && a.Email == email);
-
 
         if (!authorCheck.Any())
         {   
@@ -36,9 +35,6 @@ public class AuthorRepository : IAuthorRepository
             var author = new Author { AuthorId = newAuthorId, Name = name, Email = email };
             _db.Authors.Add(author);
             _db.SaveChanges();
-            return author;
         }
-        
-        return authorCheck.First();
     }
 }
