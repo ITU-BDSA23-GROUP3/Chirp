@@ -6,23 +6,21 @@ namespace Chirp.Infrastructure;
 public class CheepRepository : ICheepRepository
 {
     private ChirpDBContext _db;
+    protected IAuthorRepository _authorRepository;
+    protected IFollowRepository _followRepository;
 
-    public CheepRepository(ChirpDBContext db)
+    public CheepRepository(ChirpDBContext db, IFollowRepository followRepository, IAuthorRepository authorRepository)
     {
         _db = db;
         _db.Database.EnsureCreated();
+        _followRepository = followRepository;
+        _authorRepository = authorRepository;
     }
     
-    public int QueryCheepCount(string? author = null)
-    {
-        return string.IsNullOrEmpty(author) ?
-            _db.Cheeps.Count() :
-            _db.Cheeps.Count(c => c.Author.Name == author);
-    }
-    
-    public void StoreCheep(Cheep entity)
-    {
-        StoreCheeps(new List<Cheep> { entity });
+    public void StoreCheep(Cheep cheep)
+    {   
+        var newCheepId = _db.Cheeps.Any() ? _db.Cheeps.Max(cheep => cheep.CheepId) + 1 : 1;
+        StoreCheeps(new List<Cheep> { new Cheep { AuthorId= cheep.AuthorId, CheepId = newCheepId, Text = cheep.Text, TimeStamp = cheep.TimeStamp} });
     }
 
     public void StoreCheeps(List<Cheep> entities)
@@ -37,13 +35,37 @@ public class CheepRepository : ICheepRepository
         
         IQueryable<Cheep> queryResult;
 
-        if (!string.IsNullOrEmpty(author))
+        if (string.IsNullOrEmpty(author))
         {
-            queryResult = _db.Cheeps.Where(c => c.Author.Name == author);
-        } else {
             queryResult = _db.Cheeps;
+        } else {
+
+            var authors = _authorRepository.FindAuthorsByName(author);
+            if(!authors.Any()) return new List<Cheep>();
+            var authorId = authors.First().AuthorId;
+            
+            var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
         }
 
         return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
+    }
+        
+    public int QueryCheepCount(string? author = null)
+    {
+        IQueryable<Cheep> queryResult;
+
+        if (string.IsNullOrEmpty(author))
+        {
+            queryResult = _db.Cheeps;
+        } else {
+            var authors = _authorRepository.FindAuthorsByName(author);
+            if(!authors.Any()) return 0;
+            var authorId = authors.First().AuthorId;
+            var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
+        }
+
+        return queryResult.Count();
     }
 }

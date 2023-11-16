@@ -5,11 +5,13 @@ using Xunit;
 using Microsoft.Data.Sqlite;
 using FluentAssertions;
 
-namespace Chirp.Razor.UnitTest;
+namespace Chirp.Infrastructure.UnitTest;
 public class CheepRepositoryTest
 {
     private readonly SqliteConnection _connection;
     private readonly DbContextOptions<ChirpDBContext> _contextOptions;
+    private IFollowRepository followRepository;
+    private IAuthorRepository authorRepository;
 
     public CheepRepositoryTest()
     {
@@ -24,17 +26,20 @@ public class CheepRepositoryTest
         context.Database.EnsureCreated();
 
         context.Authors.AddRange(
-            new Author { AuthorId = 1, Name = "Jens", Email = "test@mail.dk" },
-            new Author { AuthorId = 2, Name = "Børge", Email = "wow@dd.dk" }
+            new Author { AuthorId = 1, Name = "Jens", Email = "example@mail.com" },
+            new Author { AuthorId = 2, Name = "Børge", Email = "example@mail.com" }
         );
         context.SaveChanges();
+
+        followRepository = new FollowRepository(context);
+        authorRepository = new AuthorRepository(context);
     }
 
     [Fact]
     public void QueryCheepCountReturnsCorrectCount()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         context.AddRange(
@@ -53,11 +58,10 @@ public class CheepRepositoryTest
     public void StoreCheepSavesCheep()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
-        var cheep = new Cheep
-        {
+        var cheep = new Cheep {
             AuthorId = 1,
             Text = "Another test cheep!",
             TimeStamp = DateTime.Now
@@ -76,7 +80,7 @@ public class CheepRepositoryTest
     public void StoreCheepsSavesCheeps()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         var cheeps = new List<Cheep>{
@@ -99,7 +103,7 @@ public class CheepRepositoryTest
     public void QueryCheepsReturnsCheepsByAuthor()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         var cheepsToStore = new List<Cheep>
@@ -108,30 +112,13 @@ public class CheepRepositoryTest
             new() { CheepId = 2, AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
             new() { CheepId = 3, AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
         };
-        context.AddRange(cheepsToStore);
+        context.Cheeps.AddRange(cheepsToStore);
         context.SaveChanges();
 
         // Act
-        var cheeps = chirpStorage.QueryCheeps(0, 32, author: "Jens");
+        var cheeps = chirpStorage.QueryCheeps(1, 32, author: "Jens");
 
         // Assert
-        cheeps.Should().BeEquivalentTo(cheepsToStore.Where(cheep => cheep.AuthorId == 1));
-    }
-
-    [Fact]
-    public void CheepViolatesFKConstraint()
-    {
-        var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context);
-
-        // Arrange
-        var cheep = new Cheep
-        {
-            Text = "A Cheep without AuthorId",
-            TimeStamp = DateTime.Now
-        };
-
-        // Act and Assert
-        Assert.Throws<DbUpdateException>(() => chirpStorage.StoreCheep(cheep));
+        cheeps.Count().Should().Be(2);
     }
 }

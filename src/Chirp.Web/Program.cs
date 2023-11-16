@@ -62,6 +62,8 @@ builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(connectionString))
     .AddScoped<ICheepRepository, CheepRepository>()
     .AddScoped<IAuthorRepository, AuthorRepository>()
+    .AddScoped<ILikeRepository, LikeRepository>()
+    .AddScoped<IFollowRepository, FollowRepository>()
     .AddScoped<ICheepService, CheepService>()
     .AddRouting()
     .AddAuthentication(options =>
@@ -76,6 +78,7 @@ builder.Services
         o.ClientId = clientId;
         o.ClientSecret = clientSecret;
         o.CallbackPath = "/signin-github";
+        o.Scope.Add("user:email");
     });
 
 var app = builder.Build();
