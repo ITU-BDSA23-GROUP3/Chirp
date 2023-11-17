@@ -15,13 +15,18 @@ public class AuthModel : PageModel
 
     public ActionResult OnGet(bool? signOut)
     {
-        if (User.Identity.IsAuthenticated && signOut != null)
+        if (User?.Identity?.IsAuthenticated == true && signOut != null)
         {
             if (signOut.Value)
                 Response.Cookies.Delete(".AspNetCore.Cookies");
         }
+        var userName = User?.Identity?.Name;
+        var userEmail = User?.FindFirst(ClaimTypes.Email)?.Value;
+        var userId = int.Parse(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+        if (userName == null || userEmail == null) return RedirectToPage(); // vi skal finde en måde at håndtere dette
     
-        _authorRepository.CreateAuthor(new Author { AuthorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value), Name = User.Identity.Name, Email = User.FindFirst(ClaimTypes.Email)?.Value});
+        _authorRepository.CreateAuthor(new Author { AuthorId = userId, Name = userName, Email = userEmail});
         return RedirectToPage("Public");
     }
 }

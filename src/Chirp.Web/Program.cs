@@ -82,8 +82,6 @@ builder.Services
         o.Scope.Add("user:email");
         o.UserInformationEndpoint = "https://api.github.com/user";
         o.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
-        o.ClaimActions.MapJsonKey(ClaimTypes.Name, "login");
-        o.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", ClaimValueTypes.Email);
     });
 
 var app = builder.Build();

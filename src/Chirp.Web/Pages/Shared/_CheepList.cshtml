@@ -33,7 +33,7 @@
                     </form>
                 }
                 @{ViewData["cheepLikes"] = Model.GetLikeCount(cheep.CheepId).ToString();}
-                <p>@ViewData["cheepLikes"] @((ViewData["cheepLikes"] == "1") ? "person likes" : "people like") this.</p>
+                <p>@ViewData["cheepLikes"] @(ViewData["cheepLikes"]?.ToString() == "1" ? "person likes" : "people like") this.</p>
 
             </li>
         }
@@ -47,7 +47,7 @@ else
 <div class="pagination">
     @for (int i = 1; i <= Math.Ceiling((double)Model.NumOfCheeps / Model.CheepsPerPage); i++)
     {
-        if (Context.GetEndpoint().DisplayName.Contains("Public"))
+        if (Context?.GetEndpoint()?.DisplayName?.Contains("Public") == true)
         {
             <a href="/?page=@i">@i</a>
         }

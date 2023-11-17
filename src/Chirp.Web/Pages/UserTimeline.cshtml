@@ -5,13 +5,13 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    var routeName = HttpContext.GetRouteValue("author").ToString();
+    var routeName = HttpContext?.GetRouteValue("author")?.ToString() ?? "";
 }
 
 <div>
     <h2> @routeName's Timeline </h2>
 
-    @if (User.Identity.IsAuthenticated && !User.Identity.Name.Equals(routeName))
+    @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name?.Equals(routeName) == false)
     {
         @if (Model.AuthorFollowsAuthor(User.Identity.Name, routeName))
         {

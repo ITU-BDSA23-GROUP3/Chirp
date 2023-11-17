@@ -20,19 +20,16 @@ public class TimelineModel : PageModel
 
     public int getUserId(string? authorName = null)
     {
-        authorName ??= User.Identity.Name;
+        authorName ??= User?.Identity?.Name;
+        if (authorName == null) return 0;
         
         var author = _authorRepository.FindAuthorsByName(authorName).FirstOrDefault();
         return author == null ? 0 : author.AuthorId;
-        /* 
-        alternativt:
-        return int.Parse((User.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? "0"); 
-        */
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public IActionResult OnPost()
     {
-        string text = Request.Form["Text"];
+        string text = Request.Form["Text"].ToString();
         if (text.Length > 160) text = text.Substring(0, 160);
         
         var authorId = getUserId();
@@ -61,7 +58,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostLike(int cheepId)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (User?.Identity?.IsAuthenticated != true) return Page();
 
         int authorId = getUserId();
         _likeRepository.LikeCheep(authorId, cheepId);
@@ -70,7 +67,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostUnlike(int cheepId)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (User?.Identity?.IsAuthenticated != true) return Page();
 
         int authorId = getUserId();
         _likeRepository.UnlikeCheep(authorId, cheepId);
@@ -103,7 +100,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostFollow(string routeName)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (User?.Identity?.IsAuthenticated != true) return Page();
 
         var followerId = getUserId();
         var followedId = getUserId(routeName);
@@ -116,7 +113,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostUnfollow(string routeName)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (User?.Identity?.IsAuthenticated != true) return Page();
 
         var followerId = getUserId();
         var followedId = getUserId(routeName);
