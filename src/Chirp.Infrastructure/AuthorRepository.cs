@@ -24,15 +24,17 @@ public class AuthorRepository : IAuthorRepository
         return authorCheck;
     }
 
-    public void CreateAuthor(string name, string email)
+    public void CreateAuthor(Author author)
     {
         var authorCheck = _db.Authors
-            .Where(a => a.Name == name && a.Email == email);
+            .Where(a => a.Name == author.Name && a.Email == author.Email);
 
         if (!authorCheck.Any())
         {   
-            int newAuthorId = _db.Authors.Count() == 0 ? 1 : _db.Authors.Max(author => author.AuthorId) + 1;
-            var author = new Author { AuthorId = newAuthorId, Name = name, Email = email };
+            if (author.AuthorId == 0) {
+                int newAuthorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
+                author.AuthorId = newAuthorId;
+            }
             _db.Authors.Add(author);
             _db.SaveChanges();
         }

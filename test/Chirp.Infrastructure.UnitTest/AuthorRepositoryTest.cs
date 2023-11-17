@@ -38,7 +38,7 @@ public class AuthorRepositoryTest
         };
 
         // Act
-        authorRepository.CreateAuthor(newAuthor.Name, newAuthor.Email);
+        authorRepository.CreateAuthor(newAuthor);
 
         // Assert
         context.Authors.Should().HaveCount(1);
@@ -79,7 +79,7 @@ public class AuthorRepositoryTest
         };
 
         // Act
-        authorRepository.CreateAuthor(newAuthor.Name, newAuthor.Email);
+        authorRepository.CreateAuthor(newAuthor);
 
         // Assert
         var author = authorRepository.FindAuthorsByEmail(newAuthor.Email).First();

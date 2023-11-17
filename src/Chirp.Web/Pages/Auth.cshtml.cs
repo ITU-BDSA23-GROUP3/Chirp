@@ -20,9 +20,8 @@ public class AuthModel : PageModel
             if (signOut.Value)
                 Response.Cookies.Delete(".AspNetCore.Cookies");
         }
-
-        _authorRepository.CreateAuthor(User.Identity.Name, User.FindFirst(ClaimTypes.Email)?.Value);
-
+    
+        _authorRepository.CreateAuthor(new Author { AuthorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value), Name = User.Identity.Name, Email = User.FindFirst(ClaimTypes.Email)?.Value});
         return RedirectToPage("Public");
     }
 }

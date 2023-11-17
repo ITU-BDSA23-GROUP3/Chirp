@@ -1,3 +1,4 @@
+using System.Security.Claims;
 namespace Chirp.Web.Pages;
 
 public class TimelineModel : PageModel
@@ -17,21 +18,34 @@ public class TimelineModel : PageModel
         _followRepository = followRepository;
     }
 
+    public int getUserId(string? authorName = null)
+    {
+        authorName ??= User.Identity.Name;
+        
+        var author = _authorRepository.FindAuthorsByName(authorName).FirstOrDefault();
+        return author == null ? 0 : author.AuthorId;
+        /* 
+        alternativt:
+        return int.Parse((User.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? "0"); 
+        */
+    }
+
     public async Task<IActionResult> OnPostAsync()
     {
         string text = Request.Form["Text"];
         if (text.Length > 160) text = text.Substring(0, 160);
-
-        var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
+        
+        var authorId = getUserId();
+        if (authorId == 0) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
+        
         _service.StoreCheep( new Cheep {AuthorId = authorId, Text=text, TimeStamp = DateTime.Now} );
         return RedirectToPage();
     }
 
     public bool AuthorLikesCheep(string name, int cheepId)
     {
-        var authors = _authorRepository.FindAuthorsByName(name);
-        if (!authors.Any()) return false; // Should never happen
-        return _likeRepository.LikeExists(authors.First().AuthorId, cheepId);
+        var authorId = getUserId();
+        return authorId != 0 && _likeRepository.LikeExists(authorId, cheepId);
     }
 
     public int GetLikeCount(int cheepId)
@@ -41,16 +55,15 @@ public class TimelineModel : PageModel
 
     public bool LikesOwnCheep(string authorName, int cheepId)
     {
-        var authors = _authorRepository.FindAuthorsByName(authorName);
-        if (!authors.Any()) return false;
-        return _likeRepository.LikesOwnCheep(authors.First().AuthorId, cheepId);
+        var authorId = getUserId();
+        return authorId != 0 && _likeRepository.LikesOwnCheep(authorId, cheepId);
     }
 
     public IActionResult OnPostLike(int cheepId)
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
+        int authorId = getUserId();
         _likeRepository.LikeCheep(authorId, cheepId);
         return RedirectToPage();
     }
@@ -59,44 +72,43 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
+        int authorId = getUserId();
         _likeRepository.UnlikeCheep(authorId, cheepId);
         return RedirectToPage();
     }
 
     public bool AuthorFollowsAuthor(string followerName, string followedName)
     {
-        var followers = _authorRepository.FindAuthorsByName(followerName);
-        if (!followers.Any()) return false; // Should never happen
-
-        var followed = _authorRepository.FindAuthorsByName(followedName);
-        if (!followed.Any()) return false; // Should never happen
-
-        return _followRepository.FollowExists(followers.First().AuthorId, followed.First().AuthorId);
+        var followerId = getUserId(followerName);
+        var followedId = getUserId(followedName);
+        
+        return followedId != 0 && followerId != 0 && _followRepository.FollowExists(followerId, followedId);
     }
 
     public int GetFollowersCount(string routeName)
     {
-        var authors = _authorRepository.FindAuthorsByName(routeName);
-        if (!authors.Any()) return 0;
+        var authorId = getUserId(routeName);
+        if (authorId == 0) return 0;
 
-        return _followRepository.FindFollowersCountByAuthorId(authors.First().AuthorId);
+        return _followRepository.FindFollowersCountByAuthorId(authorId);
     }
 
     public int GetFollowingCount(string routeName)
     {
-        var authors = _authorRepository.FindAuthorsByName(routeName);
-        if (!authors.Any()) return 0;
+        var authorId = getUserId(routeName);
+        if (authorId == 0) return 0;
 
-        return _followRepository.FindFollowingCountByAuthorId(authors.First().AuthorId);
+        return _followRepository.FindFollowingCountByAuthorId(authorId);
     }
 
     public IActionResult OnPostFollow(string routeName)
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        int followedId = _authorRepository.FindAuthorsByName(routeName).First().AuthorId;
+        var followerId = getUserId();
+        var followedId = getUserId(routeName);
+
+        if (followerId == 0 || followedId == 0) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
 
         _followRepository.Follow(followerId, followedId);
         return RedirectToPage();
@@ -106,8 +118,10 @@ public class TimelineModel : PageModel
     {
         if (!User.Identity.IsAuthenticated) return Page();
 
-        int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        int followedId = _authorRepository.FindAuthorsByName(routeName).First().AuthorId;
+        var followerId = getUserId();
+        var followedId = getUserId(routeName);
+
+        if (followerId == 0 || followedId == 0) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
 
         _followRepository.Unfollow(followerId, followedId);
         return RedirectToPage();

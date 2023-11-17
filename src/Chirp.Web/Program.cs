@@ -1,11 +1,12 @@
 using System.Configuration;
+using System.Security.Claims;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Chirp.Core;
-using Chirp.Infrastructure;
 using Chirp.Web;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,6 +80,10 @@ builder.Services
         o.ClientSecret = clientSecret;
         o.CallbackPath = "/signin-github";
         o.Scope.Add("user:email");
+        o.UserInformationEndpoint = "https://api.github.com/user";
+        o.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+        o.ClaimActions.MapJsonKey(ClaimTypes.Name, "login");
+        o.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", ClaimValueTypes.Email);
     });
 
 var app = builder.Build();
