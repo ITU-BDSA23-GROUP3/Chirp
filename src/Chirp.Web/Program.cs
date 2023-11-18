@@ -80,8 +80,6 @@ builder.Services
         o.ClientSecret = clientSecret;
         o.CallbackPath = "/signin-github";
         o.Scope.Add("user:email");
-        o.UserInformationEndpoint = "https://api.github.com/user";
-        o.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
     });
 
 var app = builder.Build();

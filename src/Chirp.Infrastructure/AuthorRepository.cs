@@ -31,10 +31,8 @@ public class AuthorRepository : IAuthorRepository
 
         if (!authorCheck.Any())
         {   
-            if (author.AuthorId == 0) {
-                int newAuthorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
-                author.AuthorId = newAuthorId;
-            }
+            int newAuthorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
+            author.AuthorId = newAuthorId;
             _db.Authors.Add(author);
             _db.SaveChanges();
         }
