@@ -13,7 +13,7 @@
 
     @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name?.Equals(routeName) == false)
     {
-        @if (Model.AuthorFollowsAuthor(User.Identity.Name, routeName))
+        @if (Model.UserFollowsAuthor(routeName))
         {
             <form method="post" asp-page-handler="Unfollow" asp-route-routeName="@routeName">
                 <button type="submit">Unfollow</button>

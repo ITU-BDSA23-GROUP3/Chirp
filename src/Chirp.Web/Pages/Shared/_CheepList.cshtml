@@ -24,12 +24,12 @@
                     @cheep.Text
                     <small>&mdash; @cheep.GetSerializedTimeStamp()</small>
                 </p>
-                @if (User.Identity.IsAuthenticated && !Model.LikesOwnCheep(User.Identity.Name, cheep.CheepId))
+                @if (User.Identity.IsAuthenticated && !Model.LikesOwnCheep(cheep.CheepId))
                 {
                     <form method="post"
-                        asp-page-handler="@((Model.AuthorLikesCheep(User.Identity.Name, cheep.CheepId)) ? "Unlike" : "Like")"
+                        asp-page-handler="@((Model.AuthorLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"
                         asp-route-cheepId="@cheep.CheepId">
-                        <button type="submit">@((Model.AuthorLikesCheep(User.Identity.Name, cheep.CheepId)) ? "Unlike" : "Like")</button>
+                        <button type="submit">@((Model.AuthorLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")</button>
                     </form>
                 }
                 @{ViewData["cheepLikes"] = Model.GetLikeCount(cheep.CheepId).ToString();}
