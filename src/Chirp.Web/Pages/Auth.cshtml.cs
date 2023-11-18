@@ -7,10 +7,12 @@ namespace Chirp.Web.Pages;
 public class AuthModel : PageModel
 {
     IAuthorRepository _authorRepository;
+    UserData _userData;
 
-    public AuthModel(IAuthorRepository authorRepository)
+    public AuthModel(IAuthorRepository authorRepository, UserData userData)
     {
         _authorRepository = authorRepository;
+        _userData = userData;
     }
 
     public ActionResult OnGet(bool? signOut)
@@ -24,8 +26,10 @@ public class AuthModel : PageModel
         var userEmail = User?.FindFirst(ClaimTypes.Email)?.Value;
         var userId = int.Parse(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
+        _userData.Author = _authorRepository.FindAuthorsByName(userName ?? "").FirstOrDefault();
+
         if (userName == null || userEmail == null) return RedirectToPage(); // vi skal finde en måde at håndtere dette
-    
+
         _authorRepository.CreateAuthor(new Author { AuthorId = userId, Name = userName, Email = userEmail});
         return RedirectToPage("Public");
     }

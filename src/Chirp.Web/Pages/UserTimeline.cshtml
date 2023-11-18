@@ -5,29 +5,28 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    var routeName = HttpContext?.GetRouteValue("author")?.ToString() ?? "";
 }
 
 <div>
-    <h2> @routeName's Timeline </h2>
+    <h2> @Model.RouteName's Timeline </h2>
 
-    @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name?.Equals(routeName) == false)
+    @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name?.Equals(Model.RouteName) == false)
     {
-        @if (Model.AuthorFollowsAuthor(User.Identity.Name, routeName))
+        @if (Model.AuthorFollowsAuthor(User.Identity.Name, Model.RouteName))
         {
-            <form method="post" asp-page-handler="Unfollow" asp-route-routeName="@routeName">
+            <form method="post" asp-page-handler="Unfollow">
                 <button type="submit">Unfollow</button>
             </form>
         }
         else
         {
-            <form method="post" asp-page-handler="Follow" asp-route-routeName="@routeName">
+            <form method="post" asp-page-handler="Follow">
                 <button type="submit">Follow</button>
             </form>
         }
     }
 
-    <p>Following: @Model.GetFollowingCount(routeName) Followers: @Model.GetFollowersCount(routeName)</p>
+    <p>Following: @Model.GetFollowingCount() Followers: @Model.GetFollowersCount()</p>
 
     @await Html.PartialAsync("Shared/_CheepList")
 </div>

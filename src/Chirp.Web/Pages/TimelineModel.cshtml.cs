@@ -6,43 +6,43 @@ public class TimelineModel : PageModel
     public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
     public int CheepsPerPage;
     public int NumOfCheeps;
+    public string RouteName = "";
     protected readonly ICheepService _service;
     protected readonly IAuthorRepository _authorRepository;
     protected readonly ILikeRepository _likeRepository;
     protected readonly IFollowRepository _followRepository;
-    public TimelineModel(IAuthorRepository authorRepository, ICheepService service, ILikeRepository likeRepository, IFollowRepository followRepository)
+    protected readonly UserData _userData;
+    public TimelineModel(IAuthorRepository authorRepository, ICheepService service, ILikeRepository likeRepository, IFollowRepository followRepository, UserData userData)
     {
         _authorRepository = authorRepository;
         _service = service;
         _likeRepository = likeRepository;
         _followRepository = followRepository;
+        _userData = userData;
     }
 
-    public int getUserId(string? authorName = null)
+    public int GetUserId(string? authorName = null)
     {
-        authorName ??= User?.Identity?.Name;
         if (authorName == null) return 0;
-        
+
         var author = _authorRepository.FindAuthorsByName(authorName).FirstOrDefault();
         return author == null ? 0 : author.AuthorId;
     }
 
     public IActionResult OnPost()
     {
+        if (_userData.Author == null) return RedirectToPage();
+
         string text = Request.Form["Text"].ToString();
         if (text.Length > 160) text = text.Substring(0, 160);
-        
-        var authorId = getUserId();
-        if (authorId == 0) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
-        
-        _service.StoreCheep( new Cheep {AuthorId = authorId, Text=text, TimeStamp = DateTime.Now} );
+
+        _service.StoreCheep(new Cheep { AuthorId = _userData.Author.AuthorId, Text = text, TimeStamp = DateTime.Now });
         return RedirectToPage();
     }
 
-    public bool AuthorLikesCheep(string name, int cheepId)
+    public bool UserLikesCheep(int cheepId)
     {
-        var authorId = getUserId();
-        return authorId != 0 && _likeRepository.LikeExists(authorId, cheepId);
+        return _userData.Author != null && _likeRepository.LikeExists(_userData.Author.AuthorId, cheepId);
     }
 
     public int GetLikeCount(int cheepId)
@@ -50,83 +50,77 @@ public class TimelineModel : PageModel
         return _likeRepository.FindLikeCountByCheepId(cheepId);
     }
 
-    public bool LikesOwnCheep(string authorName, int cheepId)
+    public bool UserLikesOwnCheep(int cheepId)
     {
-        var authorId = getUserId();
-        return authorId != 0 && _likeRepository.LikesOwnCheep(authorId, cheepId);
+        return _userData.Author != null && _likeRepository.LikesOwnCheep(_userData.Author.AuthorId, cheepId);
     }
 
     public IActionResult OnPostLike(int cheepId)
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        if (_userData.Author == null) throw new Exception("Cannot like when logged out!");
 
-        int authorId = getUserId();
-        _likeRepository.LikeCheep(authorId, cheepId);
+        _likeRepository.LikeCheep(_userData.Author.AuthorId, cheepId);
         return RedirectToPage();
     }
 
     public IActionResult OnPostUnlike(int cheepId)
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        if (_userData.Author == null) throw new Exception("Cannot unlike when logged out!");
 
-        int authorId = getUserId();
-        _likeRepository.UnlikeCheep(authorId, cheepId);
+        _likeRepository.UnlikeCheep(_userData.Author.AuthorId, cheepId);
         return RedirectToPage();
     }
 
     public bool AuthorFollowsAuthor(string followerName, string followedName)
     {
-        var followerId = getUserId(followerName);
-        var followedId = getUserId(followedName);
-        
+        var followerId = GetUserId(followerName);
+        var followedId = GetUserId(followedName);
+
         return followedId != 0 && followerId != 0 && _followRepository.FollowExists(followerId, followedId);
     }
 
-    public int GetFollowersCount(string routeName)
+    public int GetFollowersCount()
     {
-        var authorId = getUserId(routeName);
+        var authorId = GetUserId(RouteName);
         if (authorId == 0) return 0;
 
         return _followRepository.FindFollowersCountByAuthorId(authorId);
     }
 
-    public int GetFollowingCount(string routeName)
+    public int GetFollowingCount()
     {
-        var authorId = getUserId(routeName);
+        var authorId = GetUserId(RouteName);
         if (authorId == 0) return 0;
 
         return _followRepository.FindFollowingCountByAuthorId(authorId);
     }
 
-    public IActionResult OnPostFollow(string routeName)
+    public IActionResult OnPostFollow()
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        var followedId = GetUserId(HttpContext?.GetRouteValue("author")?.ToString());
 
-        var followerId = getUserId();
-        var followedId = getUserId(routeName);
+        if (_userData.Author == null) throw new Exception("Cannot follow when logged out!");
+        if (followedId == 0) throw new Exception("Trying to follow author that doesn't exist!");
 
-        if (followerId == 0 || followedId == 0) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
-
-        _followRepository.Follow(followerId, followedId);
+        _followRepository.Follow(_userData.Author.AuthorId, followedId);
         return RedirectToPage();
     }
 
-    public IActionResult OnPostUnfollow(string routeName)
+    public IActionResult OnPostUnfollow()
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        var followedId = GetUserId(HttpContext?.GetRouteValue("author")?.ToString());
 
-        var followerId = getUserId();
-        var followedId = getUserId(routeName);
+        if (_userData.Author == null) throw new Exception("Cannot unfollow when logged out!");
+        if (followedId == 0) throw new Exception("Trying to unfollow author that doesn't exist!");
 
-        if (followerId == 0 || followedId == 0) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
-
-        _followRepository.Unfollow(followerId, followedId);
+        _followRepository.Unfollow(_userData.Author.AuthorId, followedId);
         return RedirectToPage();
     }
-
-    public ActionResult OnGet(string? author, [FromQuery] int page = 1)
+    
+    public ActionResult OnGet([FromQuery] int page = 1)
     {
-        NumOfCheeps = _service.GetCheepCount(author);
+        RouteName = HttpContext?.GetRouteValue("author")?.ToString() ?? "";
+        NumOfCheeps = _service.GetCheepCount(RouteName);
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / _service.CheepsPerPage);
 
@@ -135,12 +129,12 @@ public class TimelineModel : PageModel
             page = 1;
         }
 
-        if ((page < 1 || page > maxPage) && _service.GetCheepCount(author) != 0)
+        if ((page < 1 || page > maxPage) && _service.GetCheepCount(RouteName) != 0)
         {
             return RedirectToPage();
         }
 
-        Cheeps = _service.GetCheeps(page, author);
+        Cheeps = _service.GetCheeps(page, RouteName);
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }
