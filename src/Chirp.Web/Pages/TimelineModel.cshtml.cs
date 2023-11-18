@@ -29,11 +29,11 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPost()
     {
-        string text = Request.Form["Text"].ToString();
-        if (text.Length > 160) text = text.Substring(0, 160);
-        
         var authorId = GetUserId();
         if (authorId == 0) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
+        
+        string text = Request.Form["Text"].ToString();
+        if (text.Length > 160) text = text.Substring(0, 160);
         
         _service.StoreCheep( new Cheep {AuthorId = authorId, Text=text, TimeStamp = DateTime.Now} );
         return RedirectToPage();
