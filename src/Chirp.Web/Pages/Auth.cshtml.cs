@@ -24,13 +24,12 @@ public class AuthModel : PageModel
         }
         var userName = User?.Identity?.Name;
         var userEmail = User?.FindFirst(ClaimTypes.Email)?.Value;
-        var userId = int.Parse(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
         _userData.Author = _authorRepository.FindAuthorsByName(userName ?? "").FirstOrDefault();
 
         if (userName == null || userEmail == null) return RedirectToPage(); // vi skal finde en måde at håndtere dette
-
-        _authorRepository.CreateAuthor(new Author { AuthorId = userId, Name = userName, Email = userEmail});
+    
+        _authorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail});
         return RedirectToPage("Public");
     }
 }

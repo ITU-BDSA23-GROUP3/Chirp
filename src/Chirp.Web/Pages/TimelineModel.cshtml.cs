@@ -71,12 +71,11 @@ public class TimelineModel : PageModel
         return RedirectToPage();
     }
 
-    public bool AuthorFollowsAuthor(string followerName, string followedName)
+    public bool UserFollowsAuthor(string followedName)
     {
-        var followerId = GetUserId(followerName);
         var followedId = GetUserId(followedName);
 
-        return followedId != 0 && followerId != 0 && _followRepository.FollowExists(followerId, followedId);
+        return followedId != 0 && _userData.Author != null && _followRepository.FollowExists(_userData.Author.AuthorId, followedId);
     }
 
     public int GetFollowersCount()
