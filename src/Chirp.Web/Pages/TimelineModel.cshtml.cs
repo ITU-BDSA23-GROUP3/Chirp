@@ -27,6 +27,10 @@ public class TimelineModel : PageModel
         return author == null ? 0 : author.AuthorId;
     }
 
+    public bool IsUserAuthenticated(){
+        return User?.Identity != null && User.Identity.IsAuthenticated;
+    }
+
     public IActionResult OnPost()
     {
         var authorId = GetUserId();
@@ -58,7 +62,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostLike(int cheepId)
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
         int authorId = GetUserId();
         _likeRepository.LikeCheep(authorId, cheepId);
@@ -67,7 +71,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostUnlike(int cheepId)
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
         int authorId = GetUserId();
         _likeRepository.UnlikeCheep(authorId, cheepId);
@@ -100,7 +104,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostFollow(string routeName)
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
         var followerId = GetUserId();
         var followedId = GetUserId(routeName);
@@ -113,7 +117,7 @@ public class TimelineModel : PageModel
 
     public IActionResult OnPostUnfollow(string routeName)
     {
-        if (User?.Identity?.IsAuthenticated != true) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
         var followerId = GetUserId();
         var followedId = GetUserId(routeName);

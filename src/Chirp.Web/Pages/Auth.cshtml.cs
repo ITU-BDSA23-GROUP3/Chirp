@@ -15,7 +15,7 @@ public class AuthModel : PageModel
 
     public ActionResult OnGet(bool? signOut)
     {
-        if (User?.Identity?.IsAuthenticated == true && signOut != null)
+        if (User?.Identity != null && User.Identity.IsAuthenticated && signOut != null)
         {
             if (signOut.Value)
                 Response.Cookies.Delete(".AspNetCore.Cookies");
