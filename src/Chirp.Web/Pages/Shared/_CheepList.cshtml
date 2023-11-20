@@ -33,7 +33,7 @@
                     </form>
                 }
                 @{ViewData["cheepLikes"] = Model.GetLikeCount(cheep.CheepId).ToString();}
-                <p>@ViewData["cheepLikes"] @((int?)ViewData["cheepLikes"] == 1 ? "person likes" : "people like") this.</p>
+                <p>@ViewData["cheepLikes"] @(int.Parse(ViewData["cheepLikes"]?.ToString()) == 1 ? "person likes" : "people like") this.</p>
 
             </li>
         }
