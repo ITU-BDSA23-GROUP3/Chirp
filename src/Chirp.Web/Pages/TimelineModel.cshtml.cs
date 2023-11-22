@@ -129,7 +129,8 @@ public class TimelineModel : PageModel
             return RedirectToPage();
         }
 
-        Cheeps = _service.GetCheeps(page, author);
+        var authorIsThemselves = author == User.Identity.Name;
+        Cheeps = _service.GetCheeps(page, author, authorIsThemselves);
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }

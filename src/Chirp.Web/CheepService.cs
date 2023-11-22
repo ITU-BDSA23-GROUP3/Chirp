@@ -5,7 +5,7 @@ namespace Chirp.Web;
 public interface ICheepService
 {
     public int CheepsPerPage { get; }
-    public List<Cheep> GetCheeps(int pageNumber, string? author = null);
+    public List<Cheep> GetCheeps(int pageNumber, string? author = null, bool authorIsThemselves = false);
     public int GetCheepCount(string? author = null);
     public void StoreCheep(Cheep cheep);
 }
@@ -20,9 +20,9 @@ public class CheepService : ICheepService
         _chirpStorage = chirpStorage;
     }
 
-    public List<Cheep> GetCheeps(int pageNumber, string? author = null)
+    public List<Cheep> GetCheeps(int pageNumber, string? author = null, bool authorIsThemselves = false)
     {
-        return _chirpStorage.QueryCheeps(pageNumber, CheepsPerPage, author).ToList();
+        return _chirpStorage.QueryCheeps(pageNumber, CheepsPerPage, author, authorIsThemselves).ToList();
     }
 
     public int GetCheepCount(string? author = null)
