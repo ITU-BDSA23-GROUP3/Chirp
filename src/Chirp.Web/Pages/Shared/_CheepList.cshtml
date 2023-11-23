@@ -24,14 +24,14 @@
                         {
                             @if (Model.UserFollowsAuthor(cheep.Author.Name))
                             {
-                                <form class="inline-follow" method="post" asp-page-handler="Unfollow"
+                                <form method="post" asp-page-handler="Unfollow"
                                     asp-route-routeName="@cheep.Author.Name">
                                     <button type="submit">Unfollow</button>
                                 </form>
                             }
                             else
                             {
-                                <form method="post" class="inline-follow" asp-page-handler="Follow"
+                                <form method="post" asp-page-handler="Follow"
                                     asp-route-routeName="@cheep.Author.Name">
                                     <button type="submit">Follow</button>
                                 </form>
