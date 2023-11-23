@@ -17,21 +17,35 @@ public class TimelineModel : PageModel
         _followRepository = followRepository;
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public int? GetUserId(string? authorName = null)
     {
-        string text = Request.Form["Text"];
-        if (text.Length > 160) text = text.Substring(0, 160);
+        authorName ??= User?.Identity?.Name;
+        if (authorName == null) return null;
+        
+        var author = _authorRepository.FindAuthorsByName(authorName).FirstOrDefault();
+        return author?.AuthorId;
+    }
 
-        var authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        _service.StoreCheep( new Cheep {AuthorId = authorId, Text=text, TimeStamp = DateTime.Now} );
+    public bool IsUserAuthenticated(){
+        return User?.Identity != null && User.Identity.IsAuthenticated;
+    }
+
+    public IActionResult OnPost()
+    {
+        var authorId = GetUserId();
+        if (authorId == null) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
+        
+        string text = Request.Form["Text"].ToString();
+        if (text.Length > 160) text = text.Substring(0, 160);
+        
+        _service.StoreCheep( new Cheep {AuthorId = (int)authorId, Text=text, TimeStamp = DateTime.Now} );
         return RedirectToPage();
     }
 
-    public bool AuthorLikesCheep(string name, int cheepId)
+    public bool AuthorLikesCheep(int cheepId)
     {
-        var authors = _authorRepository.FindAuthorsByName(name);
-        if (!authors.Any()) return false; // Should never happen
-        return _likeRepository.LikeExists(authors.First().AuthorId, cheepId);
+        var authorId = GetUserId();
+        return authorId != null && _likeRepository.LikeExists((int)authorId, cheepId);
     }
 
     public int GetLikeCount(int cheepId)
@@ -39,77 +53,81 @@ public class TimelineModel : PageModel
         return _likeRepository.FindLikeCountByCheepId(cheepId);
     }
 
-    public bool LikesOwnCheep(string authorName, int cheepId)
+    public bool LikesOwnCheep(int cheepId)
     {
-        var authors = _authorRepository.FindAuthorsByName(authorName);
-        if (!authors.Any()) return false;
-        return _likeRepository.LikesOwnCheep(authors.First().AuthorId, cheepId);
+        var authorId = GetUserId();
+        return authorId != null && _likeRepository.LikesOwnCheep((int)authorId, cheepId);
     }
 
     public IActionResult OnPostLike(int cheepId)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
-        int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        _likeRepository.LikeCheep(authorId, cheepId);
+        var authorId = GetUserId();
+        if (authorId == null) return Page();
+
+        _likeRepository.LikeCheep((int)authorId, cheepId);
         return RedirectToPage();
     }
 
     public IActionResult OnPostUnlike(int cheepId)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
-        int authorId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        _likeRepository.UnlikeCheep(authorId, cheepId);
+        var authorId = GetUserId();
+        if (authorId == null) return Page();
+
+        _likeRepository.UnlikeCheep((int)authorId, cheepId);
         return RedirectToPage();
     }
 
-    public bool AuthorFollowsAuthor(string followerName, string followedName)
+    public bool UserFollowsAuthor(string followedName)
     {
-        var followers = _authorRepository.FindAuthorsByName(followerName);
-        if (!followers.Any()) return false; // Should never happen
-
-        var followed = _authorRepository.FindAuthorsByName(followedName);
-        if (!followed.Any()) return false; // Should never happen
-
-        return _followRepository.FollowExists(followers.First().AuthorId, followed.First().AuthorId);
+        var followerId = GetUserId();
+        var followedId = GetUserId(followedName);
+        
+        return followedId != null && followerId != null && _followRepository.FollowExists((int)followerId, (int)followedId);
     }
 
     public int GetFollowersCount(string routeName)
     {
-        var authors = _authorRepository.FindAuthorsByName(routeName);
-        if (!authors.Any()) return 0;
+        var authorId = GetUserId(routeName);
+        if (authorId == null) return 0;
 
-        return _followRepository.FindFollowersCountByAuthorId(authors.First().AuthorId);
+        return _followRepository.FindFollowersCountByAuthorId((int)authorId);
     }
 
     public int GetFollowingCount(string routeName)
     {
-        var authors = _authorRepository.FindAuthorsByName(routeName);
-        if (!authors.Any()) return 0;
+        var authorId = GetUserId(routeName);
+        if (authorId == null) return 0;
 
-        return _followRepository.FindFollowingCountByAuthorId(authors.First().AuthorId);
+        return _followRepository.FindFollowingCountByAuthorId((int)authorId);
     }
 
     public IActionResult OnPostFollow(string routeName)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
-        int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        int followedId = _authorRepository.FindAuthorsByName(routeName).First().AuthorId;
+        var followerId = GetUserId();
+        var followedId = GetUserId(routeName);
 
-        _followRepository.Follow(followerId, followedId);
+        if (followerId == null || followedId == null) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
+
+        _followRepository.Follow((int)followerId, (int)followedId);
         return RedirectToPage();
     }
 
     public IActionResult OnPostUnfollow(string routeName)
     {
-        if (!User.Identity.IsAuthenticated) return Page();
+        if (!IsUserAuthenticated()) return Page();
 
-        int followerId = _authorRepository.FindAuthorsByName(User.Identity.Name).First().AuthorId;
-        int followedId = _authorRepository.FindAuthorsByName(routeName).First().AuthorId;
+        var followerId = GetUserId();
+        var followedId = GetUserId(routeName);
 
-        _followRepository.Unfollow(followerId, followedId);
+        if (followerId == null || followedId == null) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
+
+        _followRepository.Unfollow((int)followerId, (int)followedId);
         return RedirectToPage();
     }
 
