@@ -22,7 +22,7 @@
                         <a href="/@cheep.Author.Name">@cheep.Author.Name</a>
                             @if (User.Identity.IsAuthenticated && cheep.Author.Name != User.Identity.Name)
                             {
-                                @if (Model.AuthorFollowsAuthor(User.Identity.Name, cheep.Author.Name))
+                                @if (Model.UserFollowsAuthor(cheep.Author.Name))
                                 {
                                     <form class="inline-follow" method="post" asp-page-handler="Unfollow" asp-route-routeName="@cheep.Author.Name">
                                         <button type="submit">Unfollow</button>
