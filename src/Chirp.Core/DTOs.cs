@@ -6,5 +6,5 @@ namespace Chirp.Core
 
     public record CheepDTO(int CheepId, int AuthorId, string AuthorName, string Text, DateTime TimeStamp);
 
-    public record CreateCheepDTO(int AuthorId, string Text, DateTime TimeStamp);
+    public record CreateCheepDTO(int AuthorId, string AuthorName, string Text, DateTime TimeStamp);
 }

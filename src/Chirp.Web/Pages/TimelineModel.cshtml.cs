@@ -37,8 +37,10 @@ public class TimelineModel : PageModel
         
         string text = Request.Form["Text"].ToString();
         if (text.Length > 160) text = text.Substring(0, 160);
+
+        if (User?.Identity?.Name == null) return RedirectToPage();
         
-        _service.StoreCheep( new CreateCheepDTO (AuthorId: (int)authorId, Text: text, TimeStamp: DateTime.Now) );
+        _service.StoreCheep( new CreateCheepDTO (AuthorId: (int)authorId, AuthorName: User.Identity.Name, Text: text, TimeStamp: DateTime.Now) );
         return RedirectToPage();
     }
 
