@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Chirp.Core;
 
 namespace Chirp.Infrastructure;
@@ -12,28 +13,40 @@ public class AuthorRepository : IAuthorRepository
         _db.Database.EnsureCreated();
     }
 
-    public IEnumerable<Author> FindAuthorsByName(string name)
+    public IEnumerable<AuthorDTO> FindAuthorsByName(string name)
     {
-        var authorCheck = _db.Authors.Where(a => a.Name == name);
-        return authorCheck;
+        var authorsQuery = _db.Authors.Where(a => a.Name == name);
+        var authors = new List<AuthorDTO>();
+        foreach (Author author in authorsQuery){
+            authors.Add(new AuthorDTO(AuthorId: author.AuthorId, Name: author.Name, Email: author.Email));
+        }
+        return authors;
     }
 
-    public IEnumerable<Author> FindAuthorsByEmail(string email)
+    public IEnumerable<AuthorDTO> FindAuthorsByEmail(string email)
     {
-        var authorCheck = _db.Authors.Where(a => a.Email == email);
-        return authorCheck;
+        var authorsQuery = _db.Authors.Where(a => a.Email == email);
+        var authors = new List<AuthorDTO>();
+        foreach (Author author in authorsQuery){
+            authors.Add(new AuthorDTO(AuthorId: author.AuthorId, Name: author.Name, Email: author.Email));
+        }
+        return authors;
     }
 
-    public void CreateAuthor(Author author)
+    public void CreateAuthor(CreateAuthorDTO author)
     {
         var authorCheck = _db.Authors
             .Where(a => a.Name == author.Name && a.Email == author.Email);
 
         if (!authorCheck.Any())
         {   
-            int newAuthorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
-            author.AuthorId = newAuthorId;
-            _db.Authors.Add(author);
+            var authorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
+            _db.Authors.Add(new Author 
+            {
+                AuthorId = authorId,
+                Name = author.Name,
+                Email = author.Email
+            });
             _db.SaveChanges();
         }
     }

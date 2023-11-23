@@ -25,7 +25,7 @@ public class AuthModel : PageModel
 
         if (userName == null || userEmail == null) return RedirectToPage(); // vi skal finde en måde at håndtere dette
     
-        _authorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail});
+        _authorRepository.CreateAuthor(new CreateAuthorDTO (Name: userName, Email: userEmail));
         return RedirectToPage("Public");
     }
 }

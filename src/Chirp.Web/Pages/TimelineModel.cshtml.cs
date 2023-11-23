@@ -2,7 +2,7 @@ namespace Chirp.Web.Pages;
 
 public class TimelineModel : PageModel
 {
-    public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
+    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
     public int CheepsPerPage;
     public int NumOfCheeps;
     protected readonly ICheepService _service;
@@ -38,7 +38,7 @@ public class TimelineModel : PageModel
         string text = Request.Form["Text"].ToString();
         if (text.Length > 160) text = text.Substring(0, 160);
         
-        _service.StoreCheep( new Cheep {AuthorId = (int)authorId, Text=text, TimeStamp = DateTime.Now} );
+        _service.StoreCheep( new CreateCheepDTO (AuthorId: (int)authorId, Text: text, TimeStamp: DateTime.Now) );
         return RedirectToPage();
     }
 
