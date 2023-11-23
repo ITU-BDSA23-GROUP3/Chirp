@@ -29,7 +29,7 @@ public class CheepRepository : ICheepRepository
         _db.SaveChanges();
     }
 
-    public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null)
+    public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null, bool isAuthor = false)
     {
         int startIndex = (pageNumber -1) * amount;
         
@@ -43,15 +43,17 @@ public class CheepRepository : ICheepRepository
             var authors = _authorRepository.FindAuthorsByName(author);
             if(!authors.Any()) return new List<Cheep>();
             var authorId = authors.First().AuthorId;
-            
-            var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+            IEnumerable<int> followedIds = new List<int>();
+            if (isAuthor) {
+                followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+            }
             queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
         }
 
         return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
     }
         
-    public int QueryCheepCount(string? author = null)
+    public int QueryCheepCount(string? author = null, bool isAuthor = false)
     {
         IQueryable<Cheep> queryResult;
 
@@ -62,7 +64,10 @@ public class CheepRepository : ICheepRepository
             var authors = _authorRepository.FindAuthorsByName(author);
             if(!authors.Any()) return 0;
             var authorId = authors.First().AuthorId;
-            var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+            IEnumerable<int> followedIds = new List<int>();
+            if (isAuthor) {
+                followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+            }
             queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
         }
 

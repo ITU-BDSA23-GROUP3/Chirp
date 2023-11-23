@@ -227,3 +227,7 @@ li.topic {
   -webkit-border-radius: 5px;
   min-height: 20px;
 }
+
+.author-box.form {
+  width: min-content;
+}

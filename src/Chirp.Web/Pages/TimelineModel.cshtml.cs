@@ -131,6 +131,11 @@ public class TimelineModel : PageModel
         return RedirectToPage();
     }
 
+    private bool CalculateIsAuthor(string? pageAuthor, string? loggedInUser) {
+        if (pageAuthor == null|| loggedInUser == null) return false;
+        return pageAuthor==loggedInUser;
+    }
+
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)
     {
         NumOfCheeps = _service.GetCheepCount(author);
@@ -146,8 +151,8 @@ public class TimelineModel : PageModel
         {
             return RedirectToPage();
         }
-
-        Cheeps = _service.GetCheeps(page, author);
+        
+        Cheeps = _service.GetCheeps(page, author, CalculateIsAuthor(author, User.Identity.Name));
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }

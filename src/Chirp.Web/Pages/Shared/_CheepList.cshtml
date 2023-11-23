@@ -20,6 +20,21 @@
                 <p>
                     <strong>
                         <a href="/@cheep.Author.Name">@cheep.Author.Name</a>
+                            @if (User.Identity.IsAuthenticated && cheep.Author.Name != User.Identity.Name)
+                            {
+                                @if (Model.AuthorFollowsAuthor(User.Identity.Name, cheep.Author.Name))
+                                {
+                                    <form class="inline-follow" method="post" asp-page-handler="Unfollow" asp-route-routeName="@cheep.Author.Name">
+                                        <button type="submit">Unfollow</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form method="post" class="inline-follow" asp-page-handler="Follow" asp-route-routeName="@cheep.Author.Name">
+                                        <button type="submit">Follow</button>
+                                    </form>
+                                }
+                            }
                     </strong>
                     @cheep.Text
                     <small>&mdash; @cheep.GetSerializedTimeStamp()</small>
