@@ -38,7 +38,7 @@ div.page button {
 
 div.page button:hover {
   background-color: #9b9b9b;
-  border: 2px solid #757575;
+  border: 1px solid #757575;
 }
 
 div.page {
@@ -145,7 +145,7 @@ div.page ul.cheeps li img {
   height: 70px;
   width: 70px;
   border-radius: 5px;
-  border: 1px solid #DBF3F1;
+  border: 2px solid #DBF3F1;
   margin-bottom: 3px;
 }
 

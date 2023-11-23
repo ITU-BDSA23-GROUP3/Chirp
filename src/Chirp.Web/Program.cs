@@ -45,7 +45,7 @@ else
 {
     clientId = builder.Configuration["development:authentication:github:clientId"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientId to be set but found null");
     clientSecret = builder.Configuration["development:authentication:github:clientSecret"] ?? throw new ConfigurationErrorsException("Expected the secret development:authentication:github:clientSecret to be set but found null");
-    connectionString = configuration.GetConnectionString("DefaultConnection");
+    connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ConfigurationErrorsException("Connection string could not be found");
 }
 
 builder.Services.AddDistributedMemoryCache();

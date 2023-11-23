@@ -1,9 +1,9 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@if (User?.Identity != null && User.Identity.IsAuthenticated && Model.IsUserOrPublicPage())
+@if (User?.Identity != null && User.Identity?.IsAuthenticated == true && Model.IsUserOrPublicPage())
 {
     <div class="cheepbox">
-        <h3>What's on your mind, @(User.Identity.Name)?</h3>
+        <h3>What's on your mind, @(User?.Identity?.Name)?</h3>
         <form method="post">
             <textarea style="width:95%; margin: 10px; " name="Text"></textarea>
             <button type="submit">Submit</button>
@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="column">
                         <img src="https://avatars.githubusercontent.com/@($"{cheep.Author.Name}")">
-                        @if (User.Identity.IsAuthenticated && cheep.Author.Name != User.Identity.Name)
+                        @if (User?.Identity?.IsAuthenticated == true && cheep.Author.Name != User.Identity.Name)
                         {
                             @if (Model.UserFollowsAuthor(cheep.Author.Name))
                             {
@@ -54,9 +54,9 @@
                                 </form>
                             }
                             @{
-                                ViewData["cheepLikes"] = Model.GetLikeCount(cheep.CheepId).ToString();
+                                var cheepLikes = Model.GetLikeCount(cheep.CheepId).ToString();
                             }
-                            <p class="likes">@ViewData["cheepLikes"] @(int.Parse(ViewData["cheepLikes"]?.ToString()) == 1 ?
+                            <p class="likes">@cheepLikes @(int.Parse(cheepLikes.ToString()) == 1 ?
                         "person likes" : "people like") this.</p>
                         </div>
                     </div>
