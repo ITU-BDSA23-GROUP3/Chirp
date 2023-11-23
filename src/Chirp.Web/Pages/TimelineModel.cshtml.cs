@@ -5,6 +5,7 @@ public class TimelineModel : PageModel
     public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
     public int CheepsPerPage;
     public int NumOfCheeps;
+    public string RouteName = "";
     protected readonly ICheepService _service;
     protected readonly IAuthorRepository _authorRepository;
     protected readonly ILikeRepository _likeRepository;
@@ -131,6 +132,10 @@ public class TimelineModel : PageModel
         return RedirectToPage();
     }
 
+    public bool IsUserOrPublicPage() {
+        return RouteName == User.Identity?.Name || RouteName == "";
+    }
+
     private bool CalculateIsAuthor(string? pageAuthor, string? loggedInUser) {
         if (pageAuthor == null|| loggedInUser == null) return false;
         return pageAuthor==loggedInUser;
@@ -138,6 +143,7 @@ public class TimelineModel : PageModel
 
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)
     {
+        RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
         NumOfCheeps = _service.GetCheepCount(author);
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / _service.CheepsPerPage);
