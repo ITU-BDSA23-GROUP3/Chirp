@@ -5,7 +5,7 @@
     <div class="cheepbox">
         <h3>What's on your mind, @(User?.Identity?.Name)?</h3>
         <form method="post">
-            <textarea style="width:95%; margin: 10px; " name="Text"></textarea>
+            <textarea class="textarea" name="Text"></textarea>
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -19,20 +19,18 @@
             <li>
                 <div class="row">
                     <div class="column">
-                        <img src="https://avatars.githubusercontent.com/@($"{cheep.Author.Name}")">
+                        <img class="profile" src="https://avatars.githubusercontent.com/@($"{cheep.Author.Name}")">
                         @if (User?.Identity?.IsAuthenticated == true && cheep.Author.Name != User.Identity.Name)
                         {
                             @if (Model.UserFollowsAuthor(cheep.Author.Name))
                             {
-                                <form method="post" asp-page-handler="Unfollow"
-                                    asp-route-routeName="@cheep.Author.Name">
+                                <form method="post" asp-page-handler="Unfollow" asp-route-routeName="@cheep.Author.Name">
                                     <button type="submit">Unfollow</button>
                                 </form>
                             }
                             else
                             {
-                                <form method="post" asp-page-handler="Follow"
-                                    asp-route-routeName="@cheep.Author.Name">
+                                <form method="post" asp-page-handler="Follow" asp-route-routeName="@cheep.Author.Name">
                                     <button type="submit">Follow</button>
                                 </form>
                             }
@@ -41,7 +39,7 @@
                     <div>
                         <div class="row">
                             <a href="/@cheep.Author.Name"><strong>@cheep.Author.Name</strong></a>
-                            <p> &mdash; @cheep.GetSerializedTimeStamp()</p>
+                            <p><i>&nbsp; &mdash; @cheep.GetSerializedTimeStamp()</i></p>
                         </div>
                         <div class="row">@cheep.Text</div>
                         <div class="row">
@@ -50,14 +48,17 @@
                                 <form method="post"
                                     asp-page-handler="@((Model.AuthorLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"
                                     asp-route-cheepId="@cheep.CheepId">
-                                    <button type="submit">@((Model.AuthorLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")</button>
+                                    <button type="submit"
+                                        class="like-button @(Model.AuthorLikesCheep(cheep.CheepId) ? "liked" : "")">
+                                        <img class="heart" src="@(Model.AuthorLikesCheep(cheep.CheepId) ? "/images/liked.png" : "/images/not-liked.png")">
+                                    </button>&nbsp;
                                 </form>
                             }
                             @{
                                 var cheepLikes = Model.GetLikeCount(cheep.CheepId).ToString();
                             }
-                            <p class="likes">@cheepLikes @(int.Parse(cheepLikes.ToString()) == 1 ?
-                        "person likes" : "people like") this.</p>
+                            <p class="likes"><i>@cheepLikes @(int.Parse(cheepLikes.ToString()) == 1 ?
+                            "person likes" : "people like") this.</i></p>
                         </div>
                     </div>
                 </div>
