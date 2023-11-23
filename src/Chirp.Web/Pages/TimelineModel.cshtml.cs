@@ -1,4 +1,3 @@
-using System.Security.Claims;
 namespace Chirp.Web.Pages;
 
 public class TimelineModel : PageModel

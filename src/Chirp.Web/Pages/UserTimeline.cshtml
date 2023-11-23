@@ -5,7 +5,7 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    var routeName = HttpContext?.GetRouteValue("author")?.ToString() ?? "";
+    var routeName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
 }
 
 <div>
