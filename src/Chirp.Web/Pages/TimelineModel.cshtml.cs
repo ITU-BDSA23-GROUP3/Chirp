@@ -144,7 +144,8 @@ public class TimelineModel : PageModel
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)
     {
         RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
-        NumOfCheeps = _service.GetCheepCount(author);
+        var isAuthor = CalculateIsAuthor(author, User.Identity?.Name);
+        NumOfCheeps = _service.GetCheepCount(author, isAuthor);
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / _service.CheepsPerPage);
 
@@ -153,12 +154,12 @@ public class TimelineModel : PageModel
             page = 1;
         }
 
-        if ((page < 1 || page > maxPage) && _service.GetCheepCount(author) != 0)
+        if ((page < 1 || page > maxPage) && NumOfCheeps != 0)
         {
             return RedirectToPage();
         }
         
-        Cheeps = _service.GetCheeps(page, author, CalculateIsAuthor(author, User.Identity?.Name));
+        Cheeps = _service.GetCheeps(page, author, isAuthor);
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }
