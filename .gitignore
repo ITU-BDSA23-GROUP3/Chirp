@@ -13,3 +13,4 @@ src/*/bin
 test/*/bin
 Chirp.sln.DotSettings.user
 /src/Chirp.Infrastructure/Migrations/
+start_database.bat
