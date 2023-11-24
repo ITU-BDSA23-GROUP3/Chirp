@@ -25,17 +25,20 @@ input[type="password"] {
   color: #571010;
 }
 
-input[type="submit"] {
-  background: #571010;
-  border: 1px solid #3b0707;
-  padding: 1px 3px;
-  font-family: 'Trebuchet MS', sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  color: white;
+div.page button {
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid #bbbbbb;
+  margin-top: 1px;
+  border-radius: 4px;
+  background-color: #e4e4e4;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+div.page button:hover {
+  background-color: #9b9b9b;
+  border: 1px solid #757575;
 }
 
 div.page {
@@ -60,6 +63,15 @@ div.page h1 img {
   height: 1em;
 }
 
+div.page .follows {
+  padding: 0;
+  margin: 3px;
+}
+
+div.page .pagination {
+  margin: 10px;
+}
+
 div.page div.navigation {
   background: #DEE9E8;
   padding: 4px 10px;
@@ -76,12 +88,9 @@ div.page div.navigation a {
 }
 
 div.page h2 {
-  margin: 0 0 15px 0;
+  margin: 0;
   color: #571010;
   text-shadow: 0 1px 2px #ccc;
-}
-
-div.page div.body {
   padding: 10px;
 }
 
@@ -102,6 +111,14 @@ div.page div.followstatus {
   font-size: 13px;
 }
 
+div .row {
+  display: flex;
+  flex-direction: row;
+  padding: 4px;
+  margin-left: 5px;
+}
+
+
 div.page ul.cheeps {
   list-style: none;
   margin: 0;
@@ -109,7 +126,7 @@ div.page ul.cheeps {
 }
 
 div.page ul.cheeps li {
-  margin: 10px 0;
+  margin: 10px;
   padding: 5px;
   background: #F0FAF9;
   border: 1px solid #DBF3F1;
@@ -124,18 +141,33 @@ div.page ul.cheeps p {
   margin: 0;
 }
 
-div.page ul.cheeps li img {
-  float: left;
-  padding: 0 10px 0 0;
+div.page ul.cheeps li .profile {
+  height: 70px;
+  width: 70px;
+  border-radius: 5px;
+  border: 2px solid #DBF3F1;
+  margin-bottom: 3px;
 }
 
-div.page ul.cheeps li small {
-  font-size: 0.9em;
-  color: #888;
+div.page ul.cheeps li .likes {
+  margin: 4px;
+}
+
+div.page ul.cheeps li .row {
+  display: flex;
+  flex-direction: row;
+  padding: 4px;
+  margin-left: 5px;
+}
+
+div.page ul.cheeps li .column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 div.page div.cheepbox {
-  margin: 10px 0;
+  margin: 10px;
   padding: 5px;
   background: #F0FAF9;
   border: 1px solid #e29494;
@@ -148,19 +180,26 @@ div.page div.cheepbox h3 {
   margin: 0;
   font-size: 1em;
   color: #7e2c2c;
+  margin-left: 10px;
+}
+
+div.page div.cheepbox button {
+  margin-left: 10px;
+  margin-bottom: 7px;
 }
 
 div.page div.cheepbox p {
   margin: 0;
 }
 
-div.page div.cheepbox input[type="text"] {
-  width: 585px;
-}
-
-div.page div.cheepbox input[type="submit"] {
-  width: 70px;
-  margin-left: 5px;
+div.page div textarea {
+  width: 95%;
+  height: 60px;
+  resize: none;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 15px;
+  margin: 10px;
 }
 
 div.message {
@@ -230,4 +269,31 @@ li.topic {
 
 .author-box.form {
   width: min-content;
+}
+
+.like-button {
+  display: inline-block;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 16px;
+  color: #333;
+}
+
+div.page .like-button {
+  padding: 0;
+  margin: 0;
+  padding-top: 2px;
+  width: 25px;
+  height: 25px;
+  padding-bottom: 2px;
+}
+
+div.page img.heart {
+  padding: 0;
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  position: center;
 }

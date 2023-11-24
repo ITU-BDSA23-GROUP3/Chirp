@@ -5,6 +5,7 @@ public class TimelineModel : PageModel
     public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
     public int CheepsPerPage;
     public int NumOfCheeps;
+    public string RouteName = "";
     protected readonly ICheepService _service;
     protected readonly IAuthorRepository _authorRepository;
     protected readonly ILikeRepository _likeRepository;
@@ -131,6 +132,10 @@ public class TimelineModel : PageModel
         return RedirectToPage();
     }
 
+    public bool IsUserOrPublicPage() {
+        return RouteName == User.Identity?.Name || RouteName == "";
+    }
+
     private bool CalculateIsAuthor(string? pageAuthor, string? loggedInUser) {
         if (pageAuthor == null|| loggedInUser == null) return false;
         return pageAuthor==loggedInUser;
@@ -138,7 +143,9 @@ public class TimelineModel : PageModel
 
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)
     {
-        NumOfCheeps = _service.GetCheepCount(author);
+        RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
+        var isAuthor = CalculateIsAuthor(author, User.Identity?.Name);
+        NumOfCheeps = _service.GetCheepCount(author, isAuthor);
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / _service.CheepsPerPage);
 
@@ -147,12 +154,12 @@ public class TimelineModel : PageModel
             page = 1;
         }
 
-        if ((page < 1 || page > maxPage) && _service.GetCheepCount(author) != 0)
+        if ((page < 1 || page > maxPage) && NumOfCheeps != 0)
         {
             return RedirectToPage();
         }
         
-        Cheeps = _service.GetCheeps(page, author, CalculateIsAuthor(author, User.Identity.Name));
+        Cheeps = _service.GetCheeps(page, author, isAuthor);
         CheepsPerPage = _service.CheepsPerPage;
         return Page();
     }
