@@ -1,0 +1,84 @@
+@page "/user-information"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Chirp.Web.Pages.UserInformationModel
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "UserInformation";
+}
+
+
+<head>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<div>
+    <h2>user information</h2>
+    <img class="profile" src="https://avatars.githubusercontent.com/@($"{@User.Identity.Name}")">
+    <p>@User.Identity.Name</p>
+    <br />
+    <h3>your profile</h3>
+    
+    <table>
+        <tr>
+            <th>username</th>
+            <th>email</th>
+            <th>id</th>
+        </tr>
+        <tr>
+            <td>@User.Identity.Name/td>
+            <td>@Model.GetEmail()</td>
+            <td>@Model.GetUserId()</td>
+        </tr>
+    </table>
+    <h3>following</h3>
+    <table>
+        <tr>
+            <th>username</th>
+        </tr>
+        @foreach (var author in Model.GetFollowing())
+        {
+            <tr>
+                <td>@author.Name
+                </td>
+            </tr>
+        }
+    </table>
+    <h3>cheeps</h3>
+    <table>
+        <tr>
+            <th>text</th>
+            <th>time</th>
+            <th>author</th>
+        </tr>
+        @foreach (var cheep in Model.GetCheeps())
+        {
+            <tr>
+                <td>@cheep.Text
+                </td>
+                <td>@cheep.TimeStamp
+                </td>
+                <td>@cheep.Author.Name
+                </td>
+            </tr>
+        }
+    </table>
+    <h3>liked cheeps</h3>
+    <table>
+        <tr>
+            <th>text</th>
+            <th>time</th>
+            <th>author</th>
+        </tr>
+        @foreach (var cheep in Model.GetLikedCheeps())
+        {
+            <tr>
+                <td>@cheep.Text
+                </td>
+                <td>@cheep.TimeStamp
+                </td>
+                <td>@cheep.Author.Name
+                </td>
+            </tr>
+        }
+    </table>
+</div>
