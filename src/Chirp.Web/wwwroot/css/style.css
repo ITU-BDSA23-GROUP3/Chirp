@@ -134,7 +134,7 @@ div.page ul.cheeps li {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   min-height: 48px;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 div.page ul.cheeps p {

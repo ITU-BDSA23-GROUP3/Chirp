@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Chirp.Web.Pages;
+namespace Chirp.Web.Models;
 
 [Authorize]
 public class AuthModel : PageModel
@@ -23,7 +23,7 @@ public class AuthModel : PageModel
         var userName = User?.Identity?.Name;
         var userEmail = User?.FindFirst(ClaimTypes.Email)?.Value;
 
-        if (userName == null || userEmail == null) return RedirectToPage(); // vi skal finde en måde at håndtere dette
+        if (userName == null || userEmail == null) throw new Exception("Could not find username/user email!");
     
         _authorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail});
         return RedirectToPage("Public");

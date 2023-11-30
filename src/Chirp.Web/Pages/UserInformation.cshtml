@@ -1,6 +1,6 @@
 @page "/user-information"
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model Chirp.Web.Pages.UserInformationModel
+@model Chirp.Web.Models.ChirpModel
 
 @{
     Layout = "Shared/_Layout";
@@ -14,9 +14,9 @@
 <div class="user-data">
     <h2 class="user-title">@ViewData["title"]</h2>
     <h3>Your Picture</h3>
-    <img width="50px" class="profile" src="https://avatars.githubusercontent.com/@($"{@User.Identity.Name}")">
+    <img width="50px" class="profile" src="https://avatars.githubusercontent.com/@($"{@User.Identity?.Name}")">
     <br />
-    <h3>Your profile</h3>
+    <h3>Your author profile</h3>
 
     <table>
         <tr>
@@ -25,9 +25,9 @@
             <th>ID</th>
         </tr>
         <tr>
-            <td>@User.Identity.Name</td>
-            <td>@Model.GetEmail()</td>
-            <td>@Model.GetUserId()</td>
+            <td>@User.Identity?.Name</td>
+            <td>@Model.GetAuthor().Email</td>
+            <td>@Model.GetAuthor().AuthorId</td>
         </tr>
     </table>
     <h3>Following</h3>
@@ -57,7 +57,7 @@
                 </td>
                 <td>@cheep.TimeStamp
                 </td>
-                <td>@cheep.Author.Name
+                <td>@cheep.Author?.Name
                 </td>
             </tr>
         }
@@ -76,7 +76,7 @@
                 </td>
                 <td>@cheep.TimeStamp
                 </td>
-                <td>@cheep.Author.Name
+                <td>@cheep.Author?.Name
                 </td>
             </tr>
         }

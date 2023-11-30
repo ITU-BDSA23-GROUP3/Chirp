@@ -35,11 +35,11 @@
                             @if (User?.Identity != null && User.Identity.IsAuthenticated && !Model.LikesOwnCheep(cheep.CheepId))
                             {
                                 <form method="post"
-                                    asp-page-handler="@((Model.AuthorLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"
+                                    asp-page-handler="@((Model.UserLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"
                                     asp-route-cheepId="@cheep.CheepId">
                                     <button type="submit"
-                                        class="like-button @(Model.AuthorLikesCheep(cheep.CheepId) ? "liked" : "")">
-                                        <img class="heart" src="@(Model.AuthorLikesCheep(cheep.CheepId) ? "/images/liked.png" : "/images/not-liked.png")">
+                                        class="like-button @(Model.UserLikesCheep(cheep.CheepId) ? "liked" : "")">
+                                        <img class="heart" src="@(Model.UserLikesCheep(cheep.CheepId) ? "/images/liked.png" : "/images/not-liked.png")">
                                     </button>&nbsp;
                                 </form>
                             }
