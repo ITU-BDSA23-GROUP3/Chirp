@@ -5,6 +5,7 @@ public class TimelineModel : PageModel
     public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
     public int CheepsPerPage;
     public int NumOfCheeps;
+    public int CurrentPage = 1;
     public string RouteName = "";
     protected readonly ICheepService _service;
     protected readonly IAuthorRepository _authorRepository;
@@ -156,8 +157,11 @@ public class TimelineModel : PageModel
 
         if ((page < 1 || page > maxPage) && NumOfCheeps != 0)
         {
+            CurrentPage = 1;
             return RedirectToPage();
         }
+        
+        CurrentPage = page;
         
         Cheeps = _service.GetCheeps(page, author, isAuthor);
         CheepsPerPage = _service.CheepsPerPage;
