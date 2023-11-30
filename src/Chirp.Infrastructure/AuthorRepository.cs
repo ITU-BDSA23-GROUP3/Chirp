@@ -24,6 +24,18 @@ public class AuthorRepository : IAuthorRepository
         return authorCheck;
     }
 
+    public Author FindAuthorById(int authorId)
+    {
+        var authorCheck = _db.Authors.Where(a => a.AuthorId == authorId);
+        return authorCheck.FirstOrDefault();
+    }
+
+    public List<Author> FindAuthorsByIds(List<int> authorIds)
+    {
+        var authorCheck = _db.Authors.Where(a => authorIds.Contains(a.AuthorId));
+        return authorCheck.ToList();
+    }
+
     public void CreateAuthor(Author author)
     {
         var authorCheck = _db.Authors

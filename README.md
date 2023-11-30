@@ -4,3 +4,58 @@
 Remember to have `Co-authored-by: Name <email@example.com>` in your commit messages. \
 Remember KISS - Keep It Simple Stupid. \
 Remember to use `git tag` for your release based pushes
+
+
+# How to run and develop
+
+First you need the dotnet-runtime package, dotnet-sdk and aspnet-runtime. \
+You also need Entity Framework core which can be installed after with this command:
+```bash
+  dotnet tool install --global dotnet-ef --version 7.0.14
+```
+The next step is to create a [Github oauth app](https://github.com/settings/developers)
+
+Click new oauth app and fill in the details. 
+Homepage url should be: https://localhost:1339
+The callback url should be: https://localhost:1339/signin-github
+Client ID is specified on you apps page. And you need to generate a secret on the same page.
+You can generate a new secret if you lose it.
+Now you need to set your development secrets. 
+[user-secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=linux)
+
+this is the client id name
+development:authentication:github:clientId 
+
+this is the client secret name
+development:authentication:github:clientSecret
+
+Microsoft documentation for setting secrets:
+```bash
+dotnet user-secrets set "development:authentication:github:clientId" "<client id>"
+dotnet user-secrets set "development:authentication:github:clientSecret" "<secret id>"
+```
+
+Now install docker, and run 
+```bash
+docker pull mcr.microsoft.com/mssql/server:latest
+```
+then
+
+```bash
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Adsa2023" -p 1433:1433  --name sqlpreview --hostname sqlpreview -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+Go into the src/ directory and run
+```bash
+dotnet ef migrations add InitialMigrations --project Chirp.Infrastructure/ --startup-project Chirp.Web/
+```
+
+Now go into Chirp.Web/ directory and run
+```bash
+dotnet build
+dotnet ef database update
+dotnet run --launch-profile Localhost
+```
+
+If you did everything correctly it *should work*
+If you change the structure of the database, you might want to remove the docker container and the migrations and redeploy it again - just follow the same steps in the same order and it should be good.

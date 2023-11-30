@@ -297,3 +297,26 @@ div.page img.heart {
   height: 18px;
   position: center;
 }
+
+.user-data {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 680px;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  overflow-wrap: anywhere;
+  text-align: left;
+  padding: 8px;
+  max-width: 40px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
