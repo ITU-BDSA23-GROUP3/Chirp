@@ -128,5 +128,26 @@ namespace Chirp.Infrastructure.UnitTest
             // Act and Assert
             Assert.Throws<DbUpdateException>(() => followRepository.Follow(newFollow.FollowerId, newFollow.FollowedId));
         }
+
+        [Fact]
+        public void DeleteAllFollowsByAuthorIdRemovesAllFollowsForAuthorId()
+        {
+            var context = new ChirpDBContext(_contextOptions);
+            var followRepository = new FollowRepository(context);
+
+            // Arrange
+            var authorId = 1;
+            context.Follows.Add(new Follow { FollowerId = authorId, FollowedId = 2 });
+            context.Follows.Add(new Follow { FollowerId = authorId, FollowedId = 3 });
+            context.Follows.Add(new Follow { FollowerId = 2, FollowedId = authorId });
+            context.Follows.Add(new Follow { FollowerId = 2, FollowedId = 3 });
+            context.SaveChanges();
+
+            // Act
+            followRepository.DeleteAllFollowsByAuthorId(authorId);
+
+            // Assert
+            context.Follows.Should().ContainSingle(f => f.FollowerId == 2 && f.FollowedId == 3);
+        }
     }
 }

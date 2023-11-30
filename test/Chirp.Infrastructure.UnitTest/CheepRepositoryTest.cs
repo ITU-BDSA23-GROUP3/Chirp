@@ -121,4 +121,48 @@ public class CheepRepositoryTest
         // Assert
         cheeps.Count().Should().Be(2);
     }
+
+    [Fact]
+    public void DeleteCheepRemovesCheepFromDatabase()
+    {
+        var context = new ChirpDBContext(_contextOptions);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
+
+        // Arrange
+        var cheep = new Cheep { AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now };
+        context.Cheeps.Add(cheep);
+        context.SaveChanges();
+
+        // Act
+        chirpStorage.DeleteCheep(cheep);
+
+        // Assert
+        context.Cheeps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void DeleteCheepsRemovesCheepsFromDatabase()
+    {
+        var context = new ChirpDBContext(_contextOptions);
+        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
+
+        // Arrange
+        var cheeps = new List<Cheep>
+        {
+            new() { CheepId = 1, AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
+            new() { CheepId = 2, AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
+            new() { CheepId = 3, AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
+        };
+        var dontDeleteCheep = new Cheep { CheepId = 4, AuthorId = 2, Text = "Cheep 4", TimeStamp = DateTime.Now };
+
+        context.Cheeps.AddRange(cheeps);
+        context.Cheeps.Add(dontDeleteCheep);
+        context.SaveChanges();
+
+        // Act
+        chirpStorage.DeleteCheeps(cheeps);
+
+        // Assert
+        context.Cheeps.Should().ContainSingle(c => c.CheepId == dontDeleteCheep.CheepId);
+    }
 }

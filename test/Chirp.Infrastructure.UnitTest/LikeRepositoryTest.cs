@@ -76,5 +76,27 @@ namespace Chirp.Infrastructure.UnitTest
             // Assert
             result.Should().BeTrue();
         }
+
+        [Fact]
+        public void DeleteAllLikesByAuthorIdRemovesAllLikesByAuthorId()
+        {
+            var context = new ChirpDBContext(_contextOptions);
+            var likeRepository = new LikeRepository(context);
+
+            // Arrange
+            var newLike1 = new Like { AuthorId = 1, CheepId = 1 };
+            var newLike2 = new Like { AuthorId = 1, CheepId = 2 };
+            var newLike3 = new Like { AuthorId = 2, CheepId = 1 };
+            context.Likes.Add(newLike1);
+            context.Likes.Add(newLike2);
+            context.Likes.Add(newLike3);
+            context.SaveChanges();
+
+            // Act
+            likeRepository.DeleteAllLikesByAuthorId(1);
+
+            // Assert
+            context.Likes.Should().ContainSingle(l => l.AuthorId == 2 && l.CheepId == 1);
+        }
     }
 }
