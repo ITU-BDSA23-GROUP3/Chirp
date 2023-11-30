@@ -8,6 +8,10 @@ a {
   color: #26776F;
 }
 
+.active {
+  font-weight: bold;
+}
+
 a:hover {
   color: #333;
 }
