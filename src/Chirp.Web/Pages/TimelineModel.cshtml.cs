@@ -6,6 +6,8 @@ public class TimelineModel : PageModel
     public int CheepsPerPage;
     public int NumOfCheeps;
     public int CurrentPage = 1;
+
+    public int MaxCharacterCount = 160;
     public string RouteName = "";
     protected readonly ICheepService _service;
     protected readonly IAuthorRepository _authorRepository;
@@ -38,7 +40,7 @@ public class TimelineModel : PageModel
         if (authorId == null) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
         
         string text = Request.Form["Text"].ToString();
-        if (text.Length > 160) text = text.Substring(0, 160);
+        if (text.Length > MaxCharacterCount) text = text.Substring(0, MaxCharacterCount);
         
         _service.StoreCheep( new Cheep {AuthorId = (int)authorId, Text=text, TimeStamp = DateTime.Now} );
         return RedirectToPage();

@@ -5,8 +5,20 @@
     <div class="cheepbox">
         <h3>What's on your mind, @(User?.Identity?.Name)?</h3>
         <form method="post">
-            <textarea class="textarea" name="Text"></textarea>
-            <button type="submit">Submit</button>
+            <textarea oninput="updateCount()" class="textarea" name="Text" maxlength="@Model.MaxCharacterCount"></textarea>
+            <div class="submit-count">
+                <button type="submit">Submit</button>
+                <count class="count"></count>
+            </div>
         </form>
     </div>
 }
+<script>
+    // Update the character count on the page
+    updateCount();
+    function updateCount() {
+        var text = document.querySelector(".textarea").value;
+        var count = document.querySelector(".count");
+        count.innerHTML = text.length + "/" + @Model.MaxCharacterCount;
+    }
+</script>
