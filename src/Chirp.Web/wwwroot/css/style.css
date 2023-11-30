@@ -320,3 +320,11 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+.no-cheeps-message {
+  margin: 10px;
+}
+
+div.page h2.user-title {
+  padding-left: 0px;
+}

@@ -4,7 +4,7 @@
 
 @{
     Layout = "Shared/_Layout";
-    ViewData["Title"] = "UserInformation";
+    ViewData["Title"] = "User Information";
 }
 
 
@@ -12,7 +12,7 @@
     <link href="/css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <div class="user-data">
-    <h2>User Information</h2>
+    <h2 class="user-title">@ViewData["title"]</h2>
     <h3>Your Picture</h3>
     <img width="50px" class="profile" src="https://avatars.githubusercontent.com/@($"{@User.Identity.Name}")">
     <br />
