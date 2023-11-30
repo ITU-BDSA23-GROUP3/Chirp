@@ -1,4 +1,4 @@
-namespace Chirp.Web.Models;
+namespace Chirp.Web.Pages.Models;
 
 public class TimelineModel : ChirpModel
 {

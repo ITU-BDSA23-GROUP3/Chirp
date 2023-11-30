@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Chirp.Web.Models;
+namespace Chirp.Web.Pages.Models;
 
 [Authorize]
 public class AuthModel : PageModel
