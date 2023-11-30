@@ -15,19 +15,24 @@ You also need Entity Framework core which can be installed after with this comma
 ```
 The next step is to create a [Github oauth app](https://github.com/settings/developers)
 
-Now you need to set your development secrets. \
-
+Click new oauth app and fill in the details. 
+Homepage url should be: https://localhost:1339
+The callback url should be: https://localhost:1339/signin-github
+Client ID is specified on you apps page. And you need to generate a secret on the same page.
+You can generate a new secret if you lose it.
+Now you need to set your development secrets. 
 [user-secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=linux)
 
 this is the client id name
 development:authentication:github:clientId 
 
 this is the client secret name
-development:authentication:github:clientId 
+development:authentication:github:clientSecret
 
 Microsoft documentation for setting secrets:
 ```bash
-dotnet user-secrets set "Movies:ServiceApiKey" "12345"
+dotnet user-secrets set "development:authentication:github:clientId" "<client id>"
+dotnet user-secrets set "development:authentication:github:clientSecret" "<secret id>"
 ```
 
 Now install docker, and run 
@@ -54,4 +59,3 @@ dotnet run --launch-profile Localhost
 
 If you did everything correctly it *should work*
 If you change the structure of the database, you might want to remove the docker container and the migrations and redeploy it again - just follow the same steps in the same order and it should be good.
-
