@@ -65,4 +65,11 @@ public class LikeRepository : ILikeRepository
     {
         return _db.Likes.Count(l => l.CheepId == cheepId);
     }
+
+    public void DeleteAllLikesByAuthorId(int authorId)
+    {
+        var likes = _db.Likes.Where(l => l.AuthorId == authorId);
+        _db.Likes.RemoveRange(likes);
+        _db.SaveChanges();
+    }
 }

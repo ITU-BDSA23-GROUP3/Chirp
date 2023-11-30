@@ -9,4 +9,5 @@ public interface IFollowRepository
     public IEnumerable<Follow> FindFollowersByAuthorId(int authorId);
     public int FindFollowingCountByAuthorId(int authorId);
     public int FindFollowersCountByAuthorId(int authorId);
+    public void DeleteAllFollowsByAuthorId(int authorId);
 }

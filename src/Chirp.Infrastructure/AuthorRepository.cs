@@ -49,4 +49,14 @@ public class AuthorRepository : IAuthorRepository
             _db.SaveChanges();
         }
     }
+
+    public void DeleteAuthor(int authorId)
+    {
+        var authorCheck = _db.Authors.Where(a => a.AuthorId == authorId);
+        if (authorCheck.Any())
+        {
+            _db.Authors.Remove(authorCheck.First());
+            _db.SaveChanges();
+        }
+    }
 }

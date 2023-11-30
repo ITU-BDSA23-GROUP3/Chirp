@@ -57,10 +57,24 @@ public class UserInformationModel : PageModel
         return _service.GetAllCheepsFromAuthor(User.Identity.Name);
     }
 
-    public IEnumerable<Cheep> GetLikedCheeps(){
+    public IEnumerable<Cheep> GetLikedCheeps()
+    {
         var userId = GetUserId();
         if (userId == null) return null;
         var likes = _likeRepository.FindLikesByAuthorId((int)userId);
         return _service.GetCheeps(1).Where(c => likes.Any(l => l.CheepId == c.CheepId));
+    }
+
+    public IActionResult OnPostDelete(string routeName)
+    {
+        var authorId = GetUserId();
+        if (authorId == null) return RedirectToPage(); 
+        _service.DeleteCheeps((List<Cheep>)GetCheeps());
+        _followRepository.DeleteAllFollowsByAuthorId((int)authorId);
+        _authorRepository.DeleteAuthor((int)authorId);
+        _likeRepository.DeleteAllLikesByAuthorId((int)authorId);
+        Response.Cookies.Delete(".AspNetCore.Cookies");
+        return RedirectToPage("Public");
+
     }
 }

@@ -54,4 +54,10 @@ public class FollowRepository : IFollowRepository
     public int FindFollowersCountByAuthorId(int authorId) {
         return _db.Follows.Count(f => f.FollowedId == authorId);
     }
+
+    public void DeleteAllFollowsByAuthorId(int authorId) {
+        var follows = _db.Follows.Where(f => f.FollowerId == authorId || f.FollowedId == authorId);
+        _db.Follows.RemoveRange(follows);
+        _db.SaveChanges();
+    }
 }

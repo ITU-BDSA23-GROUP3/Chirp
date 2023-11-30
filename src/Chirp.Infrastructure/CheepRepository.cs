@@ -73,4 +73,15 @@ public class CheepRepository : ICheepRepository
 
         return queryResult.Count();
     }
+
+    public void DeleteCheep(Cheep cheep) {
+        _db.Cheeps.Remove(cheep);
+        _db.SaveChanges();
+    }
+
+    public void DeleteCheeps(List<Cheep> cheeps) {
+        _db.Cheeps.RemoveRange(cheeps);
+        _db.SaveChanges();
+    }
+
 }
