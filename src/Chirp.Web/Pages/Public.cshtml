@@ -7,5 +7,7 @@
 
 <div>
     <h2> Public Timeline </h2>
+    @await Html.PartialAsync("Shared/_PostCheep")
     @await Html.PartialAsync("Shared/_CheepList")
+    @await Html.PartialAsync("Shared/_Pagination")
 </div>

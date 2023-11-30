@@ -1,16 +1,5 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@if (User?.Identity != null && User.Identity?.IsAuthenticated == true && Model.IsUserOrPublicPage())
-{
-    <div class="cheepbox">
-        <h3>What's on your mind, @(User?.Identity?.Name)?</h3>
-        <form method="post">
-            <textarea class="textarea" name="Text"></textarea>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-}
-
 @if (Model.Cheeps.Count > 0)
 {
     <ul id="messagelist" class="cheeps">
@@ -55,10 +44,9 @@
                                 </form>
                             }
                             @{
-                                var cheepLikes = Model.GetLikeCount(cheep.CheepId).ToString();
+                                var cheepLikes = Model.GetLikeCount(cheep.CheepId);
                             }
-                            <p class="likes"><i>@cheepLikes @(int.Parse(cheepLikes.ToString()) == 1 ?
-                            "person likes" : "people like") this.</i></p>
+                            <p class="likes"><i>@cheepLikes.ToString() @(cheepLikes == 1 ? "person likes" : "people like") this.</i></p>
                         </div>
                     </div>
                 </div>
@@ -70,17 +58,3 @@ else
 {
     <em>There are no cheeps so far.</em>
 }
-
-<div class="pagination">
-    @for (int i = 1; i <= Math.Ceiling((double)Model.NumOfCheeps / Model.CheepsPerPage); i++)
-    {
-        if (Context?.GetEndpoint()?.DisplayName?.Contains("Public") == true)
-        {
-            <a href="/?page=@i">@i</a>
-        }
-        else
-        {
-            <a href="?page=@i">@i</a>
-        }
-    }
-</div>

@@ -48,8 +48,6 @@ else
     connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ConfigurationErrorsException("Connection string could not be found");
 }
 
-builder.Services.AddDistributedMemoryCache();
-
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".AspNetCore.Cookies";
