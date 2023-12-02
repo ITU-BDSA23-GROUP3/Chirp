@@ -9,7 +9,6 @@ public class FollowRepository : IFollowRepository
     public FollowRepository(ChirpDBContext db)
     {
         _db = db;
-        _db.Database.EnsureCreated();
     }
 
     public void Follow(int followerId, int followedId)

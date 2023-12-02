@@ -6,11 +6,11 @@ namespace Chirp.Web.Pages;
 [Authorize]
 public class AuthModel : PageModel
 {
-    IAuthorRepository _authorRepository;
+    IRepositoryManager _repositoryManager;
 
-    public AuthModel(IAuthorRepository authorRepository)
+    public AuthModel(IRepositoryManager repositoryManager)
     {
-        _authorRepository = authorRepository;
+        _repositoryManager = repositoryManager;
     }
 
     public ActionResult OnGet(bool? signOut)
@@ -23,9 +23,9 @@ public class AuthModel : PageModel
         var userName = User?.Identity?.Name;
         var userEmail = User?.FindFirst(ClaimTypes.Email)?.Value;
 
-        if (userName == null || userEmail == null) return RedirectToPage(); // vi skal finde en måde at håndtere dette
+        if (userName == null || userEmail == null) return RedirectToPage();
     
-        _authorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail});
+        _repositoryManager.AuthorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail});
         return RedirectToPage("Public");
     }
 }

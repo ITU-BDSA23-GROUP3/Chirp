@@ -9,7 +9,6 @@ public class AuthorRepository : IAuthorRepository
     public AuthorRepository(ChirpDBContext db)
     {
         _db = db;
-        _db.Database.EnsureCreated();
     }
 
     public IEnumerable<Author> FindAuthorsByName(string name)

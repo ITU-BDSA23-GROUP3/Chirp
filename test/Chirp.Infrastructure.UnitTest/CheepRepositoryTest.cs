@@ -83,13 +83,10 @@ public class CheepRepositoryTest
         var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
-        var cheeps = new List<Cheep>{
-            new Cheep {
-                CheepId = 1, AuthorId = 1, Text = "How u doin'?", TimeStamp = DateTime.Now
-            },
-            new Cheep {
-                CheepId = 2, AuthorId = 2, Text = "Hey all", TimeStamp = DateTime.Now
-            }
+        var cheeps = new List<Cheep>
+        {
+            new Cheep { CheepId = 1, AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
+            new Cheep { CheepId = 2, AuthorId = 2, Text = "Cheep 2", TimeStamp = DateTime.Now}
         };
 
         // Act
@@ -141,17 +138,17 @@ public class CheepRepositoryTest
     }
 
     [Fact]
-    public void DeleteCheepsRemovesCheepsFromDatabase()
+    public void DeleteAllCheepsByAuthorIdDeletesCheepsFromDatabase()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository, authorRepository);
+        var cheepRepository = new CheepRepository(context, followRepository, authorRepository);
 
         // Arrange
         var cheeps = new List<Cheep>
         {
             new() { CheepId = 1, AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
             new() { CheepId = 2, AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
-            new() { CheepId = 3, AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
+            new() { CheepId = 3, AuthorId = 1, Text = "Cheep 3", TimeStamp = DateTime.Now }
         };
         var dontDeleteCheep = new Cheep { CheepId = 4, AuthorId = 2, Text = "Cheep 4", TimeStamp = DateTime.Now };
 
@@ -160,9 +157,9 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        chirpStorage.DeleteCheeps(cheeps);
+        cheepRepository.DeleteAllCheepsByAuthorId(authorId: 1);
 
         // Assert
-        context.Cheeps.Should().ContainSingle(c => c.CheepId == dontDeleteCheep.CheepId);
+        context.Cheeps.Should().ContainSingle(c => c.AuthorId == dontDeleteCheep.AuthorId);
     }
 }

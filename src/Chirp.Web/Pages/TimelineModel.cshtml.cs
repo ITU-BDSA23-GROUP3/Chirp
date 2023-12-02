@@ -6,19 +6,14 @@ public class TimelineModel : PageModel
     public int CheepsPerPage;
     public int NumOfCheeps;
     public int CurrentPage = 1;
-
     public int MaxCharacterCount = 160;
     public string RouteName = "";
     protected readonly ICheepService _service;
-    protected readonly IAuthorRepository _authorRepository;
-    protected readonly ILikeRepository _likeRepository;
-    protected readonly IFollowRepository _followRepository;
-    public TimelineModel(IAuthorRepository authorRepository, ICheepService service, ILikeRepository likeRepository, IFollowRepository followRepository)
+    protected readonly IRepositoryManager _repositoryManager;
+    public TimelineModel(ICheepService service, IRepositoryManager repositoryManager)
     {
-        _authorRepository = authorRepository;
         _service = service;
-        _likeRepository = likeRepository;
-        _followRepository = followRepository;
+        _repositoryManager = repositoryManager;
     }
 
     public int? GetUserId(string? authorName = null)
@@ -26,7 +21,7 @@ public class TimelineModel : PageModel
         authorName ??= User?.Identity?.Name;
         if (authorName == null) return null;
         
-        var author = _authorRepository.FindAuthorsByName(authorName).FirstOrDefault();
+        var author = _repositoryManager.AuthorRepository.FindAuthorsByName(authorName).FirstOrDefault();
         return author?.AuthorId;
     }
 
@@ -37,7 +32,7 @@ public class TimelineModel : PageModel
     public IActionResult OnPost()
     {
         var authorId = GetUserId();
-        if (authorId == null) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
+        if (authorId == null) return RedirectToPage();
         
         string text = Request.Form["Text"].ToString();
         if (text.Length > MaxCharacterCount) text = text.Substring(0, MaxCharacterCount);
@@ -49,18 +44,18 @@ public class TimelineModel : PageModel
     public bool AuthorLikesCheep(int cheepId)
     {
         var authorId = GetUserId();
-        return authorId != null && _likeRepository.LikeExists((int)authorId, cheepId);
+        return authorId != null && _repositoryManager.LikeRepository.LikeExists((int)authorId, cheepId);
     }
 
     public int GetLikeCount(int cheepId)
     {
-        return _likeRepository.FindLikeCountByCheepId(cheepId);
+        return _repositoryManager.LikeRepository.FindLikeCountByCheepId(cheepId);
     }
 
     public bool LikesOwnCheep(int cheepId)
     {
         var authorId = GetUserId();
-        return authorId != null && _likeRepository.LikesOwnCheep((int)authorId, cheepId);
+        return authorId != null && _repositoryManager.LikeRepository.LikesOwnCheep((int)authorId, cheepId);
     }
 
     public IActionResult OnPostLike(int cheepId)
@@ -70,7 +65,7 @@ public class TimelineModel : PageModel
         var authorId = GetUserId();
         if (authorId == null) return Page();
 
-        _likeRepository.LikeCheep((int)authorId, cheepId);
+        _repositoryManager.LikeRepository.LikeCheep((int)authorId, cheepId);
         return RedirectToPage();
     }
 
@@ -81,7 +76,7 @@ public class TimelineModel : PageModel
         var authorId = GetUserId();
         if (authorId == null) return Page();
 
-        _likeRepository.UnlikeCheep((int)authorId, cheepId);
+        _repositoryManager.LikeRepository.UnlikeCheep((int)authorId, cheepId);
         return RedirectToPage();
     }
 
@@ -90,7 +85,7 @@ public class TimelineModel : PageModel
         var followerId = GetUserId();
         var followedId = GetUserId(followedName);
         
-        return followedId != null && followerId != null && _followRepository.FollowExists((int)followerId, (int)followedId);
+        return followedId != null && followerId != null && _repositoryManager.FollowRepository.FollowExists((int)followerId, (int)followedId);
     }
 
     public int GetFollowersCount(string routeName)
@@ -98,7 +93,7 @@ public class TimelineModel : PageModel
         var authorId = GetUserId(routeName);
         if (authorId == null) return 0;
 
-        return _followRepository.FindFollowersCountByAuthorId((int)authorId);
+        return _repositoryManager.FollowRepository.FindFollowersCountByAuthorId((int)authorId);
     }
 
     public int GetFollowingCount(string routeName)
@@ -106,7 +101,7 @@ public class TimelineModel : PageModel
         var authorId = GetUserId(routeName);
         if (authorId == null) return 0;
 
-        return _followRepository.FindFollowingCountByAuthorId((int)authorId);
+        return _repositoryManager.FollowRepository.FindFollowingCountByAuthorId((int)authorId);
     }
 
     public IActionResult OnPostFollow(string routeName)
@@ -118,7 +113,7 @@ public class TimelineModel : PageModel
 
         if (followerId == null || followedId == null) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
 
-        _followRepository.Follow((int)followerId, (int)followedId);
+        _repositoryManager.FollowRepository.Follow((int)followerId, (int)followedId);
         return RedirectToPage();
     }
 
@@ -131,7 +126,7 @@ public class TimelineModel : PageModel
 
         if (followerId == null || followedId == null) return RedirectToPage(); // hvor/hvordan skal dette fejlhåndteres?
 
-        _followRepository.Unfollow((int)followerId, (int)followedId);
+        _repositoryManager.FollowRepository.Unfollow((int)followerId, (int)followedId);
         return RedirectToPage();
     }
 

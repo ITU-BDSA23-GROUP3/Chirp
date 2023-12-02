@@ -59,10 +59,7 @@ builder.Services.AddSession(options =>
 
 builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(connectionString))
-    .AddScoped<ICheepRepository, CheepRepository>()
-    .AddScoped<IAuthorRepository, AuthorRepository>()
-    .AddScoped<ILikeRepository, LikeRepository>()
-    .AddScoped<IFollowRepository, FollowRepository>()
+    .AddScoped<IRepositoryManager, RepositoryManager>()
     .AddScoped<ICheepService, CheepService>()
     .AddRouting()
     .AddAuthentication(options =>

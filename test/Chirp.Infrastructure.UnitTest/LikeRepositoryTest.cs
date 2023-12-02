@@ -23,6 +23,12 @@ namespace Chirp.Infrastructure.UnitTest
 
             var context = new ChirpDBContext(_contextOptions);
             context.Database.EnsureCreated();
+            context.Authors.AddRange
+            (
+                new Author { AuthorId = 1, Name = "Jens", Email = "example@mail.com" },
+                new Author { AuthorId = 2, Name = "Børge", Email = "example@mail.com" }
+            );
+            context.SaveChanges();
         }
 
         [Fact]
@@ -97,6 +103,36 @@ namespace Chirp.Infrastructure.UnitTest
 
             // Assert
             context.Likes.Should().ContainSingle(l => l.AuthorId == 2 && l.CheepId == 1);
+        }
+
+        [Fact]
+        public void DeleteAllLikesOnCheepsByAuthorIdRemovesAllLikesOnCheepsByAuthorId()
+        {
+            var context = new ChirpDBContext(_contextOptions);
+            var likeRepository = new LikeRepository(context);
+
+            // Arrange
+            var cheepsToStore = new List<Cheep>
+            {
+                new() { CheepId = 1, AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
+                new() { CheepId = 2, AuthorId = 1, Text = "Cheep 2", TimeStamp = DateTime.Now },
+                new() { CheepId = 3, AuthorId = 2, Text = "Cheep 3", TimeStamp = DateTime.Now }
+            };
+            context.Cheeps.AddRange(cheepsToStore);
+            context.SaveChanges();
+            var newLike1 = new Like { AuthorId = 1, CheepId = 3 };
+            var newLike2 = new Like { AuthorId = 2, CheepId = 2 };
+            var newLike3 = new Like { AuthorId = 2, CheepId = 1 };
+            context.Likes.Add(newLike1);
+            context.Likes.Add(newLike2);
+            context.Likes.Add(newLike3);
+            context.SaveChanges();
+
+            // Act
+            likeRepository.DeleteAllLikesOnCheepsByAuthorId(1);
+
+            // Assert
+            context.Likes.Should().ContainSingle(l => l.AuthorId == 1 && l.CheepId == 3);
         }
     }
 }
