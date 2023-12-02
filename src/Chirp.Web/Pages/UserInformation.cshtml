@@ -81,12 +81,7 @@
             </tr>
         }
     </table>
-    <form asp-page-handler="delete" method="post">
-        <button onclick="areYouSure()" style="background-color: red; color: white;">Forget me!</button>
+    <form asp-page-handler="delete" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
+        <button style="background-color: red; color: white;">Forget me!</button>
     </form>
 </div>
-<script>
-    function areYouSure() {
-        var result = confirm("Are you sure you want to delete your account?");
-    }
-</script>
