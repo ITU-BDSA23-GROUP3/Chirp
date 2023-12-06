@@ -40,6 +40,8 @@ public class CheepService : ICheepService
 
     public IEnumerable<Cheep> GetAllCheepsFromAuthor(string author)
     {
+
+        // This can be cleaned up by moving the pagenumber parameter to the web project
         return _repositoryManager.CheepRepository.QueryCheeps(1, 10000, author, false).ToList();
     }
 
