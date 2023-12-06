@@ -73,6 +73,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'bdsagroup3cchirprazor'
-          slot-name: 'Development'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FE7C8BE7C732464F9EC0B9D17E957738 }}
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.PUBLISHPROFILE }}
           package: .
