@@ -72,7 +72,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'bdsagroup3cchirprazor'
+          app-name: 'bdsagroup3bchirprazor'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.PUBLISHPROFILE }}
+          publish-profile: ${{ secrets.PUBLISHPROFILE2 }}
           package: .
