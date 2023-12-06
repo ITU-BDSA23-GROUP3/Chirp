@@ -12,7 +12,6 @@ public class CheepRepository : ICheepRepository
     public CheepRepository(ChirpDBContext db, IFollowRepository followRepository, IAuthorRepository authorRepository)
     {
         _db = db;
-        _db.Database.EnsureCreated();
         _followRepository = followRepository;
         _authorRepository = authorRepository;
     }
@@ -73,4 +72,17 @@ public class CheepRepository : ICheepRepository
 
         return queryResult.Count();
     }
+
+    public void DeleteCheep(Cheep cheep) 
+    {
+        _db.Cheeps.Remove(cheep);
+        _db.SaveChanges();
+    }
+
+    public void DeleteAllCheepsByAuthorId(int authorId) 
+    {
+        _db.Cheeps.Where(c => c.AuthorId == authorId).ToList().ForEach(c => _db.Cheeps.Remove(c));
+        _db.SaveChanges();
+    }
+
 }

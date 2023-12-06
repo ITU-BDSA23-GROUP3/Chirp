@@ -325,6 +325,15 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+.submit-count {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 10px;
+}
+
+count {
+  color: gray
+}
 .no-cheeps-message {
   margin: 10px;
 }

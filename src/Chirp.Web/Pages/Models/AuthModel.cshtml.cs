@@ -6,11 +6,11 @@ namespace Chirp.Web.Pages.Models;
 [Authorize]
 public class AuthModel : PageModel
 {
-    IAuthorRepository _authorRepository;
+    IRepositoryManager _repositoryManager;
 
-    public AuthModel(IAuthorRepository authorRepository)
+    public AuthModel(IRepositoryManager repositoryManager)
     {
-        _authorRepository = authorRepository;
+        _repositoryManager = repositoryManager;
     }
 
     public ActionResult OnGet(bool? signOut)
@@ -25,7 +25,7 @@ public class AuthModel : PageModel
 
         if (userName == null || userEmail == null) throw new Exception("Could not find username/user email!");
     
-        _authorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail});
+        _repositoryManager.AuthorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail});
         return RedirectToPage("Public");
     }
 }
