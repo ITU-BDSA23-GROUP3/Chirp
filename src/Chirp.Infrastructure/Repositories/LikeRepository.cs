@@ -21,11 +21,8 @@ public class LikeRepository : ILikeRepository
 
     public void LikeCheep(int authorId, int cheepId)
     {
-        // In case the like already exists, do nothing
-        if (LikeExists(authorId, cheepId)) return;
-
-        // Check if cheep is owned by author
-        if (LikesOwnCheep(authorId, cheepId))
+        // Check if cheep is already liked or owned by author
+        if (LikeExists(authorId, cheepId) || LikesOwnCheep(authorId, cheepId))
         {
             throw new Exception("Liking your own cheeps is not allowed!");
         }

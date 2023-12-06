@@ -86,6 +86,8 @@ public class ChirpModel : PageModel
 
     public IEnumerable<Cheep> GetLikedCheeps(string? authorName = null){
         var likes = _repositoryManager.LikeRepository.FindLikesByAuthorId(GetAuthor(authorName).AuthorId);
+
+        // Error-prone since it doesn't account for all pages (all cheeps)
         return _service.GetCheeps(1).Where(c => likes.Any(l => l.CheepId == c.CheepId));
     }
 }
