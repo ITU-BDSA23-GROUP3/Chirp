@@ -7,14 +7,15 @@ public class TimelineModel : ChirpModel
     public int CheepsPerPage;
     public int NumOfCheeps;
     public int CurrentPage = 1;
-    public TimelineModel(IAuthorRepository authorRepository, ICheepService service, ILikeRepository likeRepository, IFollowRepository followRepository)
-        : base(authorRepository, service, likeRepository, followRepository) {}
+    public int MaxCharacterCount = 160;
+    public TimelineModel(ICheepService service, IRepositoryManager repositoryManager)
+        : base(service, repositoryManager) {}
 
     public IActionResult OnPost()
     {
         var authorId = GetAuthor().AuthorId;
         string text = Request.Form["Text"].ToString();
-        if (text.Length > 160) text = text.Substring(0, 160);
+        if (text.Length > MaxCharacterCount) text = text[..MaxCharacterCount];
         _service.StoreCheep( new Cheep {AuthorId = authorId, Text=text, TimeStamp = DateTime.Now} );
         return RedirectToPage();
     }
@@ -23,7 +24,7 @@ public class TimelineModel : ChirpModel
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _likeRepository.LikeCheep(authorId, cheepId);
+        _repositoryManager.LikeRepository.LikeCheep(authorId, cheepId);
         return RedirectToPage();
     }
 
@@ -31,7 +32,7 @@ public class TimelineModel : ChirpModel
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _likeRepository.UnlikeCheep(authorId, cheepId);
+        _repositoryManager.LikeRepository.UnlikeCheep(authorId, cheepId);
         return RedirectToPage();
     }
 
@@ -40,7 +41,7 @@ public class TimelineModel : ChirpModel
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
         var followedId = GetAuthor(routeName).AuthorId;
-        _followRepository.Follow(followerId, followedId);
+        _repositoryManager.FollowRepository.Follow(followerId, followedId);
         return RedirectToPage();
     }
 
@@ -49,7 +50,7 @@ public class TimelineModel : ChirpModel
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
         var followedId = GetAuthor(routeName).AuthorId;
-        _followRepository.Unfollow(followerId, followedId);
+        _repositoryManager.FollowRepository.Unfollow(followerId, followedId);
         return RedirectToPage();
     }
     
