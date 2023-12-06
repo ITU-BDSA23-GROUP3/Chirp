@@ -12,7 +12,7 @@ on:
   push:
     branches:
       - main
-      - topic/architectural-changes
+      - topic/architectural-changes 
   workflow_dispatch:
 
 jobs:
