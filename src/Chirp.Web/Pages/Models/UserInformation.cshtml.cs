@@ -7,10 +7,8 @@ public class UserInformationModel : ChirpModel
         : base(repositoryManager) {}
 
     public IEnumerable<Cheep> GetCheeps(string? authorName = null){
-        var user = GetAuthor(authorName);
-
         // This can be cleaned up by moving the pagenumber parameter to the web project
-        return _repositoryManager.CheepRepository.QueryCheeps(1, 10000, user.Name, false).ToList();
+        return _repositoryManager.CheepRepository.QueryCheeps(1, 10000, GetAuthor(authorName).Name, false).ToList();
     }
 
     public IEnumerable<Cheep> GetLikedCheeps(string? authorName = null){

@@ -6,14 +6,19 @@ public class ChirpModel : PageModel
 
     // Can be moved to timelinemodel once cheeprepository is fixed
     public int CheepsPerPage => 32;
+
     public ChirpModel(IRepositoryManager repositoryManager)
     {
         _repositoryManager = repositoryManager;
     }
 
+    public string? GetUserName() {
+        return User?.Identity?.Name;
+    }
+
     public Author GetAuthor(string? authorName = null)
     {
-        authorName ??= User?.Identity?.Name;
+        authorName ??= GetUserName();
         if (authorName == null) throw new Exception("User is not authenticated!");
         
         var author = _repositoryManager.AuthorRepository.FindAuthorsByName(authorName).FirstOrDefault();
@@ -21,7 +26,7 @@ public class ChirpModel : PageModel
     }
 
     public bool IsUserAuthenticated(){
-        return User?.Identity != null && User.Identity.IsAuthenticated;
+        return User.Identity?.IsAuthenticated == true;
     }
 
     public IEnumerable<Author> GetFollowing(){

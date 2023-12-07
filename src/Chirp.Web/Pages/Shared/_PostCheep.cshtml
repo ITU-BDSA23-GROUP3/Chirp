@@ -1,9 +1,9 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@if (User?.Identity != null && User.Identity?.IsAuthenticated == true && Model.IsUserOrPublicPage(Model.RouteName))
+@if (Model.IsUserAuthenticated() && Model.IsUserOrPublicPage(Model.RouteName))
 {
     <div class="cheepbox">
-        <h3>What's on your mind, @(User?.Identity?.Name)?</h3>
+        <h3>What's on your mind, @(Model.GetUserName())?</h3>
         <form method="post">
             <textarea oninput="updateCount()" class="textarea" name="Text" maxlength="@Model.MaxCharacterCount"></textarea>
             <div class="submit-count">

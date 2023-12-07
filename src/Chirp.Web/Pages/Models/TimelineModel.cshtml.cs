@@ -12,7 +12,7 @@ public class TimelineModel : ChirpModel
 
     public bool IsUserOrPublicPage(string routeName)
     {
-        return routeName == User.Identity?.Name || routeName == "";
+        return routeName == GetUserName() || routeName == "";
     }
 
     protected bool CalculateIsAuthor(string? pageAuthor, string? loggedInUser) {
@@ -98,7 +98,7 @@ public class TimelineModel : ChirpModel
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)
     {
         RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
-        var isAuthor = CalculateIsAuthor(author, User.Identity?.Name);
+        var isAuthor = CalculateIsAuthor(author, GetUserName());
         NumOfCheeps = _repositoryManager.CheepRepository.QueryCheepCount(author, isAuthor);
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / CheepsPerPage);

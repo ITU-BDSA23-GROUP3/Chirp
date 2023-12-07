@@ -9,7 +9,7 @@
                 <div class="row">
                     <div class="column">
                         <img class="profile" src="https://avatars.githubusercontent.com/@($"{cheep.Author.Name}")">
-                        @if (User?.Identity?.IsAuthenticated == true && cheep.Author.Name != User.Identity.Name)
+                        @if (Model.IsUserAuthenticated() && cheep.Author.Name != Model.GetUserName())
                         {
                             @if (Model.UserFollowsAuthor(cheep.Author.Name))
                             {

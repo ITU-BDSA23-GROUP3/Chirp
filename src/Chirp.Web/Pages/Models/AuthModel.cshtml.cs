@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Chirp.Web.Pages.Models;
 
@@ -16,7 +17,7 @@ public class AuthModel : ChirpModel
             if (signOut.Value)
                 Response.Cookies.Delete(".AspNetCore.Cookies");
         }
-        var userName = User?.Identity?.Name;
+        var userName = GetUserName();
         var userEmail = User?.FindFirst(ClaimTypes.Email)?.Value;
 
         if (userName == null || userEmail == null) throw new Exception("Could not find username/user email!");
