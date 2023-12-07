@@ -7,5 +7,6 @@ public interface IAuthorRepository
     public Author FindAuthorById(int authorId);
     public List<Author> FindAuthorsByIds(List<int> authorIds);
     public void CreateAuthor(Author author);
+    public void DeleteAuthor(int authorId);
     
 }

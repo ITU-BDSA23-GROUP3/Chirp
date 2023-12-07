@@ -87,4 +87,31 @@ public class AuthorRepositoryTest
         author.Name.Should().Be(newAuthor.Name);
         author.Email.Should().Be(newAuthor.Email);
     }
+
+    [Fact]
+    public void DeleteAuthor_RemovesAuthorFromDb()
+    {
+        var context = new ChirpDBContext(_contextOptions);
+        var authorRepository = new AuthorRepository(context);
+
+        // Arrange
+        var author = new Author
+        {
+            Name = "Hans Hansen", Email = "UniqueMail898989", AuthorId = 1
+        };
+        var author2 = new Author
+        {
+            Name = "Hanne Hansen", Email = "UniqueMail898990", AuthorId = 2
+        };
+
+        context.Authors.Add(author);
+        context.Authors.Add(author2);
+        context.SaveChanges();
+
+        // Act
+        authorRepository.DeleteAuthor(author.AuthorId);
+
+        // Assert
+        context.Authors.Should().ContainSingle(a => a.AuthorId == author2.AuthorId);
+    }
 }

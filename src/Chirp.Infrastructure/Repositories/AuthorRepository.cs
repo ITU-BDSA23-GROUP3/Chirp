@@ -9,7 +9,6 @@ public class AuthorRepository : IAuthorRepository
     public AuthorRepository(ChirpDBContext db)
     {
         _db = db;
-        _db.Database.EnsureCreated();
     }
 
     public IEnumerable<Author> FindAuthorsByName(string name)
@@ -46,6 +45,16 @@ public class AuthorRepository : IAuthorRepository
             int newAuthorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
             author.AuthorId = newAuthorId;
             _db.Authors.Add(author);
+            _db.SaveChanges();
+        }
+    }
+
+    public void DeleteAuthor(int authorId)
+    {
+        var authorCheck = _db.Authors.Where(a => a.AuthorId == authorId);
+        if (authorCheck.Any())
+        {
+            _db.Authors.Remove(authorCheck.First());
             _db.SaveChanges();
         }
     }
