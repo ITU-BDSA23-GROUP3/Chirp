@@ -333,6 +333,7 @@ tr:nth-child(even) {
 
 count {
   color: gray
+<<<<<<< HEAD
 }
 
 .no-cheeps-message {
@@ -341,4 +342,6 @@ count {
 
 div.page h2.user-title {
   padding-left: 0px;
+=======
+>>>>>>> b2a30a537928ac9df42fbbd8aacf0b5c7a9641ac
 }
