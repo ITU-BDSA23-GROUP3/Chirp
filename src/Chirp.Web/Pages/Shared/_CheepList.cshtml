@@ -32,7 +32,7 @@
                         </div>
                         <div class="row">@cheep.Text</div>
                         <div class="row">
-                            @if (User?.Identity != null && User.Identity.IsAuthenticated && !Model.LikesOwnCheep(cheep.CheepId))
+                            @if (Model.IsUserAuthenticated() && !Model.LikesOwnCheep(cheep.CheepId))
                             {
                                 <form method="post"
                                     asp-page-handler="@((Model.UserLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"

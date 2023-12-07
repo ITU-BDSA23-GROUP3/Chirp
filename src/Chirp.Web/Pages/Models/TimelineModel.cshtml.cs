@@ -8,7 +8,7 @@ public class TimelineModel : ChirpModel
     public int NumOfCheeps;
     public int CurrentPage = 1;
     public int MaxCharacterCount = 160;
-    public TimelineModel(ICheepService service, IRepositoryManager repositoryManager)
+    public TimelineModel(IChirpService service, IRepositoryManager repositoryManager)
         : base(service, repositoryManager) {}
 
     public IActionResult OnPost()

@@ -3,9 +3,9 @@ namespace Chirp.Web.Pages.Models;
 public class ChirpModel : PageModel
 {
     protected readonly IRepositoryManager _repositoryManager;
-    protected readonly ICheepService _service;
+    protected readonly IChirpService _service;
 
-    public ChirpModel(ICheepService service, IRepositoryManager repositoryManager)
+    public ChirpModel(IChirpService service, IRepositoryManager repositoryManager)
     {
         _service = service;
         _repositoryManager = repositoryManager;

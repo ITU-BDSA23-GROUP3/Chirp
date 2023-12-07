@@ -7,7 +7,6 @@ body {
 a {
   color: #26776F;
 }
-
 .active {
   font-weight: bold;
 }
@@ -301,7 +300,6 @@ div.page img.heart {
   height: 18px;
   position: center;
 }
-
 .user-data {
   margin-left: 10px;
   margin-bottom: 10px;
@@ -324,7 +322,6 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
-
 .submit-count {
   display: flex;
   justify-content: space-between;
@@ -333,7 +330,6 @@ tr:nth-child(even) {
 
 count {
   color: gray
-<<<<<<< HEAD
 }
 
 .no-cheeps-message {
@@ -342,6 +338,4 @@ count {
 
 div.page h2.user-title {
   padding-left: 0px;
-=======
->>>>>>> b2a30a537928ac9df42fbbd8aacf0b5c7a9641ac
 }

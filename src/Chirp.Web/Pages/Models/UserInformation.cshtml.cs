@@ -3,7 +3,7 @@ namespace Chirp.Web.Pages.Models;
 
 public class UserInformationModel : ChirpModel
 {
-    public UserInformationModel(ICheepService service, IRepositoryManager repositoryManager)
+    public UserInformationModel(IChirpService service, IRepositoryManager repositoryManager)
         : base(service, repositoryManager) {}
 
     public IActionResult OnPostDelete()

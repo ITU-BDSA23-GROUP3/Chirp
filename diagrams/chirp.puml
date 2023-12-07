@@ -53,13 +53,13 @@ package Chirp.Infrastructure {
 }
 
 package Chirp.Web {
-    interface ICheepService {
+    interface IChirpService {
         CheepsPerPage
         {method} GetCheeps
         {method} GetCheepCount
     }
     
-    class CheepService {
+    class ChirpService {
     }
     
     class TimelineModel {
@@ -77,12 +77,12 @@ package Chirp.Web {
     
     entity _Layout{}
     
-    ICheepService ..|> CheepService
-    CheepService --> ICheepRepository
+    IChirpService ..|> ChirpService
+    ChirpService --> ICheepRepository
     TimelineModel -up-> ICheepRepository
     TimelineModel -up-> IAuthorRepository
     TimelineModel -up-> ChirpDBContext
-    TimelineModel -right-> ICheepService
+    TimelineModel -right-> IChirpService
     _Layout --* AuthModel
     _Layout --* ResetTablesModel
     

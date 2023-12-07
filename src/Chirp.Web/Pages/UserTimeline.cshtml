@@ -11,7 +11,7 @@
 <div>
     <h2> @routeName's Timeline </h2>
     <div class="row">
-        @if (User?.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name?.Equals(routeName) == false)
+        @if (Model.IsUserAuthenticated() && User.Identity?.Name?.Equals(routeName) == false)
         {
             @if (Model.UserFollowsAuthor(routeName))
             {

@@ -4,18 +4,14 @@ using Microsoft.AspNetCore.Authorization;
 namespace Chirp.Web.Pages.Models;
 
 [Authorize]
-public class AuthModel : PageModel
+public class AuthModel : ChirpModel
 {
-    IRepositoryManager _repositoryManager;
-
-    public AuthModel(IRepositoryManager repositoryManager)
-    {
-        _repositoryManager = repositoryManager;
-    }
+    public AuthModel(IChirpService service, IRepositoryManager repositoryManager)
+        : base(service, repositoryManager) {}
 
     public ActionResult OnGet(bool? signOut)
     {
-        if (User?.Identity != null && User.Identity.IsAuthenticated && signOut != null)
+        if (IsUserAuthenticated() && signOut != null)
         {
             if (signOut.Value)
                 Response.Cookies.Delete(".AspNetCore.Cookies");

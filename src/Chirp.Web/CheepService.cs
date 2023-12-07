@@ -2,7 +2,7 @@ using Chirp.Core;
 
 namespace Chirp.Web;
 
-public interface ICheepService
+public interface IChirpService
 {
     public int CheepsPerPage { get; }
     public List<Cheep> GetCheeps(int pageNumber, string? author = null, bool isAuthor = false);
@@ -13,12 +13,12 @@ public interface ICheepService
     public void DeleteCheeps(int authorId);
 }
 
-public class CheepService : ICheepService
+public class ChirpService : IChirpService
 {
     private readonly IRepositoryManager _repositoryManager;
     public int CheepsPerPage => 32;
 
-    public CheepService(IRepositoryManager repositoryManager)
+    public ChirpService(IRepositoryManager repositoryManager)
     {
         _repositoryManager = repositoryManager;
     }
