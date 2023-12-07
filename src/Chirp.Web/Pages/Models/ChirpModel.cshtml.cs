@@ -3,11 +3,9 @@ namespace Chirp.Web.Pages.Models;
 public class ChirpModel : PageModel
 {
     protected readonly IRepositoryManager _repositoryManager;
-    protected readonly ICheepService _service;
-
-    public ChirpModel(ICheepService service, IRepositoryManager repositoryManager)
+    public int CheepsPerPage => 32;
+    public ChirpModel(IRepositoryManager repositoryManager)
     {
-        _service = service;
         _repositoryManager = repositoryManager;
     }
 
@@ -76,18 +74,20 @@ public class ChirpModel : PageModel
     }
 
     public int GetCheepCount(string? authorName = null){
-        return _service.GetCheepCount(authorName);
+        return _repositoryManager.CheepRepository.QueryCheepCount(authorName, false);
     }
 
     public IEnumerable<Cheep> GetCheeps(string? authorName = null){
         var user = GetAuthor(authorName);
-        return _service.GetAllCheepsFromAuthor(user.Name);
+
+        // This can be cleaned up by moving the pagenumber parameter to the web project
+        return _repositoryManager.CheepRepository.QueryCheeps(1, 10000, user.Name, false).ToList();
     }
 
     public IEnumerable<Cheep> GetLikedCheeps(string? authorName = null){
         var likes = _repositoryManager.LikeRepository.FindLikesByAuthorId(GetAuthor(authorName).AuthorId);
 
         // Error-prone since it doesn't account for all pages (all cheeps)
-        return _service.GetCheeps(1).Where(c => likes.Any(l => l.CheepId == c.CheepId));
+        return _repositoryManager.CheepRepository.QueryCheeps(1, CheepsPerPage, authorName).ToList().Where(c => likes.Any(l => l.CheepId == c.CheepId));
     }
 }

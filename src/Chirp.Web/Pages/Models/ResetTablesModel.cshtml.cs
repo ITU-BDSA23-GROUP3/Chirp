@@ -1,13 +1,14 @@
 namespace Chirp.Web.Pages.Models;
 
-public class ResetTablesModel : PageModel
+public class ResetTablesModel : ChirpModel
 {
-
-    private ChirpDBContext _db;
-    public ResetTablesModel(ChirpDBContext db)
+    private readonly ChirpDBContext _db;
+    public ResetTablesModel(IRepositoryManager repositoryManager, ChirpDBContext db)
+        : base(repositoryManager)
     {
         _db = db;
     }
+
     public IActionResult OnPost()
     {
         // Removes all pre-existing data from the database

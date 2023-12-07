@@ -3,8 +3,8 @@ namespace Chirp.Web.Pages.Models;
 
 public class UserInformationModel : ChirpModel
 {
-    public UserInformationModel(ICheepService service, IRepositoryManager repositoryManager)
-        : base(service, repositoryManager) {}
+    public UserInformationModel(IRepositoryManager repositoryManager)
+        : base(repositoryManager) {}
 
     public IActionResult OnPostDelete()
     {
@@ -15,7 +15,7 @@ public class UserInformationModel : ChirpModel
         _repositoryManager.LikeRepository.DeleteAllLikesByAuthorId(authorId);
         _repositoryManager.LikeRepository.DeleteAllLikesOnCheepsByAuthorId(authorId);
         _repositoryManager.AuthorRepository.DeleteAuthor(authorId);
-        _service.DeleteCheeps(authorId);
+        _repositoryManager.CheepRepository.DeleteAllCheepsByAuthorId(authorId);
 
         // Logout
         Response.Cookies.Delete(".AspNetCore.Cookies");

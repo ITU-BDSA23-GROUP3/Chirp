@@ -6,8 +6,8 @@ namespace Chirp.Web.Pages.Models;
 [Authorize]
 public class AuthModel : ChirpModel
 {
-    public AuthModel(ICheepService service, IRepositoryManager repositoryManager)
-        : base(service, repositoryManager) {}
+    public AuthModel(IRepositoryManager repositoryManager)
+        : base(repositoryManager) {}
 
     public ActionResult OnGet(bool? signOut)
     {
