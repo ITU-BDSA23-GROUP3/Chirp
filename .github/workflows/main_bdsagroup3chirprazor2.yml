@@ -7,11 +7,10 @@ on:
   push:
     branches:
       - main
-      - topic/architectural-changes
   workflow_dispatch:
 
 jobs:
-  build: 
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -52,7 +51,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'bdsagroup3bchirprazor'
+          app-name: 'bdsagroup3chirprazor2'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.PUBLISHPROFILE }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EC4EF83CAF24406BAACA0E918CC5BCF }}
