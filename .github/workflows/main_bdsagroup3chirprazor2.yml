@@ -3,6 +3,10 @@
 
 name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirprazor2
 
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.Web'
+  AZURE_INFRASTRUCTURE_PACKAGE_PATH: './src/Chirp.Infrastructure'
+
 on:
   push:
     branches:
