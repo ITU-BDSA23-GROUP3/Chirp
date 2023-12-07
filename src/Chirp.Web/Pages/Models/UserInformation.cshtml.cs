@@ -6,6 +6,20 @@ public class UserInformationModel : ChirpModel
     public UserInformationModel(IRepositoryManager repositoryManager)
         : base(repositoryManager) {}
 
+    public IEnumerable<Cheep> GetCheeps(string? authorName = null){
+        var user = GetAuthor(authorName);
+
+        // This can be cleaned up by moving the pagenumber parameter to the web project
+        return _repositoryManager.CheepRepository.QueryCheeps(1, 10000, user.Name, false).ToList();
+    }
+
+    public IEnumerable<Cheep> GetLikedCheeps(string? authorName = null){
+        var likes = _repositoryManager.LikeRepository.FindLikesByAuthorId(GetAuthor(authorName).AuthorId);
+
+        // Error-prone since it doesn't account for all pages (all cheeps)
+        return _repositoryManager.CheepRepository.QueryCheeps(1, CheepsPerPage, authorName).ToList().Where(c => likes.Any(l => l.CheepId == c.CheepId));
+    }
+
     public IActionResult OnPostDelete()
     {
         var authorId = GetAuthor().AuthorId;
