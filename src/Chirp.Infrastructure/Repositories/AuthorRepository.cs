@@ -26,7 +26,7 @@ public class AuthorRepository : IAuthorRepository
     public Author FindAuthorById(int authorId)
     {
         var authorCheck = _db.Authors.Where(a => a.AuthorId == authorId);
-        return authorCheck.FirstOrDefault();
+        return authorCheck.FirstOrDefault() ?? throw new Exception("Could not find author by id!");
     }
 
     public List<Author> FindAuthorsByIds(List<int> authorIds)

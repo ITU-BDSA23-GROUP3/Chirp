@@ -1,6 +1,6 @@
 ﻿@page "/{author}"
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model Chirp.Web.Pages.TimelineModel
+@model Chirp.Web.Pages.Models.TimelineModel
 
 @{
     ViewData["Title"] = "Chirp!";
@@ -11,7 +11,7 @@
 <div>
     <h2> @routeName's Timeline </h2>
     <div class="row">
-        @if (User?.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name?.Equals(routeName) == false)
+        @if (Model.IsUserAuthenticated() && Model.GetUserName()?.Equals(routeName) == false)
         {
             @if (Model.UserFollowsAuthor(routeName))
             {

@@ -1,10 +1,10 @@
 @page "/user-information"
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model Chirp.Web.Pages.UserInformationModel
+@model Chirp.Web.Pages.Models.UserInformationModel
 
 @{
     Layout = "Shared/_Layout";
-    ViewData["Title"] = "UserInformation";
+    ViewData["Title"] = "Chirp!";
 }
 
 
@@ -12,11 +12,11 @@
     <link href="/css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <div class="user-data">
-    <h2>User Information</h2>
+    <h2 class="user-title">User Information</h2>
     <h3>Your Picture</h3>
-    <img width="100px" class="profile" src="https://avatars.githubusercontent.com/@($"{@User.Identity.Name}")">
+    <img width="100px" class="profile" src="https://avatars.githubusercontent.com/@($"{@Model.GetUserName()}")">
     <br />
-    <h3>Your profile</h3>
+    <h3>Your Profile</h3>
 
     <table>
         <tr>
@@ -25,12 +25,12 @@
             <th>ID</th>
         </tr>
         <tr>
-            <td>@User.Identity.Name</td>
-            <td>@Model.GetEmail()</td>
-            <td>@Model.GetUserId()</td>
+            <td>@Model.GetUserName()</td>
+            <td>@Model.GetAuthor().Email</td>
+            <td>@Model.GetAuthor().AuthorId</td>
         </tr>
     </table>
-    <h3>Following</h3>
+    <h3>People you follow</h3>
     <table>
         <tr>
             <th>Username</th>
@@ -43,6 +43,21 @@
             </tr>
         }
     </table>
+
+    <h3>People that follow you</h3>
+    <table>
+        <tr>
+            <th>Username</th>
+        </tr>
+        @foreach (var author in Model.GetFollowers())
+        {
+            <tr>
+                <td>@author.Name
+                </td>
+            </tr>
+        }
+    </table>
+
     <h3>Cheeps</h3>
     <table>
         <tr>
@@ -57,7 +72,7 @@
                 </td>
                 <td>@cheep.TimeStamp
                 </td>
-                <td>@cheep.Author.Name
+                <td>@cheep.Author?.Name
                 </td>
             </tr>
         }
@@ -76,7 +91,7 @@
                 </td>
                 <td>@cheep.TimeStamp
                 </td>
-                <td>@cheep.Author.Name
+                <td>@cheep.Author?.Name
                 </td>
             </tr>
         }

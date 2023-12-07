@@ -9,7 +9,7 @@
                 <div class="row">
                     <div class="column">
                         <img class="profile" src="https://avatars.githubusercontent.com/@($"{cheep.Author.Name}")">
-                        @if (User?.Identity?.IsAuthenticated == true && cheep.Author.Name != User.Identity.Name)
+                        @if (Model.IsUserAuthenticated() && cheep.Author.Name != Model.GetUserName())
                         {
                             @if (Model.UserFollowsAuthor(cheep.Author.Name))
                             {
@@ -32,14 +32,14 @@
                         </div>
                         <div class="row">@cheep.Text</div>
                         <div class="row">
-                            @if (User?.Identity != null && User.Identity.IsAuthenticated && !Model.LikesOwnCheep(cheep.CheepId))
+                            @if (Model.IsUserAuthenticated() && !Model.LikesOwnCheep(cheep.CheepId))
                             {
                                 <form method="post"
-                                    asp-page-handler="@((Model.AuthorLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"
+                                    asp-page-handler="@((Model.UserLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"
                                     asp-route-cheepId="@cheep.CheepId">
                                     <button type="submit"
-                                        class="like-button @(Model.AuthorLikesCheep(cheep.CheepId) ? "liked" : "")">
-                                        <img class="heart" src="@(Model.AuthorLikesCheep(cheep.CheepId) ? "/images/liked.png" : "/images/not-liked.png")">
+                                        class="like-button @(Model.UserLikesCheep(cheep.CheepId) ? "liked" : "")">
+                                        <img class="heart" src="@(Model.UserLikesCheep(cheep.CheepId) ? "/images/liked.png" : "/images/not-liked.png")">
                                     </button>&nbsp;
                                 </form>
                             }
@@ -56,7 +56,5 @@
 }
 else
 {
-    <div class="row">
-        <em>There are no cheeps so far.</em>
-    </div>
+    <em class="no-cheeps-message">There are no cheeps so far.</em>
 }
