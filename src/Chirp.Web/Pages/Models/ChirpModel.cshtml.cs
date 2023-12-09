@@ -4,9 +4,6 @@ public class ChirpModel : PageModel
 {
     protected readonly IRepositoryManager _repositoryManager;
 
-    // Can be moved to timelinemodel once cheeprepository is fixed
-    public int CheepsPerPage => 32;
-
     public ChirpModel(IRepositoryManager repositoryManager)
     {
         _repositoryManager = repositoryManager;

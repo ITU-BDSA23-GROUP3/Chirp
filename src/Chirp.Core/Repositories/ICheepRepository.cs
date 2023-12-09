@@ -2,10 +2,14 @@ namespace Chirp.Core;
 
 public interface ICheepRepository
 {
-    public void StoreCheep(Cheep cheep);
-    public void StoreCheeps(List<Cheep> entities);
-    public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null, bool isAuthor = false);
-    public int QueryCheepCount(string? author = null, bool isAuthor = false);
-    public void DeleteCheep(Cheep cheep);
-    public void DeleteAllCheepsByAuthorId(int authorId) ;
+    void StoreCheep(Cheep cheep);
+    void StoreCheeps(List<Cheep> entities);
+    IEnumerable<Cheep> GetCheepsPaginated(int pageNumber, int cheepsPerPage, string? author = null, bool isUser = false);
+    IQueryable<Cheep> GetQueryableCheeps(string? author = null, bool isUser = false);
+    IQueryable<Cheep> GetAllCheepsByAuthorAndFollowers(int authorId);
+    IQueryable<Cheep> GetAll();
+    IQueryable<Cheep> GetAllCheepsByAuthorId(int authorId);
+    void DeleteAllCheepsByAuthorId(int authorId);
+    void DeleteCheep(Cheep cheep);
+    
 }

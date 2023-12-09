@@ -5,8 +5,10 @@ public class TimelineModel : ChirpModel
     public string RouteName = "";
     public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
     public int NumOfCheeps;
+    public int CheepsPerPage = 32;
     public int CurrentPage = 1;
     public int MaxCharacterCount = 160;
+    
     public TimelineModel(IRepositoryManager repositoryManager)
         : base(repositoryManager) { }
 
@@ -99,7 +101,7 @@ public class TimelineModel : ChirpModel
     {
         RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
         var isAuthor = CalculateIsAuthor(author, GetUserName());
-        NumOfCheeps = _repositoryManager.CheepRepository.QueryCheepCount(author, isAuthor);
+        NumOfCheeps = _repositoryManager.CheepRepository.GetQueryableCheeps(author, isAuthor).Count();
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / CheepsPerPage);
 
@@ -115,7 +117,7 @@ public class TimelineModel : ChirpModel
         }
 
         CurrentPage = page;
-        Cheeps = _repositoryManager.CheepRepository.QueryCheeps(page, CheepsPerPage, author, isAuthor).ToList();
+        Cheeps = _repositoryManager.CheepRepository.GetCheepsPaginated(page, CheepsPerPage, author, isAuthor).ToList();
         return Page();
     }
 }
