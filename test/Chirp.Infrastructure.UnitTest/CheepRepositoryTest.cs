@@ -143,6 +143,8 @@ public class CheepRepositoryTest
         var context = new ChirpDBContext(_contextOptions);
         var cheepRepository = new CheepRepository(context, followRepository, authorRepository);
 
+        var author = new Author { AuthorId = 1, Email = "example@mail.com", Name = "Eksempel" };
+
         // Arrange
         var cheeps = new List<Cheep>
         {
@@ -157,7 +159,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        cheepRepository.DeleteAllCheepsByAuthorId(authorId: 1);
+        cheepRepository.DeleteAllCheepsByAuthorId(author);
 
         // Assert
         context.Cheeps.Should().ContainSingle(c => c.AuthorId == dontDeleteCheep.AuthorId);

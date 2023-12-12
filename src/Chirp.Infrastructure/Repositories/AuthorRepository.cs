@@ -2,6 +2,7 @@ using Chirp.Core;
 
 namespace Chirp.Infrastructure;
 
+/// <inheritdoc cref="IAuthorRepository" />
 public class AuthorRepository : IAuthorRepository
 {
     private ChirpDBContext _db;
@@ -26,7 +27,7 @@ public class AuthorRepository : IAuthorRepository
     public Author FindAuthorById(int authorId)
     {
         var authorCheck = _db.Authors.Where(a => a.AuthorId == authorId);
-        return authorCheck.FirstOrDefault() ?? throw new Exception("Could not find author by id!");
+        return authorCheck.FirstOrDefault() ?? throw new InvalidOperationException("Could not find author by id!");
     }
 
     public List<Author> FindAuthorsByIds(List<int> authorIds)
@@ -49,13 +50,9 @@ public class AuthorRepository : IAuthorRepository
         }
     }
 
-    public void DeleteAuthor(int authorId)
+    public void DeleteAuthor(Author author)
     {
-        var authorCheck = _db.Authors.Where(a => a.AuthorId == authorId);
-        if (authorCheck.Any())
-        {
-            _db.Authors.Remove(authorCheck.First());
-            _db.SaveChanges();
-        }
+        _db.Authors.Remove(author);
+        _db.SaveChanges();
     }
 }

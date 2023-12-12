@@ -30,12 +30,12 @@ public class ChirpModel : PageModel
     }
 
     public IEnumerable<Author> GetFollowing(){
-        var following = _repositoryManager.FollowRepository.FindFollowingByAuthorId(GetAuthor().AuthorId);
+        var following = _repositoryManager.FollowRepository.FindFollowingByAuthor(GetAuthor());
         return _repositoryManager.AuthorRepository.FindAuthorsByIds(following.Select(f => f.FollowedId).ToList());
     }
 
     public IEnumerable<Author> GetFollowers(){
-        var followers = _repositoryManager.FollowRepository.FindFollowersByAuthorId(GetAuthor().AuthorId);
+        var followers = _repositoryManager.FollowRepository.FindFollowersByAuthor(GetAuthor());
         return _repositoryManager.AuthorRepository.FindAuthorsByIds(followers.Select(f => f.FollowerId).ToList());
     }
 }

@@ -3,6 +3,7 @@
 @if (Model.Cheeps.Count > 0)
 {
     <ul id="messagelist" class="cheeps">
+        @ViewData["hej"]
         @foreach (var cheep in Model.Cheeps)
         {
             <li>
@@ -32,19 +33,19 @@
                         </div>
                         <div class="row">@cheep.Text</div>
                         <div class="row">
-                            @if (Model.IsUserAuthenticated() && !Model.LikesOwnCheep(cheep.CheepId))
+                            @if (Model.IsUserAuthenticated() && !Model.LikesOwnCheep(cheep))
                             {
                                 <form method="post"
-                                    asp-page-handler="@((Model.UserLikesCheep(cheep.CheepId)) ? "Unlike" : "Like")"
+                                    asp-page-handler="@((Model.UserLikesCheep(cheep)) ? "Unlike" : "Like")"
                                     asp-route-cheepId="@cheep.CheepId">
                                     <button type="submit"
-                                        class="like-button @(Model.UserLikesCheep(cheep.CheepId) ? "liked" : "")">
-                                        <img class="heart" src="@(Model.UserLikesCheep(cheep.CheepId) ? "/images/liked.png" : "/images/not-liked.png")">
+                                        class="like-button @(Model.UserLikesCheep(cheep) ? "liked" : "")">
+                                        <img class="heart" src="@(Model.UserLikesCheep(cheep) ? "/images/liked.png" : "/images/not-liked.png")">
                                     </button>&nbsp;
                                 </form>
                             }
                             @{
-                                var cheepLikes = Model.GetLikeCount(cheep.CheepId);
+                                var cheepLikes = Model.GetLikeCount(cheep);
                             }
                             <p class="likes"><i>@cheepLikes.ToString() @(cheepLikes == 1 ? "person likes" : "people like") this.</i></p>
                         </div>

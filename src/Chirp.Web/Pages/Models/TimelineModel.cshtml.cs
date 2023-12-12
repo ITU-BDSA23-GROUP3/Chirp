@@ -15,41 +15,42 @@ public class TimelineModel : ChirpModel
         return routeName == GetUserName() || routeName == "";
     }
 
-    protected bool CalculateIsAuthor(string? pageAuthor, string? loggedInUser) {
-        if (pageAuthor == null|| loggedInUser == null) return false;
-        return pageAuthor==loggedInUser;
+    protected bool CalculateIsAuthor(string? pageAuthor, string? loggedInUser)
+    {
+        if (pageAuthor == null || loggedInUser == null) return false;
+        return pageAuthor == loggedInUser;
     }
 
-    public bool UserFollowsAuthor(string followedName)
+    public bool UserFollowsAuthor(string routeName)
     {
-        var followerId = GetAuthor().AuthorId;
-        var followedId = GetAuthor(followedName).AuthorId;
-        return _repositoryManager.FollowRepository.FollowExists(followerId, followedId);
+        return _repositoryManager.FollowRepository.FollowExists(
+            new Follow { FollowerId = GetAuthor().AuthorId, FollowedId = GetAuthor(routeName).AuthorId }
+        );
     }
 
-    public bool UserLikesCheep(int cheepId)
+    public bool UserLikesCheep(Cheep cheep)
     {
-        return _repositoryManager.LikeRepository.LikeExists(GetAuthor().AuthorId, cheepId);
+        return _repositoryManager.LikeRepository.LikeExists(new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId });
     }
 
-    public int GetLikeCount(int cheepId)
+    public int GetLikeCount(Cheep cheep)
     {
-        return _repositoryManager.LikeRepository.FindLikeCountByCheepId(cheepId);
+        return _repositoryManager.LikeRepository.FindLikeCountByCheep(cheep);
     }
 
-    public bool LikesOwnCheep(int cheepId)
+    public bool LikesOwnCheep(Cheep cheep)
     {
-        return _repositoryManager.LikeRepository.LikesOwnCheep(GetAuthor().AuthorId, cheepId);
+        return _repositoryManager.LikeRepository.LikesOwnCheep(new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId });
     }
 
     public int GetFollowersCount(string routeName)
     {
-        return _repositoryManager.FollowRepository.FindFollowersCountByAuthorId(GetAuthor(routeName).AuthorId);
+        return _repositoryManager.FollowRepository.FindFollowersCountByAuthor(GetAuthor(routeName));
     }
 
     public int GetFollowingCount(string routeName)
     {
-        return _repositoryManager.FollowRepository.FindFollowingCountByAuthorId(GetAuthor(routeName).AuthorId);
+        return _repositoryManager.FollowRepository.FindFollowingCountByAuthor(GetAuthor(routeName));
     }
 
     public IActionResult OnPost()
@@ -61,37 +62,35 @@ public class TimelineModel : ChirpModel
         return RedirectToPage();
     }
 
-    public IActionResult OnPostLike(int cheepId)
+    public IActionResult OnPostLike(Cheep cheep)
     {
         if (!IsUserAuthenticated()) return Page();
-        var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.LikeCheep(authorId, cheepId);
+        _repositoryManager.LikeRepository.AddLike(new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId });
         return RedirectToPage();
     }
 
-    public IActionResult OnPostUnlike(int cheepId)
+    public IActionResult OnPostUnlike(Cheep cheep)
     {
         if (!IsUserAuthenticated()) return Page();
-        var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.UnlikeCheep(authorId, cheepId);
+        _repositoryManager.LikeRepository.RemoveLike(new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId });
         return RedirectToPage();
     }
 
     public IActionResult OnPostFollow(string routeName)
     {
         if (!IsUserAuthenticated()) return Page();
-        var followerId = GetAuthor().AuthorId;
-        var followedId = GetAuthor(routeName).AuthorId;
-        _repositoryManager.FollowRepository.Follow(followerId, followedId);
+        _repositoryManager.FollowRepository.AddFollow(
+            new Follow { FollowerId = GetAuthor().AuthorId, FollowedId = GetAuthor(routeName).AuthorId }
+        );
         return RedirectToPage();
     }
 
     public IActionResult OnPostUnfollow(string routeName)
     {
         if (!IsUserAuthenticated()) return Page();
-        var followerId = GetAuthor().AuthorId;
-        var followedId = GetAuthor(routeName).AuthorId;
-        _repositoryManager.FollowRepository.Unfollow(followerId, followedId);
+        _repositoryManager.FollowRepository.RemoveFollow(
+            new Follow { FollowerId = GetAuthor().AuthorId, FollowedId = GetAuthor(routeName).AuthorId }
+        );
         return RedirectToPage();
     }
 

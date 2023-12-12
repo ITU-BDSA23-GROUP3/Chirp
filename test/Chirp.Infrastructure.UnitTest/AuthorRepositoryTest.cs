@@ -109,7 +109,7 @@ public class AuthorRepositoryTest
         context.SaveChanges();
 
         // Act
-        authorRepository.DeleteAuthor(author.AuthorId);
+        authorRepository.DeleteAuthor(author);
 
         // Assert
         context.Authors.Should().ContainSingle(a => a.AuthorId == author2.AuthorId);

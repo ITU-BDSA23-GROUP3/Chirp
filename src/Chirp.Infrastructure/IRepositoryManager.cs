@@ -1,6 +1,7 @@
 using Chirp.Core;
 
 namespace Chirp.Infrastructure;
+
 public interface IRepositoryManager
 {
     IAuthorRepository AuthorRepository { get; }

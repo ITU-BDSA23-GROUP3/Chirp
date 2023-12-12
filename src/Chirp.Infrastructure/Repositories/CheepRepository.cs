@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure;
 
+/// <inheritdoc cref="ICheepRepository" />
 public class CheepRepository : ICheepRepository
 {
     private ChirpDBContext _db;
@@ -22,7 +23,7 @@ public class CheepRepository : ICheepRepository
         StoreCheeps(new List<Cheep> { new Cheep { AuthorId= cheep.AuthorId, CheepId = newCheepId, Text = cheep.Text, TimeStamp = cheep.TimeStamp} });
     }
 
-    public void StoreCheeps(List<Cheep> entities)
+    public void StoreCheeps(ICollection<Cheep> entities)
     {
         _db.Cheeps.AddRange(entities);
         _db.SaveChanges();
@@ -41,12 +42,12 @@ public class CheepRepository : ICheepRepository
 
             var authors = _authorRepository.FindAuthorsByName(author);
             if(!authors.Any()) return new List<Cheep>();
-            var authorId = authors.First().AuthorId;
+            var foundAuthor = authors.First();
             IEnumerable<int> followedIds = new List<int>();
             if (isAuthor) {
-                followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+                followedIds = _followRepository.FindFollowingByAuthor(foundAuthor).Select(f => f.FollowedId);
             }
-            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
+            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == foundAuthor.AuthorId);
         }
 
         return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
@@ -62,12 +63,12 @@ public class CheepRepository : ICheepRepository
         } else {
             var authors = _authorRepository.FindAuthorsByName(author);
             if(!authors.Any()) return 0;
-            var authorId = authors.First().AuthorId;
+            var foundAuthor = authors.First();
             IEnumerable<int> followedIds = new List<int>();
             if (isAuthor) {
-                followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+                followedIds = _followRepository.FindFollowingByAuthor(foundAuthor).Select(f => f.FollowedId);
             }
-            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
+            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == foundAuthor.AuthorId);
         }
 
         return queryResult.Count();
@@ -79,9 +80,9 @@ public class CheepRepository : ICheepRepository
         _db.SaveChanges();
     }
 
-    public void DeleteAllCheepsByAuthorId(int authorId) 
+    public void DeleteAllCheepsByAuthorId(Author author) 
     {
-        _db.Cheeps.Where(c => c.AuthorId == authorId).ToList().ForEach(c => _db.Cheeps.Remove(c));
+        _db.Cheeps.Where(c => c.Author == author).ToList().ForEach(c => _db.Cheeps.Remove(c));
         _db.SaveChanges();
     }
 
