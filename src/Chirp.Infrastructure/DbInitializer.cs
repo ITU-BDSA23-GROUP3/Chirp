@@ -3,8 +3,15 @@ using Chirp.Core;
 
 namespace Chirp.Infrastructure;
 
+/// <summary>
+/// Contains methods for initializing and seeding the Chirp database with sample data.
+/// </summary>
 public static class DbInitializer
 {
+    /// <summary>
+    /// Seeds the Chirp database with sample data.
+    /// </summary>
+    /// <param name="chirpContext"> The Chirp database context to seed. </param>
     public static void SeedDatabase(ChirpDBContext chirpContext)
     {
         if (!(chirpContext.Authors.Any() && chirpContext.Cheeps.Any()))

@@ -19,61 +19,61 @@ public class Author
     public required string Name { get; set; }
 
     /// <summary>
-    /// The email of the author
+    /// The email of the author.
     /// </summary>
     public required string Email { get; set; }
 
     /// <summary>
-    /// The cheeps authored by this author
+    /// The cheeps authored by this author.
     /// </summary>
     public ICollection<Cheep>? Cheeps { get; set; }
 }
 
 /// <summary>
-/// Represents a cheep in the Chirp application
+/// Represents a cheep in the Chirp application.
 /// </summary>
 public class Cheep
 {
     /// <summary>
-    /// The id and primary key of the cheep
+    /// The id and primary key of the cheep.
     /// </summary>
     [Key]
     public int CheepId { get; set; }
 
     /// <summary>
-    /// The author id of the cheep
+    /// The author id of the cheep.
     /// </summary>
     public int AuthorId { get; set; }
 
     /// <summary>
-    /// The author of the cheep
+    /// The author of the cheep.
     /// </summary>
     public Author? Author { get; set; }
 
     /// <summary>
-    /// The text content of the cheep
+    /// The text content of the cheep.
     /// </summary>
     [MaxLength(160)]
     public required string Text { get; set; }
 
     /// <summary>
-    /// The timestamp when the cheep was created
+    /// The timestamp when the cheep was created.
     /// </summary>
     public required DateTime TimeStamp { get; set; }
 
     /// <summary>
-    /// Gets a serialized representation of the cheep timestamp
+    /// Gets a serialized representation of the cheep timestamp.
     /// </summary>
-    /// <returns> A string representing the formatted timestamp </returns>
+    /// <returns> A string representing the formatted timestamp. </returns>
     public string GetSerializedTimeStamp()
     {
         return $"{TimeStamp:MM/dd/yy H:mm:ss}";
     }
 
     /// <summary>
-    /// Gets a string representation of the cheep
+    /// Gets a string representation of the cheep.
     /// </summary>
-    /// <returns> A string containing author name, cheep text, and timestamp </returns>
+    /// <returns> A string containing author name, cheep text, and timestamp. </returns>
     public override string ToString()
     {
         return Author?.Name + " " + Text + " " + TimeStamp;
@@ -81,33 +81,33 @@ public class Cheep
 }
 
 /// <summary>
-/// Represents a "like" relationship in the Chirp application
+/// Represents a "like" relationship in the Chirp application.
 /// </summary>
 public class Like
 {
     /// <summary>
-    /// The id of the author who performed the like
+    /// The id of the author who performed the like.
     /// </summary>
     public int AuthorId { get; set; }
 
     /// <summary>
-    /// The id of the cheep that was liked
+    /// The id of the cheep that was liked.
     /// </summary>
     public int CheepId { get; set; }
 }
 
 /// <summary>
-/// Represents a "follow" relationship in the Chirp application
+/// Represents a "follow" relationship in the Chirp application.
 /// </summary>
 public class Follow
 {
     /// <summary>
-    /// The id of the follower
+    /// The id of the follower.
     /// </summary>
     public int FollowerId { get; set; }
 
     /// <summary>
-    /// The id of the user being followed
+    /// The id of the user being followed.
     /// </summary>
     public int FollowedId { get; set; }
 }

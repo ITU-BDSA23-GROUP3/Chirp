@@ -1,12 +1,9 @@
 using System.Configuration;
-using System.Security.Claims;
 using Azure.Core;
+using Chirp.Infrastructure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Chirp.Web;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +30,7 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 string clientId;
 string clientSecret;
 string connectionString;
+
 // Creates a secret client which connects to our azure key vault
 if (!builder.Environment.IsDevelopment())
 {
@@ -108,6 +106,5 @@ DbInitializer.SeedDatabase(context);
 context.Database.EnsureCreated();
 
 app.MapRazorPages();
-
 
 app.Run();
