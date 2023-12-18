@@ -16,8 +16,12 @@ public class UserInformationModel : ChirpModel
     public UserInformationModel(IRepositoryManager repositoryManager)
         : base(repositoryManager) { }
 
-    public IEnumerable<Cheep> GetCheeps(string? authorName = null){
-        return _repositoryManager.CheepRepository.GetQueryableCheeps(GetAuthor(authorName)).ToList();
+    /// <summary>
+    /// Gets the cheeps authored by the authorized user.
+    /// </summary>
+    /// <returns> The cheeps authored by the authorized user. </returns>
+    public IEnumerable<Cheep> GetCheepsByUser(){
+        return _repositoryManager.CheepRepository.GetQueryableCheeps(GetAuthor()).ToList();
     }
 
     /// <summary>
@@ -27,8 +31,7 @@ public class UserInformationModel : ChirpModel
     public IEnumerable<Cheep> GetLikedCheeps()
     {
         var likes = _repositoryManager.LikeRepository.FindLikesByAuthor(GetAuthor());
-
-        return _repositoryManager.CheepRepository.GetQueryableCheeps(GetAuthor()).Where(c => likes.Any(l => l.CheepId == c.CheepId));
+        return _repositoryManager.CheepRepository.GetQueryableCheeps().Where(c => likes.Any(l => l.CheepId == c.CheepId));
     }
 
     /// <summary>
@@ -44,7 +47,7 @@ public class UserInformationModel : ChirpModel
         _repositoryManager.LikeRepository.DeleteAllLikesByAuthor(author);
         _repositoryManager.LikeRepository.DeleteAllLikesOnCheepsByAuthor(author);
         _repositoryManager.AuthorRepository.DeleteAuthor(author);
-        _repositoryManager.CheepRepository.DeleteAllCheepsByAuthorId(author);
+        _repositoryManager.CheepRepository.DeleteAllCheepsByAuthor(author);
 
         // Logout
         Response.Cookies.Delete(".AspNetCore.Cookies");

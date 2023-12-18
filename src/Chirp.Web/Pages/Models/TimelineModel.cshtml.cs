@@ -1,6 +1,7 @@
 using Chirp.Core;
 using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Chirp.Web.Pages.Models;
 
@@ -12,7 +13,7 @@ public class TimelineModel : ChirpModel
     /// <summary>
     /// The name of the current route.
     /// </summary>
-    public string RouteName = "";
+    public string? RouteName = "";
 
     /// <summary>
     /// The list of cheeps displayed on the timeline.
@@ -207,12 +208,12 @@ public class TimelineModel : ChirpModel
     /// <returns> The timeline page result. </returns>
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)
     {
-        RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
+        RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? null;
         var isAuthor = CalculateIsAuthor(author, GetUserName());
 
-        var foundAuthor = GetAuthor(author);
+        var authorEntity = RouteName.IsNullOrEmpty() ? null : GetAuthor(author);
 
-        var cheeps = _repositoryManager.CheepRepository.GetQueryableCheeps(foundAuthor, isAuthor);
+        var cheeps = _repositoryManager.CheepRepository.GetQueryableCheeps(authorEntity, isAuthor);
         NumOfCheeps = cheeps.Count();
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / CheepsPerPage);

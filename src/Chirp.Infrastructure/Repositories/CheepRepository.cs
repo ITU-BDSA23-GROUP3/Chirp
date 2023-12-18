@@ -35,7 +35,7 @@ public class CheepRepository : ICheepRepository
         {
             return GetAll();
         }
-        
+
         if (isUser)
         {
             return GetAllCheepsByAuthorAndFollowers(author);
@@ -62,14 +62,6 @@ public class CheepRepository : ICheepRepository
         return cheepsToPaginate.OrderByDescending(c => c.TimeStamp).Skip(skip).Include(c => c.Author).Take(take);
     }
 
-    public IEnumerable<Cheep> GetCheepsPaginated(int pageNumber, int cheepsPerPage, Author? author = null, bool isUser = false)
-    {
-        int skip = (pageNumber -1) * cheepsPerPage;
-        var cheepsToBePaginated = GetQueryableCheeps(author, isUser);
-
-        return GetCheepsPaginated(skip, cheepsPerPage, cheepsToBePaginated);
-    }
-
     public IQueryable<Cheep> GetAll()
     {
         return _db.Cheeps.OrderByDescending(c => c.TimeStamp).Include(c => c.Author);
@@ -86,10 +78,6 @@ public class CheepRepository : ICheepRepository
         _db.SaveChanges();
     }
 
-    public void DeleteAllCheepsByAuthorId(Author author) 
-    {
-        _db.Cheeps.Where(c => c.Author == author).ToList().ForEach(c => _db.Cheeps.Remove(c));
-    }
     public void DeleteCheeps(IEnumerable<Cheep> cheeps) 
     {
         _db.Cheeps.RemoveRange(cheeps);
