@@ -50,12 +50,10 @@ else
 
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = "Cookies";
     options.IdleTimeout = TimeSpan.FromMinutes(10);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
 
 builder.Services
     .AddDbContext<ChirpDBContext>(options => options.UseSqlServer(connectionString))
@@ -108,6 +106,5 @@ DbInitializer.SeedDatabase(context);
 context.Database.EnsureCreated();
 
 app.MapRazorPages();
-
 
 app.Run();
