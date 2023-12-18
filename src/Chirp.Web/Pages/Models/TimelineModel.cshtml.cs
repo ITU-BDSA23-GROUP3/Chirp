@@ -152,7 +152,7 @@ public class TimelineModel : ChirpModel
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.LikeCheep(authorId, cheepId);
+        _repositoryManager.LikeRepository.AddLike(new Like { AuthorId=authorId, CheepId = cheepId});
         return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
@@ -160,7 +160,7 @@ public class TimelineModel : ChirpModel
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.UnlikeCheep(authorId, cheepId);
+        _repositoryManager.LikeRepository.RemoveLike(new Like { AuthorId=authorId, CheepId = cheepId});
         return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
@@ -169,7 +169,7 @@ public class TimelineModel : ChirpModel
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
         var followedId = GetAuthor(routeName).AuthorId;
-        _repositoryManager.FollowRepository.Follow(followerId, followedId);
+        _repositoryManager.FollowRepository.AddFollow(new Follow { FollowerId=followerId, FollowedId = followedId});
         return Redirect("/"+routeAuthor+"?page=" + routePage);
 
     }
@@ -179,7 +179,7 @@ public class TimelineModel : ChirpModel
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
         var followedId = GetAuthor(routeName).AuthorId;
-        _repositoryManager.FollowRepository.Unfollow(followerId, followedId);
+        _repositoryManager.FollowRepository.RemoveFollow(new Follow { FollowerId=followerId, FollowedId = followedId});
         return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
