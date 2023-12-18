@@ -148,56 +148,39 @@ public class TimelineModel : ChirpModel
         return RedirectToPage();
     }
 
-    /// <summary>
-    /// Handles the POST request for adding a like to a cheep.
-    /// </summary>
-    /// <param name="cheep"> The cheep to like. </param>
-    /// <returns> A redirect result to the same page after adding the like. </returns>
-    public IActionResult OnPostLike(Cheep cheep)
+    public IActionResult OnPostLike(int cheepId, string routeAuthor, string routePage)
     {
         if (!IsUserAuthenticated()) return Page();
-        _repositoryManager.LikeRepository.AddLike(new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId });
-        return RedirectToPage();
+        var authorId = GetAuthor().AuthorId;
+        _repositoryManager.LikeRepository.LikeCheep(authorId, cheepId);
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
-    /// <summary>
-    /// Handles the POST request for removing a like from a cheep.
-    /// </summary>
-    /// <param name="cheep"> The cheep to unlike. </param>
-    /// <returns> A redirect result to the same page after removing the like. </returns>
-    public IActionResult OnPostUnlike(Cheep cheep)
+    public IActionResult OnPostUnlike(int cheepId, string routeAuthor, string routePage)
     {
         if (!IsUserAuthenticated()) return Page();
-        _repositoryManager.LikeRepository.RemoveLike(new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId });
-        return RedirectToPage();
+        var authorId = GetAuthor().AuthorId;
+        _repositoryManager.LikeRepository.UnlikeCheep(authorId, cheepId);
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
-    /// <summary>
-    /// Handles the POST request for following an author.
-    /// </summary>
-    /// <param name="routeName"> The name of the author to follow. </param>
-    /// <returns> A redirect result to the same page after following the author. </returns>
-    public IActionResult OnPostFollow(string routeName)
+    public IActionResult OnPostFollow(string routeName, string routePage, string routeAuthor)
     {
         if (!IsUserAuthenticated()) return Page();
-        _repositoryManager.FollowRepository.AddFollow(
-            new Follow { FollowerId = GetAuthor().AuthorId, FollowedId = GetAuthor(routeName).AuthorId }
-        );
-        return RedirectToPage();
+        var followerId = GetAuthor().AuthorId;
+        var followedId = GetAuthor(routeName).AuthorId;
+        _repositoryManager.FollowRepository.Follow(followerId, followedId);
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
+
     }
 
-    /// <summary>
-    /// Handles the POST request for unfollowing an author.
-    /// </summary>
-    /// <param name="routeName"> The name of the author to unfollow. </param>
-    /// <returns> A redirect result to the same page after unfollowing the author. </returns>
-    public IActionResult OnPostUnfollow(string routeName)
+    public IActionResult OnPostUnfollow(string routeName, string routePage, string routeAuthor)
     {
         if (!IsUserAuthenticated()) return Page();
-        _repositoryManager.FollowRepository.RemoveFollow(
-            new Follow { FollowerId = GetAuthor().AuthorId, FollowedId = GetAuthor(routeName).AuthorId }
-        );
-        return RedirectToPage();
+        var followerId = GetAuthor().AuthorId;
+        var followedId = GetAuthor(routeName).AuthorId;
+        _repositoryManager.FollowRepository.Unfollow(followerId, followedId);
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
     /// <summary>
