@@ -5,6 +5,11 @@ git clone https://github.com/ITU-BDSA23-GROUP3/Chirp
 ```
 
 To run the application you need the dotnet-runtime package, dotnet-sdk and aspnet-runtime. \
+***Remember to install dotnet 7 and not dotnet 8***
+On debian it is done with 
+```bash
+sudo apt upgrade dotnet-sdk-7.0
+```
 You also need Entity Framework core which can be installed after with this command:
 ```bash
   dotnet tool install --global dotnet-ef --version 7.0.14
