@@ -16,21 +16,25 @@
             @if (Model.IsUserAuthenticated())
             {
                 <div>
-                    <a href="/@(Model.GetUserName())">my timeline</a> |
-                    <a href="/">public timeline</a> |
+                    <a id=timeline href="/@(Model.GetUserName())">my timeline</a> |
+                    <a id=public-timeline href="/">public timeline</a> |
                     @if (Environment.IsDevelopment())
                     {
-                        <a href="/reset">reset tables</a> <span>|</span>
+                        <a id=reset-tables href="/reset">reset tables</a> <span>|</span>
                     }
-                    <a href="/user-information">about me</a> |
-                    <a href="/login/oauth/auth?signOut=true">logout [@(Model.GetUserName())]</a>
+                    <a id=about href="/user-information">about me</a> |
+                    <a id=logout href="/login/oauth/auth?signOut=true">logout [@(Model.GetUserName())]</a>
                 </div>
             }
             else
             {
                 <div>
-                    <a href="/">public timeline</a> |
-                    <a href="/login/oauth/auth">login</a>
+                    <a id=public-timeline href="/">public timeline</a> |
+                    @if (Environment.IsDevelopment())
+                    {
+                        <a id=devlogin href="/devlogin">development login</a> <span>|</span>
+                    }
+                    <a id=login href="/login/oauth/auth">login</a>
                 </div>
             }
         </div>

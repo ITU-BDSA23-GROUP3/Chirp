@@ -17,7 +17,8 @@
                             asp-route-followedId="@cheep.Author.AuthorId" 
                             asp-route-routeName="@Model.RouteName"
                             asp-route-pageNumber="@Model.CurrentPage">
-                                <button type="submit">@(Model.UserFollowsAuthor(cheep.Author.Name) ? "Unfollow" : "Follow")</button>
+                                <button id="@((Model.UserFollowsAuthor(cheep.Author.Name)) ? "unfollow-button" : "follow-button")"
+                                type="submit">@(Model.UserFollowsAuthor(cheep.Author.Name) ? "Unfollow" : "Follow")</button>
                             </form>
                         }
                     </div>
@@ -36,6 +37,7 @@
                                     asp-route-routeName="@Model.RouteName"
                                     asp-route-pageNumber="@Model.CurrentPage">
                                     <button type="submit"
+                                        id="@((Model.UserLikesCheep(cheep)) ? "like-button-liked" : "like-button-not-liked")"
                                         class="like-button @(Model.UserLikesCheep(cheep) ? "liked" : "")">
                                         <img class="heart" src="@(Model.UserLikesCheep(cheep) ? "/images/liked.png" : "/images/not-liked.png")">
                                     </button>&nbsp;

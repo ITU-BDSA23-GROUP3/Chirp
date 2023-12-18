@@ -78,7 +78,7 @@
         }
     </table>
     <h3>Liked Cheeps</h3>
-    <table>
+    <table id=liked-cheeps>
         <tr>
             <th>Text</th>
             <th>Time</th>
@@ -97,6 +97,6 @@
         }
     </table>
     <form asp-page-handler="delete" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
-        <button style="background-color: red; color: white;">Forget me!</button>
+        <button id=forget-btn style="background-color: red; color: white;">Forget me!</button>
     </form>
 </div>

@@ -1,0 +1,30 @@
+@page "/devlogin"
+@model Chirp.Web.Pages.Models.DevloginModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Development login test</title>
+</head>
+<body>
+    <h2>Development login test</h2>
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="Input.Username" required />
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="Input.email" required />
+        </div>
+        <div>
+            <input id=login-btn type="submit" value="Login" />
+        </div>
+    </form>
+</body>
+</html>
