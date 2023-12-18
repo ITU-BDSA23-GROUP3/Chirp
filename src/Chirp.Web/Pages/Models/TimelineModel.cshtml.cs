@@ -63,38 +63,39 @@ public class TimelineModel : ChirpModel
         return RedirectToPage();
     }
 
-    public IActionResult OnPostLike(int cheepId)
+    public IActionResult OnPostLike(int cheepId, string routeAuthor, string routePage)
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
         _repositoryManager.LikeRepository.LikeCheep(authorId, cheepId);
-        return RedirectToPage();
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
-    public IActionResult OnPostUnlike(int cheepId)
+    public IActionResult OnPostUnlike(int cheepId, string routeAuthor, string routePage)
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
         _repositoryManager.LikeRepository.UnlikeCheep(authorId, cheepId);
-        return RedirectToPage();
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
-    public IActionResult OnPostFollow(string routeName)
+    public IActionResult OnPostFollow(string routeName, string routePage, string routeAuthor)
     {
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
         var followedId = GetAuthor(routeName).AuthorId;
         _repositoryManager.FollowRepository.Follow(followerId, followedId);
-        return RedirectToPage();
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
+
     }
 
-    public IActionResult OnPostUnfollow(string routeName)
+    public IActionResult OnPostUnfollow(string routeName, string routePage, string routeAuthor)
     {
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
         var followedId = GetAuthor(routeName).AuthorId;
         _repositoryManager.FollowRepository.Unfollow(followerId, followedId);
-        return RedirectToPage();
+        return Redirect("/"+routeAuthor+"?page=" + routePage);
     }
 
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)

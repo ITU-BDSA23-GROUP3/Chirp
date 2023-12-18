@@ -15,13 +15,19 @@
         {
             @if (Model.UserFollowsAuthor(routeName))
             {
-                <form method="post" asp-page-handler="Unfollow" asp-route-routeName="@routeName">
+                <form method="post"
+                asp-page-handler="Unfollow" 
+                asp-route-routeName="@routeName" 
+                asp-route-routeAuthor="@Model.RouteName">
                     <button type="submit">Unfollow</button>
                 </form>
             }
             else
             {
-                <form method="post" asp-page-handler="Follow" asp-route-routeName="@routeName">
+                <form method="post"
+                asp-page-handler="Follow"
+                asp-route-routeName="@routeName"
+                asp-route-routeAuthor="@Model.RouteName">
                     <button type="submit">Follow</button>
                 </form>
             }
