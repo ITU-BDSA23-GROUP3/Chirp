@@ -86,6 +86,6 @@ dotnet run --launch-profile Localhost
 ```
 
 Now navigate to the `test/Chirp.Infrastructure.UnitTest` directory, and run:
-```bash
+```
 dotnet test
 ```
