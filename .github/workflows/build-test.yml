@@ -12,11 +12,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+        ports:
+          - 4444:4444
+
     steps:
     - uses: actions/checkout@v3
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '7' # specify your dotnet version
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --no-restore
+
+    - name: Start SQL Server Container
+      run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Adsa2023" -p 1433:1433 --name sqlpreview --hostname sqlpreview -d mcr.microsoft.com/mssql/server:2022-latest
+
+    - name: Run Application
+      run: dotnet run --launch-profile Localhost &
+      shell: bash
+
     - name: Test
       run: dotnet test *.sln
