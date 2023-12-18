@@ -5,7 +5,7 @@ namespace Chirp.Infrastructure;
 /// <inheritdoc cref="IFollowRepository" />
 public class FollowRepository : IFollowRepository
 {
-    private ChirpDBContext _db;
+    private readonly ChirpDBContext _db;
 
     public FollowRepository(ChirpDBContext db)
     {

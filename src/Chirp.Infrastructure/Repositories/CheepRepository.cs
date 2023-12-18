@@ -6,15 +6,13 @@ namespace Chirp.Infrastructure;
 /// <inheritdoc cref="ICheepRepository" />
 public class CheepRepository : ICheepRepository
 {
-    private ChirpDBContext _db;
-    protected IAuthorRepository _authorRepository;
-    protected IFollowRepository _followRepository;
+    private readonly ChirpDBContext _db;
+    private readonly IFollowRepository _followRepository;
 
-    public CheepRepository(ChirpDBContext db, IFollowRepository followRepository, IAuthorRepository authorRepository)
+    public CheepRepository(ChirpDBContext db, IFollowRepository followRepository)
     {
         _db = db;
         _followRepository = followRepository;
-        _authorRepository = authorRepository;
     }
     
     public void StoreCheep(Cheep cheep)

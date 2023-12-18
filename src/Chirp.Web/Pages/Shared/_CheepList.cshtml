@@ -12,26 +12,13 @@
                         <img class="profile" src="https://avatars.githubusercontent.com/@($"{cheep.Author.Name}")">
                         @if (Model.IsUserAuthenticated() && cheep.Author.Name != Model.GetUserName())
                         {
-                            @if (Model.UserFollowsAuthor(cheep.Author.Name))
-                            {
-                                <form method="post" 
-                                asp-page-handler="Unfollow" 
-                                asp-route-routeName="@cheep.Author.Name" 
-                                asp-route-routePage="@Model.CurrentPage"
-                                asp-route-routeAuthor="@Model.RouteName">
-                                    <button type="submit">Unfollow</button>
-                                </form>
-                            }
-                            else
-                            {
-                                <form method="post" 
-                                asp-page-handler="Follow" 
-                                asp-route-routeName="@cheep.Author.Name" 
-                                asp-route-routePage="@Model.CurrentPage"
-                                asp-route-routeAuthor="@Model.RouteName">
-                                    <button type="submit">Follow</button>
-                                </form>
-                            }
+                            <form method="post" 
+                            asp-page-handler="@(Model.UserFollowsAuthor(cheep.Author.Name) ? "Unfollow" : "Follow")"
+                            asp-route-followedId="@cheep.Author.AuthorId" 
+                            asp-route-routeName="@Model.RouteName"
+                            asp-route-pageNumber="@Model.CurrentPage">
+                                <button type="submit">@(Model.UserFollowsAuthor(cheep.Author.Name) ? "Unfollow" : "Follow")</button>
+                            </form>
                         }
                     </div>
                     <div>
@@ -46,8 +33,8 @@
                                 <form method="post"
                                     asp-page-handler="@((Model.UserLikesCheep(cheep)) ? "Unlike" : "Like")"
                                     asp-route-cheepId="@cheep.CheepId"
-                                    asp-route-routePage="@Model.CurrentPage"
-                                    asp-route-routeAuthor="@Model.RouteName">
+                                    asp-route-routeName="@Model.RouteName"
+                                    asp-route-pageNumber="@Model.CurrentPage">
                                     <button type="submit"
                                         class="like-button @(Model.UserLikesCheep(cheep) ? "liked" : "")">
                                         <img class="heart" src="@(Model.UserLikesCheep(cheep) ? "/images/liked.png" : "/images/not-liked.png")">

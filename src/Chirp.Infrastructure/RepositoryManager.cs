@@ -53,7 +53,7 @@ public class RepositoryManager : IRepositoryManager
         // Initialize repositories with the Chirp database context.
         AuthorRepository ??= new AuthorRepository(_db);
         FollowRepository ??= new FollowRepository(_db);
-        CheepRepository ??= new CheepRepository(_db, FollowRepository, AuthorRepository);
+        CheepRepository ??= new CheepRepository(_db, FollowRepository);
         LikeRepository ??= new LikeRepository(_db);
     }
 }

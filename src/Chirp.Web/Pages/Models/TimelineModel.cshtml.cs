@@ -54,7 +54,7 @@ public class TimelineModel : ChirpModel
     /// <returns> True if the page belongs to the authenticated user or is a public page; otherwise, false. </returns>
     public bool IsUserOrPublicPage(string routeName)
     {
-        return routeName == GetUserName() || routeName == "";
+        return routeName == GetUserName() || routeName == null;
     }
 
     /// <summary>
@@ -148,39 +148,64 @@ public class TimelineModel : ChirpModel
         return RedirectToPage();
     }
 
-    public IActionResult OnPostLike(int cheepId, string routeAuthor, string routePage)
+    /// <summary>
+    /// Handles the POST request for liking a cheep.
+    /// </summary>
+    /// <param name="cheepId"> The id of the cheep to like. </param>
+    /// <param name="routeName"> The author name of the current route. </param>
+    /// <param name="pageNumber"> The current page number. </param>
+    /// <returns> A redirect result to the same page with the current query parameters. </returns>
+    public IActionResult OnPostLike(int cheepId, string routeName, string pageNumber)
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.AddLike(new Like { AuthorId=authorId, CheepId = cheepId});
-        return Redirect("/"+routeAuthor+"?page=" + routePage);
+        _repositoryManager.LikeRepository.AddLike(new Like { AuthorId = authorId, CheepId = cheepId });
+        return Redirect("/" + routeName + "?page=" + pageNumber);
     }
 
-    public IActionResult OnPostUnlike(int cheepId, string routeAuthor, string routePage)
+    /// <summary>
+    /// Handles the POST request for unliking a cheep.
+    /// </summary>
+    /// <param name="cheepId"> The id of the cheep to unlike. </param>
+    /// <param name="routeName"> The author name of the current route. </param>
+    /// <param name="pageNumber"> The current page number. </param>
+    /// <returns> A redirect result to the same page with the current query parameters. </returns>
+    public IActionResult OnPostUnlike(int cheepId, string routeName, string pageNumber)
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.RemoveLike(new Like { AuthorId=authorId, CheepId = cheepId});
-        return Redirect("/"+routeAuthor+"?page=" + routePage);
+        _repositoryManager.LikeRepository.RemoveLike(new Like { AuthorId = authorId, CheepId = cheepId });
+        return Redirect("/" + routeName + "?page=" + pageNumber);
     }
 
-    public IActionResult OnPostFollow(string routeName, string routePage, string routeAuthor)
+    /// <summary>
+    /// Handles the POST request for following an author.
+    /// </summary>
+    /// <param name="followedId"> The id of the author to follow. </param>
+    /// <param name="routeName"> The author name of the current route. </param>
+    /// <param name="pageNumber"> The current page number. </param>
+    /// <returns> A redirect result to the same page with the current query parameters. </returns>
+    public IActionResult OnPostFollow(int followedId, string routeName, string pageNumber)
     {
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
-        var followedId = GetAuthor(routeName).AuthorId;
-        _repositoryManager.FollowRepository.AddFollow(new Follow { FollowerId=followerId, FollowedId = followedId});
-        return Redirect("/"+routeAuthor+"?page=" + routePage);
-
+        _repositoryManager.FollowRepository.AddFollow(new Follow { FollowerId = followerId, FollowedId = followedId });
+        return Redirect("/" + routeName + "?page=" + pageNumber);
     }
 
-    public IActionResult OnPostUnfollow(string routeName, string routePage, string routeAuthor)
+    /// <summary>
+    /// Handles the POST request for unfollowing an author.
+    /// </summary>
+    /// <param name="followedId"> The id of the author to unfollow. </param>
+    /// <param name="routeName"> The author name of the current route. </param>
+    /// <param name="pageNumber"> The current page number. </param>
+    /// <returns> A redirect result to the same page with the current query parameters. </returns>
+    public IActionResult OnPostUnfollow(int followedId, string routeName, string pageNumber)
     {
         if (!IsUserAuthenticated()) return Page();
         var followerId = GetAuthor().AuthorId;
-        var followedId = GetAuthor(routeName).AuthorId;
-        _repositoryManager.FollowRepository.RemoveFollow(new Follow { FollowerId=followerId, FollowedId = followedId});
-        return Redirect("/"+routeAuthor+"?page=" + routePage);
+        _repositoryManager.FollowRepository.RemoveFollow(new Follow { FollowerId = followerId, FollowedId = followedId });
+        return Redirect("/" + routeName + "?page=" + pageNumber);
     }
 
     /// <summary>
@@ -213,7 +238,7 @@ public class TimelineModel : ChirpModel
         }
 
         CurrentPage = page;
-        Cheeps = _repositoryManager.CheepRepository.GetCheepsPaginated(page, CheepsPerPage, cheeps).ToList();
+        Cheeps = _repositoryManager.CheepRepository.GetCheepsPaginated(page - 1, CheepsPerPage, cheeps).ToList();
         return Page();
     }
 }

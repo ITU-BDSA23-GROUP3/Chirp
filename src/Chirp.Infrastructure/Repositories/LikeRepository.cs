@@ -5,7 +5,7 @@ namespace Chirp.Infrastructure;
 /// <inheritdoc cref="ILikeRepository" />
 public class LikeRepository : ILikeRepository
 {
-    private ChirpDBContext _db;
+    private readonly ChirpDBContext _db;
 
     public LikeRepository(ChirpDBContext db)
     {

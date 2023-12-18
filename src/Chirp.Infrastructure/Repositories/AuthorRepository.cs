@@ -5,7 +5,7 @@ namespace Chirp.Infrastructure;
 /// <inheritdoc cref="IAuthorRepository" />
 public class AuthorRepository : IAuthorRepository
 {
-    private ChirpDBContext _db;
+    private readonly ChirpDBContext _db;
 
     public AuthorRepository(ChirpDBContext db)
     {

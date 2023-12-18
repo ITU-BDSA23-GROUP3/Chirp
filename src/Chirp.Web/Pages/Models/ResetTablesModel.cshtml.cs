@@ -11,7 +11,6 @@ public class ResetTablesModel : ChirpModel
     private readonly ChirpDBContext _db;
         private readonly IWebHostEnvironment _environment;
 
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetTablesModel"/> class.
     /// </summary>
