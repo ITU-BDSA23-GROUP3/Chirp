@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Environment
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -16,7 +18,10 @@
                 <div>
                     <a href="/@(Model.GetUserName())">my timeline</a> |
                     <a href="/">public timeline</a> |
-                    <a href="/reset">reset tables</a> |
+                    @if (Environment.IsDevelopment())
+                    {
+                        <a href="/reset">reset tables</a> <span>|</span>
+                    }
                     <a href="/user-information">about me</a> |
                     <a href="/login/oauth/auth?signOut=true">logout [@(Model.GetUserName())]</a>
                 </div>

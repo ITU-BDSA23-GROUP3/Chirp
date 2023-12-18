@@ -41,7 +41,7 @@ namespace Chirp.Infrastructure.UnitTest
             var newLike = new Like { AuthorId = 1, CheepId = 1 };
 
             // Act
-            likeRepository.LikeCheep(newLike.AuthorId, newLike.CheepId);
+            likeRepository.AddLike(newLike);
 
             // Assert
             context.Likes.Should().ContainSingle(l => l.AuthorId == newLike.AuthorId && l.CheepId == newLike.CheepId);
@@ -59,7 +59,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            likeRepository.UnlikeCheep(newLike.AuthorId, newLike.CheepId);
+            likeRepository.RemoveLike(newLike);
 
             // Assert
             context.Likes.Should().BeEmpty();
@@ -77,7 +77,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            var result = likeRepository.LikeExists(newLike.AuthorId, newLike.CheepId);
+            var result = likeRepository.LikeExists(newLike);
 
             // Assert
             result.Should().BeTrue();
@@ -90,6 +90,7 @@ namespace Chirp.Infrastructure.UnitTest
             var likeRepository = new LikeRepository(context);
 
             // Arrange
+            var author = new Author { AuthorId = 1, Email = "example@mail.com", Name = "Example" };
             var newLike1 = new Like { AuthorId = 1, CheepId = 1 };
             var newLike2 = new Like { AuthorId = 1, CheepId = 2 };
             var newLike3 = new Like { AuthorId = 2, CheepId = 1 };
@@ -99,7 +100,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            likeRepository.DeleteAllLikesByAuthorId(1);
+            likeRepository.DeleteAllLikesByAuthor(author);
 
             // Assert
             context.Likes.Should().ContainSingle(l => l.AuthorId == 2 && l.CheepId == 1);
@@ -120,6 +121,7 @@ namespace Chirp.Infrastructure.UnitTest
             };
             context.Cheeps.AddRange(cheepsToStore);
             context.SaveChanges();
+            var author = new Author { AuthorId = 1, Email = "example@mail.com", Name = "Example" };
             var newLike1 = new Like { AuthorId = 1, CheepId = 3 };
             var newLike2 = new Like { AuthorId = 2, CheepId = 2 };
             var newLike3 = new Like { AuthorId = 2, CheepId = 1 };
@@ -129,7 +131,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            likeRepository.DeleteAllLikesOnCheepsByAuthorId(1);
+            likeRepository.DeleteAllLikesOnCheepsByAuthor(author);
 
             // Assert
             context.Likes.Should().ContainSingle(l => l.AuthorId == 1 && l.CheepId == 3);

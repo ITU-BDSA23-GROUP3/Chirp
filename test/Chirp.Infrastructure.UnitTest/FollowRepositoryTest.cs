@@ -35,7 +35,7 @@ namespace Chirp.Infrastructure.UnitTest
             var newFollow = new Follow { FollowerId = 1, FollowedId = 2 };
 
             // Act
-            followRepository.Follow(newFollow.FollowerId, newFollow.FollowedId);
+            followRepository.AddFollow(newFollow);
 
             // Assert
             context.Follows.Should().ContainSingle(f => f.FollowerId == newFollow.FollowerId && f.FollowedId == newFollow.FollowedId);
@@ -53,7 +53,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            followRepository.Unfollow(newFollow.FollowerId, newFollow.FollowedId);
+            followRepository.RemoveFollow(newFollow);
 
             // Assert
             context.Follows.Should().BeEmpty();
@@ -71,7 +71,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            var result = followRepository.FollowExists(newFollow.FollowerId, newFollow.FollowedId);
+            var result = followRepository.FollowExists(newFollow);
 
             // Assert
             result.Should().BeTrue();
@@ -84,13 +84,13 @@ namespace Chirp.Infrastructure.UnitTest
             var followRepository = new FollowRepository(context);
 
             // Arrange
-            var authorId = 1;
-            context.Follows.Add(new Follow { FollowerId = authorId, FollowedId = 2 });
-            context.Follows.Add(new Follow { FollowerId = authorId, FollowedId = 3 });
+            var author = new Author { AuthorId= 1, Email="example@mail.com", Name = "Example"};
+            context.Follows.Add(new Follow { FollowerId = 1, FollowedId = 2 });
+            context.Follows.Add(new Follow { FollowerId = 1, FollowedId = 3 });
             context.SaveChanges();
 
             // Act
-            var result = followRepository.FindFollowingByAuthorId(authorId);
+            var result = followRepository.FindFollowingByAuthor(author);
 
             // Assert
             result.Should().HaveCount(2);
@@ -103,14 +103,14 @@ namespace Chirp.Infrastructure.UnitTest
             var followRepository = new FollowRepository(context);
 
             // Arrange
-            var authorId = 2;
-            context.Follows.Add(new Follow { FollowerId = 1, FollowedId = authorId });
-            context.Follows.Add(new Follow { FollowerId = 3, FollowedId = authorId });
-            context.Follows.Add(new Follow { FollowerId = 4, FollowedId = authorId });
+            var author = new Author { AuthorId= 2, Email="example@mail.com", Name = "Example"};
+            context.Follows.Add(new Follow { FollowerId = 1, FollowedId = 2 });
+            context.Follows.Add(new Follow { FollowerId = 3, FollowedId = 2 });
+            context.Follows.Add(new Follow { FollowerId = 4, FollowedId = 2 });
             context.SaveChanges();
 
             // Act
-            var result = followRepository.FindFollowersCountByAuthorId(authorId);
+            var result = followRepository.FindFollowersCountByAuthor(author);
 
             // Assert
             result.Should().Be(3);
@@ -126,7 +126,7 @@ namespace Chirp.Infrastructure.UnitTest
             var newFollow = new Follow { FollowerId = 1, FollowedId = 1 };
 
             // Act and Assert
-            Assert.Throws<DbUpdateException>(() => followRepository.Follow(newFollow.FollowerId, newFollow.FollowedId));
+            Assert.Throws<DbUpdateException>(() => followRepository.AddFollow(newFollow));
         }
 
         [Fact]
@@ -136,15 +136,15 @@ namespace Chirp.Infrastructure.UnitTest
             var followRepository = new FollowRepository(context);
 
             // Arrange
-            var authorId = 1;
-            context.Follows.Add(new Follow { FollowerId = authorId, FollowedId = 2 });
-            context.Follows.Add(new Follow { FollowerId = authorId, FollowedId = 3 });
-            context.Follows.Add(new Follow { FollowerId = 2, FollowedId = authorId });
+            var author = new Author { AuthorId= 1, Email="example@mail.com", Name = "Example"};
+            context.Follows.Add(new Follow { FollowerId = 1, FollowedId = 2 });
+            context.Follows.Add(new Follow { FollowerId = 1, FollowedId = 3 });
+            context.Follows.Add(new Follow { FollowerId = 2, FollowedId = 1 });
             context.Follows.Add(new Follow { FollowerId = 2, FollowedId = 3 });
             context.SaveChanges();
 
             // Act
-            followRepository.DeleteAllFollowsByAuthorId(authorId);
+            followRepository.DeleteAllFollowsByAuthor(author);
 
             // Assert
             context.Follows.Should().ContainSingle(f => f.FollowerId == 2 && f.FollowedId == 3);

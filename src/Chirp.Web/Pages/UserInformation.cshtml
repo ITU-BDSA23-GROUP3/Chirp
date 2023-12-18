@@ -65,7 +65,7 @@
             <th>Time</th>
             <th>Author</th>
         </tr>
-        @foreach (var cheep in Model.GetCheeps())
+        @foreach (var cheep in Model.GetCheepsByUser())
         {
             <tr>
                 <td>@cheep.Text
