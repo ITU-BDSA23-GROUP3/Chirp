@@ -48,7 +48,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        var count = chirpStorage.QueryCheepCount();
+        var count = chirpStorage.GetQueryableCheeps().Count();
 
         // Assert
         Assert.Equal(1, count);
@@ -113,7 +113,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        var cheeps = chirpStorage.QueryCheeps(1, 32, author: "Jens");
+        var cheeps = chirpStorage.GetQueryableCheeps(author: "Jens");
 
         // Assert
         cheeps.Count().Should().Be(2);

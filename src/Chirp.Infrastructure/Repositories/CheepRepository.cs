@@ -28,49 +28,63 @@ public class CheepRepository : ICheepRepository
         _db.SaveChanges();
     }
 
-    public IEnumerable<Cheep> QueryCheeps(int pageNumber, int amount, string? author = null, bool isAuthor = false)
+    public IQueryable<Cheep> GetQueryableCheeps(string? author = null, bool isUser = false)
     {
-        int startIndex = (pageNumber -1) * amount;
-        
-        IQueryable<Cheep> queryResult;
-
-        if (string.IsNullOrEmpty(author))
+        if (author == null)
         {
-            queryResult = _db.Cheeps;
-        } else {
-
-            var authors = _authorRepository.FindAuthorsByName(author);
-            if(!authors.Any()) return new List<Cheep>();
-            var authorId = authors.First().AuthorId;
-            IEnumerable<int> followedIds = new List<int>();
-            if (isAuthor) {
-                followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
-            }
-            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
+            return GetAll();
         }
+        
+        var authors = _authorRepository.FindAuthorsByName(author);
+        if (!authors.Any()) return new List<Cheep>().AsQueryable(); // Exception: page of non-existent author
 
-        return queryResult.OrderByDescending(c => c.TimeStamp).Skip(startIndex).Include(c => c.Author).Take(amount);
+        var authorId = authors.First().AuthorId;
+
+        if (isUser)
+        {
+            return GetAllCheepsByAuthorAndFollowers(authorId);
+        }
+        
+        return GetAllCheepsByAuthorId(authorId);
     }
-        
-    public int QueryCheepCount(string? author = null, bool isAuthor = false)
-    {
-        IQueryable<Cheep> queryResult;
 
-        if (string.IsNullOrEmpty(author))
+    public IQueryable<Cheep> GetAllCheepsByAuthorAndFollowers(int authorId) 
+    {   
+        var followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
+        return _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId); // Complexity: O(n^2)
+    }
+
+    private IEnumerable<Cheep> GetCheepsPaginated(int skip, int take, IQueryable<Cheep> cheepsToPaginate = null)
+    {
+        if (skip < 0 || take < 0)
         {
-            queryResult = _db.Cheeps;
-        } else {
-            var authors = _authorRepository.FindAuthorsByName(author);
-            if(!authors.Any()) return 0;
-            var authorId = authors.First().AuthorId;
-            IEnumerable<int> followedIds = new List<int>();
-            if (isAuthor) {
-                followedIds = _followRepository.FindFollowingByAuthorId(authorId).Select(f => f.FollowedId);
-            }
-            queryResult = _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.AuthorId == authorId);
+            throw new ArgumentException("Skip and take must be positive integers");
         }
 
-        return queryResult.Count();
+        if (cheepsToPaginate == null)
+        {
+            cheepsToPaginate = _db.Cheeps;
+        }
+
+        return cheepsToPaginate.OrderByDescending(c => c.TimeStamp).Skip(skip).Include(c => c.Author).Take(take);
+    }
+
+    public IEnumerable<Cheep> GetCheepsPaginated(int pageNumber, int cheepsPerPage, string? author = null, bool isUser = false)
+    {
+        int skip = (pageNumber -1) * cheepsPerPage;
+        var cheepsToBePaginated = GetQueryableCheeps(author, isUser);
+
+        return GetCheepsPaginated(skip, cheepsPerPage, cheepsToBePaginated);
+    }
+
+    public IQueryable<Cheep> GetAll()
+    {
+        return _db.Cheeps.OrderByDescending(c => c.TimeStamp).Include(c => c.Author);
+    }
+
+    public IQueryable<Cheep> GetAllCheepsByAuthorId(int authorId) 
+    {
+        return _db.Cheeps.Where(c => c.AuthorId == authorId);
     }
 
     public void DeleteCheep(Cheep cheep) 
@@ -79,10 +93,16 @@ public class CheepRepository : ICheepRepository
         _db.SaveChanges();
     }
 
-    public void DeleteAllCheepsByAuthorId(int authorId) 
+    public void DeleteCheeps(IEnumerable<Cheep> cheeps) 
     {
-        _db.Cheeps.Where(c => c.AuthorId == authorId).ToList().ForEach(c => _db.Cheeps.Remove(c));
+        _db.Cheeps.RemoveRange(cheeps);
         _db.SaveChanges();
+    }
+
+    public void DeleteAllCheepsByAuthorId(int authorId)
+    {
+        var cheepsToDelete = GetAllCheepsByAuthorId(authorId);
+        DeleteCheeps(cheepsToDelete);
     }
 
 }
