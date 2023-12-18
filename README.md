@@ -8,7 +8,7 @@ To run the application you need the dotnet-runtime package, dotnet-sdk and aspne
 ***Remember to install dotnet 7 and not dotnet 8***
 On debian it is done with 
 ```bash
-sudo apt upgrade dotnet-sdk-7.0
+sudo apt install dotnet-sdk-7.0
 ```
 You also need Entity Framework core which can be installed after with this command:
 ```bash
