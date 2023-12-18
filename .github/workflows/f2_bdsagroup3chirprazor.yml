@@ -3,10 +3,6 @@
 
 name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirprazor
 
-env:
-  AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.Web'
-  AZURE_INFRASTRUCTURE_PACKAGE_PATH: './src/Chirp.Infrastructure'
-
 on:
   push:
     branches:
@@ -26,26 +22,14 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
-      - name: Add ef-core tool
-        run: dotnet tool install --global dotnet-ef --version 7.0.14
-      
-#      - name: Migrations 
-#        run: dotnet ef migrations add InitialMigrations --project ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/ --startup-project ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/
-
       - name: Build with dotnet
-        run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
-
-#      - name: Test with dotnet
-#        run: dotnet test *.sln
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o ${{env.DOTNET_ROOT}}/myapp
-        
-#      - name: Seed database
-#        run: dotnet ef --project=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} database update
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
@@ -56,18 +40,18 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-      
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'bdsagroup3chirprazor'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A145192DF238498088476B988BDF3972 }}
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AD33E3A37DAA43398192BF208E9C9FB7 }}
