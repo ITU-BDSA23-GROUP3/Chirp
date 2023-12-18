@@ -29,9 +29,6 @@ jobs:
       - name: Add ef-core tool
         run: dotnet tool install --global dotnet-ef --version 7.0.14
       
-      - name: Remove potential migrations
-        run: rm ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/Migrations -r -force
-      
 #      - name: Migrations 
 #        run: dotnet ef migrations add InitialMigrations --project ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/ --startup-project ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/
 
