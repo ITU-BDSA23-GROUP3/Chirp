@@ -31,6 +31,7 @@ public class AuthModel : ChirpModel
         {
             // If signing out, delete the authentication cookie
             Response.Cookies.Delete(".AspNetCore.Cookies");
+            return RedirectToPage("Public");
         }
 
         // Retrieve user information from claims

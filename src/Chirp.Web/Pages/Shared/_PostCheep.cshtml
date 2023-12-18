@@ -5,10 +5,10 @@
     <div class="cheepbox">
         <h3>What's on your mind, @(Model.GetUserName())?</h3>
         <form method="post">
-            <textarea oninput="updateCount()" class="textarea" name="Text" maxlength="@Model.MaxCharacterCount"></textarea>
+            <textarea id=cheep-text-area oninput="updateCount()" class="textarea" name="Text" maxlength="@Model.MaxCharacterCount"></textarea>
             <div class="submit-count">
-                <button type="submit">Submit</button>
-                <count class="count"></count>
+                <button id=cheep-btn type="submit">Submit</button>
+                <count id=cheep-count class="count"></count>
             </div>
         </form>
     </div>
