@@ -50,7 +50,7 @@ else
 
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".AspNetCore.Cookies";
+    options.Cookie.Name = "Cookies";
     options.IdleTimeout = TimeSpan.FromMinutes(10);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
