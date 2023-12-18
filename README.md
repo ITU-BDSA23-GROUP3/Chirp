@@ -7,21 +7,36 @@ Remember to use `git tag` for your release based pushes
 
 
 # How to run and develop
+First install git and clone this repository
+```bash
+git clone https://github.com/ITU-BDSA23-GROUP3/Chirp
+```
 
-First you need the dotnet-runtime package, dotnet-sdk and aspnet-runtime. \
+To run the application you need the dotnet-runtime package, dotnet-sdk and aspnet-runtime. \
 You also need Entity Framework core which can be installed after with this command:
 ```bash
   dotnet tool install --global dotnet-ef --version 7.0.14
 ```
+You might need to add dotnet tools to your PATH
+Add this line to your bashrc.
+```bash
+export PATH="$PATH:$HOME/.dotnet/tools/"
+```
+
 The next step is to create a [Github oauth app](https://github.com/settings/developers)
 
 Click new oauth app and fill in the details. 
-Homepage url should be: https://localhost:1339
-The callback url should be: https://localhost:1339/signin-github
+Homepage url should be: http://localhost:1339
+The callback url should be: http://localhost:1339/signin-github
 Client ID is specified on you apps page. And you need to generate a secret on the same page.
 You can generate a new secret if you lose it.
 Now you need to set your development secrets. 
 [user-secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=linux)
+
+Init your user-secrets with
+```bash
+dotnet user-secrets init
+```
 
 this is the client id name
 development:authentication:github:clientId 
@@ -39,7 +54,8 @@ Now install docker, and run
 ```bash
 docker pull mcr.microsoft.com/mssql/server:latest
 ```
-then
+Remember sudo if you are on linux!
+Then
 
 ```bash
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Adsa2023" -p 1433:1433  --name sqlpreview --hostname sqlpreview -d mcr.microsoft.com/mssql/server:2022-latest
