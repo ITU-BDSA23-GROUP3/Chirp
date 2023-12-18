@@ -16,14 +16,8 @@ public class UserInformationModel : ChirpModel
     public UserInformationModel(IRepositoryManager repositoryManager)
         : base(repositoryManager) { }
 
-    /// <summary>
-    /// Gets the cheeps authored by the user.
-    /// </summary>
-    /// <returns> The cheeps authored by the user. </returns>
-    public IEnumerable<Cheep> GetCheeps()
-    {
-        // This can be cleaned up by moving the pagenumber parameter to the web project
-        return _repositoryManager.CheepRepository.QueryCheeps(1, 10000, GetAuthor().Name, false).ToList();
+    public IEnumerable<Cheep> GetCheeps(string? authorName = null){
+        return _repositoryManager.CheepRepository.GetQueryableCheeps(GetAuthor(authorName)).ToList();
     }
 
     /// <summary>
@@ -34,9 +28,7 @@ public class UserInformationModel : ChirpModel
     {
         var likes = _repositoryManager.LikeRepository.FindLikesByAuthor(GetAuthor());
 
-        // Error-prone since it doesn't account for all pages (all cheeps)
-        return _repositoryManager.CheepRepository.QueryCheeps(1, CheepsPerPage).ToList()
-            .Where(c => likes.Any(l => l.CheepId == c.CheepId));
+        return _repositoryManager.CheepRepository.GetQueryableCheeps(GetAuthor()).Where(c => likes.Any(l => l.CheepId == c.CheepId));
     }
 
     /// <summary>

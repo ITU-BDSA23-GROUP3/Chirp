@@ -15,11 +15,6 @@ public class ChirpModel : PageModel
     protected readonly IRepositoryManager _repositoryManager;
 
     /// <summary>
-    /// The number of cheeps to display per page.
-    /// </summary>
-    public int CheepsPerPage => 32;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="ChirpModel"/> class.
     /// </summary>
     /// <param name="repositoryManager"> The repository manager providing access to various repositories. </param>
