@@ -72,3 +72,20 @@ dotnet run --launch-profile Localhost
 
 If you did everything correctly it *should work*
 If you change the structure of the database, you might want to remove the docker container and the migrations and redeploy it again - just follow the same steps in the same order and it should be good.
+
+### To run Selenium testcases
+We're using Selenium Grid to automate our testing. This makes headless development really easy across platforms. The only dependency needed to use this efficiently is docker, which you'd already need to have to succesfully run it anyways. Specifically you need to run:
+```bash
+sudo docker run --net="host" -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome
+```
+[Note: You may need to run this without `sudo`, and that this might not work out of the gate on non-UNIX compliant systems]
+
+Ensure that the application is running by doing:
+```bash
+dotnet run --launch-profile Localhost
+```
+
+Now navigate to the `test/Chirp.Infrastructure.UnitTest` directory, and run:
+```bash
+dotnet test
+```
