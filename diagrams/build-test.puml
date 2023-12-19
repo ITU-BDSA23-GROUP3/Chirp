@@ -1,0 +1,9 @@
+@startuml
+group build-test.yml
+start
+:Restore Dependencies;
+:Build;
+:Test;
+stop
+end group
+@enduml

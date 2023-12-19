@@ -1,0 +1,19 @@
+@startuml
+group main-bdsagroup3chirprazor.yml
+
+start
+group build
+
+:Set up .NET Core;
+:Build;
+:Publish;
+:Upload artifact;
+end group
+
+group deploy
+:Download artifact;
+:Deploy;
+end group
+stop
+end group
+@enduml

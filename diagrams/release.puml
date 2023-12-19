@@ -1,0 +1,13 @@
+@startuml
+group release.yml
+start
+:Restore Dependencies;
+:Build;
+:Test;
+:Create Linux Release;
+:Create Windows Release;
+:Create OSX x64 Release;
+:Create OSX arm Release;
+stop
+end group
+@enduml
