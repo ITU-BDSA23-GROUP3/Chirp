@@ -15,9 +15,13 @@ You also need Entity Framework core which can be installed after with this comma
   dotnet tool install --global dotnet-ef --version 7.0.14
 ```
 You might need to add dotnet tools to your PATH
-Add this line to your bashrc.
+Add this line to the bottom of your ~/.bashrc.
 ```bash
 export PATH="$PATH:$HOME/.dotnet/tools/"
+```
+If you want the changes to take effect in the current terminal immedietly then you can run
+```bash
+source ~/.bashrc
 ```
 
 The next step is to create a [Github oauth app](https://github.com/settings/developers)
@@ -30,7 +34,7 @@ You can generate a new secret if you lose it.
 Now you need to set your development secrets. 
 [user-secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=linux)
 
-Init your user-secrets with
+Navigate to /src/Chirp.Web and init your user-secrets with
 ```bash
 dotnet user-secrets init
 ```
@@ -41,7 +45,7 @@ development:authentication:github:clientId
 this is the client secret name
 development:authentication:github:clientSecret
 
-Microsoft documentation for setting secrets:
+Set secrets with these names
 ```bash
 dotnet user-secrets set "development:authentication:github:clientId" "<client id>"
 dotnet user-secrets set "development:authentication:github:clientSecret" "<secret id>"
@@ -52,8 +56,8 @@ Now install docker, and run
 docker pull mcr.microsoft.com/mssql/server:latest
 ```
 Remember sudo if you are on linux!
-Then
-
+Then you can start the container
+We recommend modifying this default password
 ```bash
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Adsa2023" -p 1433:1433  --name sqlpreview --hostname sqlpreview -d mcr.microsoft.com/mssql/server:2022-latest
 ```
