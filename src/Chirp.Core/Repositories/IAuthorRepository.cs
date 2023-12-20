@@ -40,6 +40,7 @@ public interface IAuthorRepository
     /// Inserts given Author into the database.
     /// </summary>
     /// <param name="author"> The Author to insert into the database. </param>
+    /// <returns> The found or given Author. <returns/>
     public Author CreateAuthor(Author author);
 
     /// <summary>
