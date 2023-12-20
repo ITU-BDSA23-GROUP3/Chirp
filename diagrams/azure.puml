@@ -1,0 +1,30 @@
+@startuml name
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+
+!define AzurePuml https://raw.githubusercontent.com/plantuml-stdlib/Azure-PlantUML/master/dist
+!includeurl AzurePuml/AzureCommon.puml
+!includeurl AzurePuml/Databases/AzureSql.puml
+!includeurl AzurePuml/Security/AzureKeyVault.puml
+
+!define razor https://ppolyzos.com/wp-content/uploads/2016/09/asp-net-core-razor-view.jpg
+
+
+title deployment
+
+Person(user, "Customer", "A user of Chirp")
+Container(spa, "SPA", "Razor", "The main interface that the customer interacts with")
+
+System_Boundary(az, "Azure"){
+    ContainerDb(db, "Database", "Azure SQL", $sprite="AzureSql")
+    System_Boundary(web, "Web app"){
+        Container(server, "Server", "Razor", "SSR")
+    }
+    Container(vault, "Key vault", "Azure key vault", $sprite="AzureKeyVault")
+}
+
+Rel_R(user, spa, "Uses")
+BiRel_R(spa, server, "SSR", "HTTPS")
+Rel(server, vault, "Accesses")
+Rel(server, db, "Reads/Writes")
+@enduml
