@@ -23,7 +23,7 @@ System_Boundary(az, "Azure"){
     Container(vault, "Key vault", "Azure key vault", $sprite="AzureKeyVault")
 }
 
-Rel_R(user, spa, "Uses", "HTTPS")
+Rel_R(user, spa, "Uses")
 BiRel_R(spa, server, "SSR", "HTTPS")
 Rel(server, vault, "Accesses")
 Rel(server, db, "Reads/Writes")
