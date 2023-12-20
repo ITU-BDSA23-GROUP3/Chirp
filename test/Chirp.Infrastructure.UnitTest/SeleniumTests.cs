@@ -208,7 +208,7 @@ namespace Chirp.Infrastructure.UnitTest
             _driver.Navigate().GoToUrl($"{BaseUrl}");
             var pageSource = _driver.PageSource;
             pageSource.Should().NotBeNull();
-            pageSource.Should().Contain(message);
+            pageSource.Should().NotContain(message);
         }
 
         public void Dispose()
