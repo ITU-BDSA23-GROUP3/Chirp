@@ -100,8 +100,8 @@ app.UseSession();
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<ChirpDBContext>();
 
 // Add template data to the database
-DbInitializer.SeedDatabase(context);
 context.Database.EnsureCreated();
+DbInitializer.SeedDatabase(context);
 
 app.MapRazorPages();
 

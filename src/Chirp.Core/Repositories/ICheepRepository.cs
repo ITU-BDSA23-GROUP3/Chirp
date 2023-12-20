@@ -1,4 +1,6 @@
-namespace Chirp.Core;
+using Chirp.Core.Entities;
+
+namespace Chirp.Core.Repositories;
 
 /// <summary>
 /// Repository for database actions relating to cheeps.
@@ -32,10 +34,11 @@ public interface ICheepRepository
     /// <summary>
     /// Gets all cheeps from the database.
     /// </summary>
+    /// <param name="followedIds">The ids of all the folllowers</param>
     /// <param name="author"> Optional parameter for only getting cheeps by the given author. </param>
     /// <param name="isUser"> Optional parameter for also getting cheeps by followed authors. </param>
     /// <returns> A queryable list of cheeps. </returns>
-    public IQueryable<Cheep> GetQueryableCheeps(Author? author = null, bool isUser = false);
+    public IQueryable<Cheep> GetQueryableCheeps(IEnumerable<int> followedIds, Author? author = null, bool isUser = false);
 
     /// <summary>
     /// Gets a subset of the available cheeps for pagination use.
@@ -44,6 +47,6 @@ public interface ICheepRepository
     /// <param name="take"> The amount of cheeps to take. </param>
     /// <param name="cheepsToPaginate"> Optional parameter for a list of cheeps to paginate. </param>
     /// <returns> A subset of cheeps, formatted for pagination. </returns>
-    public IEnumerable<Cheep> GetCheepsPaginated(int skip, int take, IQueryable<Cheep>? cheepsToPaginate = null);
+    public IEnumerable<Cheep> GetCheepsPaginated(uint skip, uint take, IQueryable<Cheep>? cheepsToPaginate = null);
 
 }

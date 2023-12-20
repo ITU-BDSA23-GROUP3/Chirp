@@ -1,4 +1,6 @@
-namespace Chirp.Core;
+using Chirp.Core.Entities;
+
+namespace Chirp.Core.Repositories;
 
 /// <summary>
 /// Repository for database actions relating to authors.
@@ -38,7 +40,7 @@ public interface IAuthorRepository
     /// Inserts given Author into the database.
     /// </summary>
     /// <param name="author"> The Author to insert into the database. </param>
-    public void CreateAuthor(Author author);
+    public Author CreateAuthor(Author author);
 
     /// <summary>
     /// Deletes given Author from the database.

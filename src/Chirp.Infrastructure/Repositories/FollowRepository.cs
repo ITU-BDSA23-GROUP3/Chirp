@@ -1,6 +1,8 @@
 using Chirp.Core;
+using Chirp.Core.Entities;
+using Chirp.Core.Repositories;
 
-namespace Chirp.Infrastructure;
+namespace Chirp.Infrastructure.Repositories;
 
 /// <inheritdoc cref="IFollowRepository" />
 public class FollowRepository : IFollowRepository

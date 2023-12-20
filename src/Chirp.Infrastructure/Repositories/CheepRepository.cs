@@ -1,18 +1,18 @@
 using Chirp.Core;
+using Chirp.Core.Entities;
+using Chirp.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chirp.Infrastructure;
+namespace Chirp.Infrastructure.Repositories;
 
 /// <inheritdoc cref="ICheepRepository" />
 public class CheepRepository : ICheepRepository
 {
     private readonly ChirpDBContext _db;
-    private readonly IFollowRepository _followRepository;
 
-    public CheepRepository(ChirpDBContext db, IFollowRepository followRepository)
+    public CheepRepository(ChirpDBContext db)
     {
         _db = db;
-        _followRepository = followRepository;
     }
     
     public void StoreCheep(Cheep cheep)
@@ -27,45 +27,33 @@ public class CheepRepository : ICheepRepository
         _db.SaveChanges();
     }
 
-    public IQueryable<Cheep> GetQueryableCheeps(Author? author = null, bool isUser = false)
+    public IQueryable<Cheep> GetQueryableCheeps(IEnumerable<int> followedIds, Author? author = null, bool isUser = false)
     {
         if (author == null)
         {
             return GetAll();
         }
 
-        if (isUser)
-        {
-            return GetAllCheepsByAuthorAndFollowers(author);
-        }
-        
-        return GetAllCheepsByAuthor(author);
+        return isUser ? GetAllCheepsByAuthorAndFollowers(author, followedIds) : GetAllCheepsByAuthor(author);
     }
 
-    public IQueryable<Cheep> GetAllCheepsByAuthorAndFollowers(Author author) 
+    private IQueryable<Cheep> GetAllCheepsByAuthorAndFollowers(Author author, IEnumerable<int> followedIds)
     {   
-        var followedIds = _followRepository.FindFollowingByAuthor(author).Select(f => f.FollowedId);
         return _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.Author == author); // Complexity: O(n^2)
     }
 
-    public IEnumerable<Cheep> GetCheepsPaginated(int skip, int take, IQueryable<Cheep>? cheepsToPaginate = null)
+    public IEnumerable<Cheep> GetCheepsPaginated(uint skip, uint take, IQueryable<Cheep>? cheepsToPaginate = null)
     {
-        if (skip < 0 || take < 0)
-        {
-            throw new ArgumentException("Skip and take must be positive integers");
-        }
-
         cheepsToPaginate ??= _db.Cheeps;
-
-        return cheepsToPaginate.OrderByDescending(c => c.TimeStamp).Skip(skip).Include(c => c.Author).Take(take);
+        return cheepsToPaginate.OrderByDescending(c => c.TimeStamp).Skip((int)skip).Include(c => c.Author).Take((int)take);
     }
 
-    public IQueryable<Cheep> GetAll()
+    private IQueryable<Cheep> GetAll()
     {
         return _db.Cheeps.OrderByDescending(c => c.TimeStamp).Include(c => c.Author);
     }
 
-    public IQueryable<Cheep> GetAllCheepsByAuthor(Author author) 
+    private IQueryable<Cheep> GetAllCheepsByAuthor(Author author) 
     {
         return _db.Cheeps.Where(c => c.Author == author);
     }
@@ -76,7 +64,7 @@ public class CheepRepository : ICheepRepository
         _db.SaveChanges();
     }
 
-    public void DeleteCheeps(IEnumerable<Cheep> cheeps) 
+    private void DeleteCheeps(IEnumerable<Cheep> cheeps) 
     {
         _db.Cheeps.RemoveRange(cheeps);
         _db.SaveChanges();

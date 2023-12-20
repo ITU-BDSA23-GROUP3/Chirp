@@ -9,13 +9,14 @@ namespace Chirp.Web.Pages.Models;
 public class ResetTablesModel : ChirpModel
 {
     private readonly ChirpDBContext _db;
-        private readonly IWebHostEnvironment _environment;
+    private readonly IWebHostEnvironment _environment;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetTablesModel"/> class.
     /// </summary>
     /// <param name="repositoryManager"> The repository manager providing access to various repositories. </param>
     /// <param name="db"> The Chirp database context. </param>
+    /// <param name="environment">The webhost environment which we're running inside</param>
     public ResetTablesModel(IRepositoryManager repositoryManager, ChirpDBContext db, IWebHostEnvironment environment)
         : base(repositoryManager)
     {

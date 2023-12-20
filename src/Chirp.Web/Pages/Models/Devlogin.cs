@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Chirp.Infrastructure;
 using Chirp.Core;
+using Chirp.Core.Entities;
 
 namespace Chirp.Web.Pages.Models;
 public class DevloginModel : PageModel

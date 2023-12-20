@@ -1,4 +1,7 @@
-namespace Chirp.Core;
+using Chirp.Core.Entities;
+using Chirp.Core.Exceptions;
+
+namespace Chirp.Core.Repositories;
 
 /// <summary>
 /// Repository for database actions relating to likes.
@@ -9,6 +12,7 @@ public interface ILikeRepository
     /// Inserts given Like into the database.
     /// </summary>
     /// <param name="like"> The Like to insert into the database. </param>
+    /// <exception cref="OwnCheepLikedException">Is thrown if the author tries to like their own cheep</exception>
     public void AddLike(Like like);
 
     /// <summary>

@@ -1,6 +1,8 @@
 using Chirp.Core;
+using Chirp.Core.Entities;
+using Chirp.Core.Repositories;
 
-namespace Chirp.Infrastructure;
+namespace Chirp.Infrastructure.Repositories;
 
 /// <inheritdoc cref="IAuthorRepository" />
 public class AuthorRepository : IAuthorRepository
@@ -36,18 +38,18 @@ public class AuthorRepository : IAuthorRepository
         return authorCheck.ToList();
     }
 
-    public void CreateAuthor(Author author)
+    public Author CreateAuthor(Author author)
     {
         var authorCheck = _db.Authors
             .Where(a => a.Name == author.Name && a.Email == author.Email);
 
-        if (!authorCheck.Any())
-        {   
-            int newAuthorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
-            author.AuthorId = newAuthorId;
-            _db.Authors.Add(author);
-            _db.SaveChanges();
-        }
+        if (authorCheck.Any()) return authorCheck.First();
+        
+        var newAuthorId = _db.Authors.Any() ? _db.Authors.Max(a => a.AuthorId) + 1 : 1;
+        author.AuthorId = newAuthorId;
+        _db.Authors.Add(author);
+        _db.SaveChanges();
+        return author;
     }
 
     public void DeleteAuthor(Author author)
