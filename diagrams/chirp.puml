@@ -1,6 +1,5 @@
-@startuml
+@startuml uml
 package Chirp {
-
     package Chirp.Core {
         interface IAuthorRepository {
             {method} FindAuthorsByName
@@ -14,6 +13,30 @@ package Chirp {
             {method} QueryCheeps
             {method} QueryCheepCount
         }
+    
+        interface IFollowRepository {
+            {method} Follow
+            {method} Unfollow
+            {method} FollowExists
+            {method} FindFollowingByAuthorId
+            {method} FindFollowersByAuthorId
+            {method} FindFollowingCountByAuthorId
+            {method} FindFollowersCountByAuthorId
+            {method} DeleteAllFollowsByAuthorId
+        }
+
+        interface ILikeRepository{
+            {method} LikeCheep
+            {method} UnlikeCheep
+            {method} LikeExists
+            {method} FindLikesByCheepId
+            {method} FindLikesByAuthorId
+            {method} FindLikeCountByCheepId
+            {method} LikesOwnCheep
+            {method} DeleteAllLikesByAuthorId
+            {method} DeleteAllLikesOnCheepsByAuthorId
+        }
+
         class Author
         {
             AuthorId
@@ -32,51 +55,144 @@ package Chirp {
             {method}GetSerializedTimeStamp
             {method}ToString
         }
+
+        class Like {
+            AuthorId
+            CheepId
+        }
+
+        class Follow{
+            FollowerId
+            FollowedId
+        }
+
         Author o-- IAuthorRepository
         Cheep o-- ICheepRepository
+        Follow o-- IFollowRepository
+        Like o-- ILikeRepository
     }
 
     package Chirp.Infrastructure {
+        interface IRepositoryManager{
+            AuthorRepository
+            CheepRepository
+            FollowRepository
+            LikeRepository
+        }
+
+        class RepositoryManager{
+        }
+
         class AuthorRepository {
         }
         
         class CheepRepository {
         }
-        
+
+        class FollowRepository{
+        }
+
+        class LikeRepository{
+        }
+
         class ChirpDBContext{
             Cheeps
             Authors
+            Likes
+            Follows
         }
 
         IAuthorRepository <|.. AuthorRepository
         ICheepRepository <|.. CheepRepository
+        IFollowRepository <|.. FollowRepository 
+        ILikeRepository <|.. LikeRepository 
+        IRepositoryManager <|.. RepositoryManager
+
         AuthorRepository --> ChirpDBContext
         CheepRepository --> ChirpDBContext
+        LikeRepository --> ChirpDBContext
+        FollowRepository --> ChirpDBContext
+
+        IRepositoryManager --* IAuthorRepository
+        IRepositoryManager --* ICheepRepository
+        IRepositoryManager --* IFollowRepository
+        IRepositoryManager --* ILikeRepository
+
+        RepositoryManager --> ChirpDBContext
     }
 
     package Chirp.Web {
-        
-        class TimelineModel {
-            {method} OnPostAsync
-            {method} OnGet
+        package Chirp.Web.Pages {
+            package Chirp.Web.Pages.Models{
+                class ChirpModel {
+                    {method} GetUserName
+                    {method} GetAuthor
+                    {method} IsUserAuthenticated
+                    {method} GetFollowing
+                    {method} GetFollowers
+                }
+
+                class TimelineModel {
+                    {method} OnPost
+                    {method} OnPostLike
+                    {method} OnPostUnlike
+                    {method} OnPostFollow
+                    {method} OnPostUnFollow
+                    {method} OnGet
+                    {method} IsUserOrPublicPage
+                    {method} CalculateIsAuthor
+                    {method} UserFollowsAuthor
+                    {method} UserLikesCheep
+                    {method} GetLikeCount
+                    {method} LikesOwnCheep
+                    {method} GetFollowersCount
+                    {method} GetFollowingCount
+                }
+
+                class AuthModel {
+                    {method} OnGet
+                }
+
+                class ResetTablesModel{
+                    {method} OnPost
+                }
+
+                class UserInformationModel{
+                    {method} GetCheeps
+                    {method} GetLikedCheeps
+                    {method} OnPostDelete
+                }
+
+
+                TimelineModel --|> ChirpModel
+                AuthModel --|> ChirpModel
+                ResetTablesModel --|> ChirpModel
+                UserInformationModel --|> ChirpModel
+                TimelineModel -left-> IRepositoryManager
+            }
+            entity Auth{}
+            entity Public{}
+            entity ResetTables{}
+            entity UserInformation{}
+            entity UserTimeLine{}
+            entity _CheepList{}
+            entity _Layout{}
+            entity _Pagination{}
+            entity _PostCheep{}
+
+            Auth --> AuthModel
+            ResetTables --> ResetTablesModel
+            UserInformation --> UserInformationModel
+
+            _Layout -up-> Public
+            _Layout --> UserInformation
+            _Layout --> UserTimeLine
+            Public -up-> _CheepList
+            Public -up-> _Pagination
+            Public -up-> _PostCheep
+
         }
-        
-        class AuthModel {
-            {method} OnGet
-        }
-        
-        class ResetTablesModel{
-            {method} OnPost
-        }
-        
-        entity _Layout{}
-        
-        TimelineModel -up-> ICheepRepository
-        TimelineModel -up-> IAuthorRepository
-        TimelineModel -up-> ChirpDBContext
-        _Layout --* AuthModel
-        _Layout --* ResetTablesModel
-        
+
     }
 }
 @enduml
