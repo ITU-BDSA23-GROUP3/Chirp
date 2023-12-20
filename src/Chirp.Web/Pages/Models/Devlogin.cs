@@ -1,23 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Chirp.Infrastructure;
-using Chirp.Core;
 using Chirp.Core.Entities;
 
 namespace Chirp.Web.Pages.Models;
-public class DevloginModel : PageModel
+public class DevLoginModel : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = new InputModel();
     IRepositoryManager _repositoryManager;
     private readonly IWebHostEnvironment _environment;
 
-    public DevloginModel(IRepositoryManager repositoryManager, IWebHostEnvironment environment)
+    public DevLoginModel(IRepositoryManager repositoryManager, IWebHostEnvironment environment)
     {
         _repositoryManager = repositoryManager;
         _environment = environment;

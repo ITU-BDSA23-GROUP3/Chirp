@@ -2,7 +2,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Chirp.Infrastructure;
-using Chirp.Core;
 using Chirp.Core.Entities;
 
 namespace Chirp.Web.Pages.Models;

@@ -1,4 +1,3 @@
-using Chirp.Core;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Repositories;
 

@@ -1,4 +1,3 @@
-using Chirp.Core;
 using Chirp.Core.Entities;
 using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Mvc;

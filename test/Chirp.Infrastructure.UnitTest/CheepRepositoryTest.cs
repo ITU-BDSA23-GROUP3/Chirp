@@ -1,7 +1,5 @@
-﻿using Chirp.Core;
-using Chirp.Core.Entities;
+﻿using Chirp.Core.Entities;
 using Chirp.Core.Repositories;
-using Chirp.Infrastructure;
 using Chirp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
