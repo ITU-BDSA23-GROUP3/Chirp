@@ -54,19 +54,19 @@ public class TimelineModel : ChirpModel
     /// <returns> True if the page belongs to the authenticated user or is a public page; otherwise, false. </returns>
     public bool IsUserOrPublicPage(string routeName)
     {
-        return routeName == GetUserName() || routeName == null;
+        return routeName == GetUserName() || routeName == "";
     }
 
-    /// <summary>
+/// <summary>
     /// Calculates if the specified page author is the same as the logged-in user.
     /// </summary>
     /// <param name="pageAuthor"> The name of the page author. </param>
-    /// <param name="loggedInUser"> The name of the logged-in user. </param>
     /// <returns> True if the page author is the same as the logged-in user; otherwise, false. </returns>
-    protected bool CalculateIsAuthor(string? pageAuthor, string? loggedInUser)
+    protected bool UsersPrivateTimeline(string? pageAuthor)
     {
-        if (pageAuthor == null || loggedInUser == null) return false;
-        return pageAuthor == loggedInUser;
+        var loggedInUser = GetUserName();
+        if (pageAuthor == null|| loggedInUser == null) return false;
+        return pageAuthor==loggedInUser;
     }
 
     /// <summary>
@@ -86,11 +86,9 @@ public class TimelineModel : ChirpModel
     /// </summary>
     /// <param name="cheep"> The cheep to check for likes. </param>
     /// <returns> True if the user likes the cheep; otherwise, false. </returns>
-    public bool UserLikesCheep(Cheep cheep)
+    public bool UserLikesCheep(int cheepId)
     {
-        return _repositoryManager.LikeRepository.LikeExists(
-            new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId }
-        );
+        return _repositoryManager.LikeRepository.LikeExists(new Like {AuthorId= GetAuthor().AuthorId, CheepId= cheepId});
     }
 
     /// <summary>
@@ -98,9 +96,9 @@ public class TimelineModel : ChirpModel
     /// </summary>
     /// <param name="cheep"> The cheep to retrieve like count for. </param>
     /// <returns> The number of likes for the cheep. </returns>
-    public int GetLikeCount(Cheep cheep)
+    public int GetLikeCount(int cheepId)
     {
-        return _repositoryManager.LikeRepository.FindLikeCountByCheep(cheep);
+        return _repositoryManager.LikeRepository.FindLikeCountByCheepId(cheepId);
     }
 
     /// <summary>
@@ -108,11 +106,9 @@ public class TimelineModel : ChirpModel
     /// </summary>
     /// <param name="cheep"> The cheep to check for likes. </param>
     /// <returns> True if the user likes their own cheep; otherwise, false. </returns>
-    public bool LikesOwnCheep(Cheep cheep)
+    public bool LikesOwnCheep(int cheepId)
     {
-        return _repositoryManager.LikeRepository.LikesOwnCheep(
-            new Like { AuthorId = GetAuthor().AuthorId, CheepId = cheep.CheepId }
-        );
+        return _repositoryManager.LikeRepository.LikesOwnCheep(GetAuthor().AuthorId, cheepId);
     }
 
     /// <summary>
@@ -122,7 +118,7 @@ public class TimelineModel : ChirpModel
     /// <returns> The number of followers for the author. </returns>
     public int GetFollowersCount(string routeName)
     {
-        return _repositoryManager.FollowRepository.FindFollowersCountByAuthor(GetAuthor(routeName));
+        return _repositoryManager.FollowRepository.FindFollowersCount(GetAuthor(routeName).AuthorId);
     }
 
     /// <summary>
@@ -132,23 +128,23 @@ public class TimelineModel : ChirpModel
     /// <returns> The number of authors the author is following. </returns>
     public int GetFollowingCount(string routeName)
     {
-        return _repositoryManager.FollowRepository.FindFollowingCountByAuthor(GetAuthor(routeName));
+        return _repositoryManager.FollowRepository.FindFollowingCount(GetAuthor(routeName).AuthorId);
     }
 
-    /// <summary>
+     /// <summary>
     /// Handles the POST request for creating a new cheep.
     /// </summary>
     /// <returns> A redirect result to the same page after storing the new cheep. </returns>
-    public IActionResult OnPost()
+    public IActionResult OnPostCheep()
     {
         var authorId = GetAuthor().AuthorId;
         string text = Request.Form["Text"].ToString();
         if (text.Length > MaxCharacterCount) text = text[..MaxCharacterCount];
-        _repositoryManager.CheepRepository.StoreCheep(new Cheep { AuthorId = authorId, Text = text, TimeStamp = DateTime.Now });
+        _repositoryManager.CheepRepository.StoreCheep(new Cheep{ AuthorId= authorId, Text= text, TimeStamp= DateTime.Now});
         return RedirectToPage();
     }
 
-    /// <summary>
+        /// <summary>
     /// Handles the POST request for liking a cheep.
     /// </summary>
     /// <param name="cheepId"> The id of the cheep to like. </param>
@@ -159,7 +155,7 @@ public class TimelineModel : ChirpModel
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.AddLike(new Like { AuthorId = authorId, CheepId = cheepId });
+        _repositoryManager.LikeRepository.AddLike(new Like{AuthorId= authorId, CheepId= cheepId});
         return Redirect("/" + routeName + "?page=" + pageNumber);
     }
 
@@ -174,7 +170,7 @@ public class TimelineModel : ChirpModel
     {
         if (!IsUserAuthenticated()) return Page();
         var authorId = GetAuthor().AuthorId;
-        _repositoryManager.LikeRepository.RemoveLike(new Like { AuthorId = authorId, CheepId = cheepId });
+        _repositoryManager.LikeRepository.RemoveLike(authorId, cheepId);
         return Redirect("/" + routeName + "?page=" + pageNumber);
     }
 
@@ -216,29 +212,88 @@ public class TimelineModel : ChirpModel
     /// <returns> The timeline page result. </returns>
     public ActionResult OnGet(string? author, [FromQuery] int page = 1)
     {
-        RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? null;
-        var isAuthor = CalculateIsAuthor(author, GetUserName());
-
-        var authorEntity = RouteName.IsNullOrEmpty() ? null : GetAuthor(author);
-
-        var cheeps = _repositoryManager.CheepRepository.GetQueryableCheeps(authorEntity, isAuthor);
-        NumOfCheeps = cheeps.Count();
+        RouteName = HttpContext.GetRouteValue("author")?.ToString() ?? "";
+        string timelineType = GetTimelineType(author);
+        NumOfCheeps = GetTotalCheepCountForTimeline(timelineType, author);
 
         int maxPage = (int)Math.Ceiling((double)NumOfCheeps / CheepsPerPage);
 
-        if (page == 0)
+        if ((page < 1 || page > maxPage) && NumOfCheeps != 0)
         {
             page = 1;
         }
 
-        if ((page < 1 || page > maxPage) && NumOfCheeps != 0)
-        {
-            CurrentPage = 1;
-            return RedirectToPage();
-        }
+        var skip = (page - 1) * CheepsPerPage;
 
         CurrentPage = page;
-        Cheeps = _repositoryManager.CheepRepository.GetCheepsPaginated(page - 1, CheepsPerPage, cheeps).ToList();
+        Cheeps = GetCheepsForTimeline(timelineType, author, skip, CheepsPerPage);
         return Page();
     }
+
+    public string GetTimelineType(string? authorName)
+    {
+        // if public page
+        if (authorName == null)
+        {
+            return "public page";
+        }
+        
+        var author = GetAuthor(authorName);
+
+        var isUser = UsersPrivateTimeline(authorName);
+        // if current user's private page
+        if (isUser)
+        {
+            return "private page";
+        }
+
+        // another users page
+        return "user page";
+    }
+
+    public List<Cheep> GetCheepsForTimeline(string timelineType, string? authorName, int skip, int take)
+    {
+        if (timelineType == "public page")
+        {
+            return _repositoryManager.CheepRepository.GetPaginatedCheeps(skip, take).ToList();
+        }
+
+        var authorId = GetAuthor(authorName!).AuthorId;
+
+        if (timelineType == "private page")
+        {
+            var authorIds = _repositoryManager.FollowRepository.FindFollowingIds(authorId).ToList();
+            authorIds.Add(authorId);
+            return _repositoryManager.CheepRepository.GetPaginatedCheepsByAuthorIds(authorIds, skip, take).ToList();
+        }
+        if (timelineType == "user page")
+        {
+            return _repositoryManager.CheepRepository.GetPaginatedCheepsByAuthorId(authorId, skip, take).ToList();
+        }
+        return null;
+    }
+
+    public int GetTotalCheepCountForTimeline(string timelineType, string? authorName)
+    {
+        if (timelineType == "public page")
+        {
+            return _repositoryManager.CheepRepository.GetAllCheeps().Count();
+        }
+
+        var authorId = GetAuthor(authorName!).AuthorId;
+
+        if (timelineType == "private page")
+        {
+            var authorIds = _repositoryManager.FollowRepository.FindFollowingIds(authorId).ToList();
+            authorIds.Add(authorId);
+            return _repositoryManager.CheepRepository.GetAllCheepsByAuthorIds(authorIds).Count();
+        }
+        if (timelineType == "user page")
+        {
+            return _repositoryManager.CheepRepository.GetAllCheepsByAuthorId(authorId).Count();
+        }
+
+        return 0;
+    }
+
 }

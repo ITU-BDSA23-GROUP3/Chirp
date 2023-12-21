@@ -90,7 +90,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            var result = followRepository.FindFollowingByAuthor(author);
+            var result = followRepository.FindFollowingIds(author.AuthorId);
 
             // Assert
             result.Should().HaveCount(2);
@@ -110,7 +110,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            var result = followRepository.FindFollowersCountByAuthor(author);
+            var result = followRepository.FindFollowersCount(author.AuthorId);
 
             // Assert
             result.Should().Be(3);
@@ -130,7 +130,7 @@ namespace Chirp.Infrastructure.UnitTest
         }
 
         [Fact]
-        public void DeleteAllFollowsByAuthorIdRemovesAllFollowsForAuthorId()
+        public void DeleteAllFollowsRelatedToAuthorIdRemovesAllFollowsForAuthorId()
         {
             var context = new ChirpDBContext(_contextOptions);
             var followRepository = new FollowRepository(context);
@@ -144,7 +144,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            followRepository.DeleteAllFollowsByAuthor(author);
+            followRepository.DeleteAllFollowsRelatedToAuthorId(author.AuthorId);
 
             // Assert
             context.Follows.Should().ContainSingle(f => f.FollowerId == 2 && f.FollowedId == 3);

@@ -48,7 +48,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        var count = chirpStorage.GetQueryableCheeps().Count();
+        var count = chirpStorage.GetAllCheeps().Count();
 
         // Assert
         Assert.Equal(1, count);
@@ -77,27 +77,7 @@ public class CheepRepositoryTest
     }
 
     [Fact]
-    public void StoreCheepsSavesCheeps()
-    {
-        var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository);
-
-        // Arrange
-        var cheeps = new List<Cheep>
-        {
-            new Cheep { CheepId = 1, AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now },
-            new Cheep { CheepId = 2, AuthorId = 2, Text = "Cheep 2", TimeStamp = DateTime.Now}
-        };
-
-        // Act
-        chirpStorage.StoreCheeps(cheeps);
-
-        // Assert
-        context.Cheeps.Should().BeEquivalentTo(cheeps);
-    }
-
-    [Fact]
-    public void QueryCheepsReturnsCheepsByAuthor()
+    public void GetAllCheepsByAuthorReturnsCheepsByAuthor()
     {
         var context = new ChirpDBContext(_contextOptions);
         var chirpStorage = new CheepRepository(context, followRepository);
@@ -115,7 +95,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        var cheeps = chirpStorage.GetQueryableCheeps(author1);
+        var cheeps = chirpStorage.GetAllCheepsByAuthorId(author1.AuthorId);
 
         // Assert
         cheeps.Count().Should().Be(2);
@@ -133,7 +113,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        chirpStorage.DeleteCheep(cheep);
+        chirpStorage.DeleteCheep(cheep.CheepId);
 
         // Assert
         context.Cheeps.Should().BeEmpty();
@@ -161,7 +141,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        cheepRepository.DeleteAllCheepsByAuthor(author);
+        cheepRepository.DeleteAllCheepsByAuthorId(author.AuthorId);
 
         // Assert
         context.Cheeps.Should().ContainSingle(c => c.AuthorId == dontDeleteCheep.AuthorId);

@@ -59,7 +59,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            likeRepository.RemoveLike(newLike);
+            likeRepository.RemoveLike(newLike.AuthorId, newLike.CheepId);
 
             // Assert
             context.Likes.Should().BeEmpty();
@@ -100,7 +100,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            likeRepository.DeleteAllLikesByAuthor(author);
+            likeRepository.DeleteAllLikesByAuthorId(author.AuthorId);
 
             // Assert
             context.Likes.Should().ContainSingle(l => l.AuthorId == 2 && l.CheepId == 1);
@@ -131,7 +131,7 @@ namespace Chirp.Infrastructure.UnitTest
             context.SaveChanges();
 
             // Act
-            likeRepository.DeleteAllLikesOnCheepsByAuthor(author);
+            likeRepository.DeleteAllLikesOnCheepsByAuthorId(author.AuthorId);
 
             // Assert
             context.Likes.Should().ContainSingle(l => l.AuthorId == 1 && l.CheepId == 3);

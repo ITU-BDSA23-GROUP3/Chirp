@@ -4,7 +4,7 @@
 {
     <div class="cheepbox">
         <h3>What's on your mind, @(Model.GetUserName())?</h3>
-        <form method="post">
+        <form method="post" asp-page-handler="Cheep">
             <textarea id=cheep-text-area oninput="updateCount()" class="textarea" name="Text" maxlength="@Model.MaxCharacterCount"></textarea>
             <div class="submit-count">
                 <button id=cheep-btn type="submit">Submit</button>

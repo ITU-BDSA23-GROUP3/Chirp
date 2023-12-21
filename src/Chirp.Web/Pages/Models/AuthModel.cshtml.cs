@@ -45,7 +45,7 @@ public class AuthModel : ChirpModel
         }
 
         // Create a new Author entity based on the authenticated user's information
-        _repositoryManager.AuthorRepository.CreateAuthor(new Author { Name = userName, Email = userEmail });
+        _repositoryManager.AuthorRepository.CreateAuthor(new Author{Name=userName, Email=userEmail});
 
         // Redirect to the "Public" page
         return RedirectToPage("Public");

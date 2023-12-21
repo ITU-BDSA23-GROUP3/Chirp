@@ -42,7 +42,7 @@ public class DevloginModel : PageModel
             return Page();
         }
 
-        _repositoryManager.AuthorRepository.CreateAuthor(new Author { Name = Input.Username, Email = Input.Email });
+        _repositoryManager.AuthorRepository.CreateAuthor(new Author{Name= Input.Username, Email= Input.Email});
 
         var claims = new List<Claim>
             {

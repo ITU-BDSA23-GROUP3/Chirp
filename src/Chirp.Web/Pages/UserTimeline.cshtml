@@ -14,6 +14,7 @@
         <p class="follows">Following: @Model.GetFollowingCount(routeName) Followers: @Model.GetFollowersCount(routeName)</p>
     </div>
     @await Html.PartialAsync("Shared/_PostCheep")
+    @await Html.PartialAsync("Shared/_Pagination")
     @await Html.PartialAsync("Shared/_CheepList")
     @await Html.PartialAsync("Shared/_Pagination")
 </div>

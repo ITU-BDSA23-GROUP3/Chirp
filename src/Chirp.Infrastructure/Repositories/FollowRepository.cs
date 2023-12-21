@@ -38,25 +38,30 @@ public class FollowRepository : IFollowRepository
         return _db.Follows.Any(f => f.FollowerId == follow.FollowerId && f.FollowedId == follow.FollowedId);
     }
 
-    public IEnumerable<Follow> FindFollowingByAuthor(Author author)
+    public List<int> FindFollowingIds(int authorId)
     {
-        return _db.Follows.Where(f => f.FollowerId == author.AuthorId);
+        return _db.Follows.Where(f => f.FollowerId == authorId)
+            .Select(f => f.FollowedId)
+            .ToList();
     }
 
-    public IEnumerable<Follow> FindFollowersByAuthor(Author author) {
-        return _db.Follows.Where(f => f.FollowedId == author.AuthorId);
+    public List<int> FindFollowersIds(int authorId)
+    {
+        return _db.Follows.Where(f => f.FollowedId == authorId)
+            .Select(f => f.FollowedId)
+            .ToList();
     }
 
-    public int FindFollowingCountByAuthor(Author author) {
-        return _db.Follows.Count(f => f.FollowerId == author.AuthorId);
+    public int FindFollowingCount(int authorId) {
+        return _db.Follows.Count(f => f.FollowerId == authorId);
     }
 
-    public int FindFollowersCountByAuthor(Author author) {
-        return _db.Follows.Count(f => f.FollowedId == author.AuthorId);
+    public int FindFollowersCount(int authorId) {
+        return _db.Follows.Count(f => f.FollowedId == authorId);
     }
 
-    public void DeleteAllFollowsByAuthor(Author author) {
-        var follows = _db.Follows.Where(f => f.FollowerId == author.AuthorId || f.FollowedId == author.AuthorId);
+    public void DeleteAllFollowsRelatedToAuthorId(int authorId) {
+        var follows = _db.Follows.Where(f => f.FollowerId == authorId || f.FollowedId == authorId);
         _db.Follows.RemoveRange(follows);
         _db.SaveChanges();
     }

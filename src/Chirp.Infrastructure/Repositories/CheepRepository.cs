@@ -18,74 +18,100 @@ public class CheepRepository : ICheepRepository
     public void StoreCheep(Cheep cheep)
     {   
         var newCheepId = _db.Cheeps.Any() ? _db.Cheeps.Max(cheep => cheep.CheepId) + 1 : 1;
-        StoreCheeps(new List<Cheep> { new Cheep { AuthorId= cheep.AuthorId, CheepId = newCheepId, Text = cheep.Text, TimeStamp = cheep.TimeStamp} });
-    }
 
-    public void StoreCheeps(ICollection<Cheep> entities)
-    {
-        _db.Cheeps.AddRange(entities);
+        var author = _db.Authors
+            .Where(a => a.AuthorId == cheep.AuthorId)
+            .SingleOrDefault();
+
+        if (author == null) return;
+        
+        var newCheep = new Cheep { 
+            AuthorId= cheep.AuthorId, 
+            Author= author,
+            CheepId = newCheepId, 
+            Text = cheep.Text, 
+            TimeStamp = cheep.TimeStamp
+            };
+
+        _db.Cheeps.Add(newCheep);
         _db.SaveChanges();
     }
 
-    public IQueryable<Cheep> GetQueryableCheeps(Author? author = null, bool isUser = false)
+    public IQueryable<Cheep> GetAllCheeps()
     {
-        if (author == null)
-        {
-            return GetAll();
-        }
+        return _db.Cheeps
+            .OrderByDescending(c => c.TimeStamp);
+    }
 
-        if (isUser)
-        {
-            return GetAllCheepsByAuthorAndFollowers(author);
-        }
+    public IEnumerable<Cheep> GetPaginatedCheeps(int skip, int take)
+    {
+        return _db.Cheeps
+            .OrderByDescending(c => c.TimeStamp)
+            .Skip(skip)
+            .Include(c => c.Author)
+            .Take(take);
+    }
+
+    public IQueryable<Cheep> GetAllCheepsByAuthorId(int authorId) 
+    {
+        return _db.Cheeps
+            .Where(c => c.AuthorId == authorId);
+    }
+
+    public IEnumerable<Cheep> GetPaginatedCheepsByAuthorId(int authorId, int skip, int take)
+    {
+        return _db.Cheeps
+            .Where(c => c.AuthorId == authorId)
+            .OrderByDescending(c => c.TimeStamp)
+            .Skip(skip)
+            .Include(c => c.Author)
+            .Take(take);
+    }
+
+    public IQueryable<Cheep> GetAllCheepsByAuthorIds(List<int> authorIds)
+    {
+        return _db.Cheeps
+            .OrderByDescending(c => c.TimeStamp)
+            .Where(c => authorIds.Contains(c.AuthorId));
+    }
+
+    public IEnumerable<Cheep> GetPaginatedCheepsByAuthorIds(List<int> authorIds, int skip, int take)
+    {
+        return _db.Cheeps
+            .Where(c => authorIds.Contains(c.AuthorId))
+            .OrderByDescending(c => c.TimeStamp)
+            .Skip(skip)
+            .Include(c => c.Author)
+            .Take(take);
+    }
+
+
+    public Cheep? GetCheepById(int cheepId)
+    {
+        return _db.Cheeps
+            .Where(c => c.CheepId == cheepId)
+            .SingleOrDefault();
+    }
+
+    public void DeleteCheep(int cheepId) 
+    {
+        var cheep = _db.Cheeps
+            .Where(c => c.CheepId == cheepId)
+            .SingleOrDefault();
         
-        return GetAllCheepsByAuthor(author);
-    }
-
-    public IQueryable<Cheep> GetAllCheepsByAuthorAndFollowers(Author author) 
-    {   
-        var followedIds = _followRepository.FindFollowingByAuthor(author).Select(f => f.FollowedId);
-        return _db.Cheeps.Where(c => followedIds.Contains(c.AuthorId) || c.Author == author); // Complexity: O(n^2)
-    }
-
-    public IEnumerable<Cheep> GetCheepsPaginated(int skip, int take, IQueryable<Cheep>? cheepsToPaginate = null)
-    {
-        if (skip < 0 || take < 0)
-        {
-            throw new ArgumentException("Skip and take must be positive integers");
-        }
-
-        cheepsToPaginate ??= _db.Cheeps;
-
-        return cheepsToPaginate.OrderByDescending(c => c.TimeStamp).Skip(skip).Include(c => c.Author).Take(take);
-    }
-
-    public IQueryable<Cheep> GetAll()
-    {
-        return _db.Cheeps.OrderByDescending(c => c.TimeStamp).Include(c => c.Author);
-    }
-
-    public IQueryable<Cheep> GetAllCheepsByAuthor(Author author) 
-    {
-        return _db.Cheeps.Where(c => c.Author == author);
-    }
-
-    public void DeleteCheep(Cheep cheep) 
-    {
         _db.Cheeps.Remove(cheep);
         _db.SaveChanges();
     }
 
-    public void DeleteCheeps(IEnumerable<Cheep> cheeps) 
+    public void DeleteCheeps(IQueryable<Cheep> cheeps) 
     {
         _db.Cheeps.RemoveRange(cheeps);
         _db.SaveChanges();
     }
 
-    public void DeleteAllCheepsByAuthor(Author author)
+    public void DeleteAllCheepsByAuthorId(int authorId)
     {
-        var cheepsToDelete = GetAllCheepsByAuthor(author);
+        var cheepsToDelete = GetAllCheepsByAuthorId(authorId);
         DeleteCheeps(cheepsToDelete);
     }
-
 }

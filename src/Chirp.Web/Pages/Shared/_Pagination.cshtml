@@ -3,6 +3,6 @@
 <div class="pagination">
     @for (int i = 1; i <= Math.Ceiling((double)Model.NumOfCheeps / Model.CheepsPerPage); i++)
     {
-        <a href="?page=@i" class="@(i==Model.CurrentPage ? "active" : "")">@i</a>
+        <a href="?page=@i" class="@(i == Model.CurrentPage ? "active" : "")">@i</a>
     }
 </div>

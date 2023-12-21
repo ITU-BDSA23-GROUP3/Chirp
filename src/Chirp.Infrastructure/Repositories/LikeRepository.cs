@@ -13,35 +13,25 @@ public class LikeRepository : ILikeRepository
         _db.Database.EnsureCreated();
     }
 
-    public bool LikesOwnCheep(Like like)
+    public bool LikesOwnCheep(int authorId, int cheepId)
     {
-        var cheeps = _db.Cheeps.Where(c => c.CheepId == like.CheepId);
-        if (!cheeps.Any()) return false;
-        return cheeps.First().AuthorId == like.AuthorId;
+        var cheep = _db.Cheeps.Where(c => c.CheepId == cheepId).FirstOrDefault();
+        if (cheep == null) return false;
+        return cheep.AuthorId == authorId;
     }
 
     public void AddLike(Like like)
     {
-        // Check if like already exists
-        if (LikeExists(like))
-        {
-            throw new Exception("Cheep is already liked by author!");
-        }
-
-        // Check if cheep is owned by author
-        if (LikesOwnCheep(like))
-        {
-            throw new Exception("Liking your own cheeps is not allowed!");
-        }
+        if (LikeExists(like)) return;
 
         _db.Likes.Add(like);
         _db.SaveChanges();
     }
 
-    public void RemoveLike(Like like)
+    public void RemoveLike(int authorId, int cheepId)
     {
         var existingLike = _db.Likes
-            .FirstOrDefault(l => l.AuthorId == like.AuthorId && l.CheepId == like.CheepId);
+            .FirstOrDefault(l => l.AuthorId == authorId && l.CheepId == cheepId);
 
         // In case the like doesn't exist to begin with, do nothing
         if (existingLike == null) return;
@@ -55,34 +45,41 @@ public class LikeRepository : ILikeRepository
         return _db.Likes.Any(l => l.AuthorId == like.AuthorId && l.CheepId == like.CheepId);
     }
 
-    public IEnumerable<Like> FindLikesByCheep(Cheep cheep)
+    public IEnumerable<Like> FindLikesByCheepId(int cheepId)
     {
-        return _db.Likes.Where(l => l.CheepId == cheep.CheepId);
+        return _db.Likes.Where(l => l.CheepId == cheepId);
     }
 
-    public IEnumerable<Like> FindLikesByAuthor(Author author)
+    public List<Like> FindLikesByAuthorId(int authorId)
     {
-        return _db.Likes.Where(l => l.AuthorId == author.AuthorId);
+        return _db.Likes.Where(l => l.AuthorId == authorId).ToList();
     }
 
-    public int FindLikeCountByCheep(Cheep cheep)
+    public int FindLikeCountByCheepId(int cheepId)
     {
-        return _db.Likes.Count(l => l.CheepId == cheep.CheepId);
+        return _db.Likes.Count(l => l.CheepId == cheepId);
     }
 
-    public void DeleteAllLikesByAuthor(Author author)
+    public void DeleteAllLikesByAuthorId(int authorId)
     {
-        var likes = _db.Likes.Where(l => l.AuthorId == author.AuthorId);
+        var likes = FindLikesByAuthorId(authorId);
         _db.Likes.RemoveRange(likes);
         _db.SaveChanges();
     }
 
-    public void DeleteAllLikesOnCheepsByAuthor(Author author)
+    public void DeleteAllLikesOnCheepsByAuthorId(int authorId)
     {
-        var cheeps = _db.Cheeps.Where(c => c.AuthorId == author.AuthorId);
-        var cheepIds = cheeps.Select(c => c.CheepId);
-        var likes = _db.Likes.Where(l => cheepIds.Contains(l.CheepId));
+        var likes = FindAllLikesOnCheepsByAuthorId(authorId);
         _db.Likes.RemoveRange(likes);
         _db.SaveChanges();
+    }
+    
+    public IQueryable<Like> FindAllLikesOnCheepsByAuthorId(int authorId)
+    {
+        var cheepIdsOfCheepsCreatedByAuthor = _db.Cheeps
+            .Where(c => c.AuthorId == authorId)
+            .Select(c => c.CheepId);
+        
+        return _db.Likes.Where(l => cheepIdsOfCheepsCreatedByAuthor.Contains(l.CheepId));
     }
 }

@@ -12,28 +12,24 @@ public class AuthorRepository : IAuthorRepository
         _db = db;
     }
 
-    public IEnumerable<Author> FindAuthorsByName(string name)
+    public Author FindAuthorByName(string name)
     {
-        var authorCheck = _db.Authors.Where(a => a.Name == name);
-        return authorCheck;
-    }
-
-    public IEnumerable<Author> FindAuthorsByEmail(string email)
-    {
-        var authorCheck = _db.Authors.Where(a => a.Email == email);
-        return authorCheck;
+        return _db.Authors
+            .Where(a => a.Name == name)
+            .FirstOrDefault();
     }
 
     public Author FindAuthorById(int authorId)
     {
-        var authorCheck = _db.Authors.Where(a => a.AuthorId == authorId);
-        return authorCheck.FirstOrDefault() ?? throw new InvalidOperationException("Could not find author by id!");
+        return _db.Authors
+            .Where(a => a.AuthorId == authorId)
+            .FirstOrDefault();
     }
 
-    public List<Author> FindAuthorsByIds(List<int> authorIds)
+    public IEnumerable<Author> FindAuthorsByIds(List<int> authorIds)
     {
-        var authorCheck = _db.Authors.Where(a => authorIds.Contains(a.AuthorId));
-        return authorCheck.ToList();
+        return _db.Authors
+            .Where(a => authorIds.Contains(a.AuthorId));
     }
 
     public void CreateAuthor(Author author)
@@ -44,14 +40,24 @@ public class AuthorRepository : IAuthorRepository
         if (!authorCheck.Any())
         {   
             int newAuthorId = _db.Authors.Any() ? _db.Authors.Max(author => author.AuthorId) + 1 : 1;
-            author.AuthorId = newAuthorId;
-            _db.Authors.Add(author);
+            
+            var newAuthor = new Author { 
+                AuthorId = newAuthorId, 
+                Name = author.Name, 
+                Email = author.Email,
+                Cheeps = new List<Cheep>()
+            };
+
+            _db.Authors.Add(newAuthor);
             _db.SaveChanges();
         }
     }
 
-    public void DeleteAuthor(Author author)
+    public void DeleteAuthor(string authorName)
     {
+        var author = FindAuthorByName(authorName);
+            
+        if (author != null) return;
         _db.Authors.Remove(author);
         _db.SaveChanges();
     }

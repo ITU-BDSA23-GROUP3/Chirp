@@ -12,13 +12,14 @@
                         <img class="profile" src="https://avatars.githubusercontent.com/@($"{cheep.Author.Name}")">
                         @if (Model.IsUserAuthenticated() && cheep.Author.Name != Model.GetUserName())
                         {
+                            var follows = Model.UserFollowsAuthor(cheep.Author.Name);
                             <form method="post" 
-                            asp-page-handler="@(Model.UserFollowsAuthor(cheep.Author.Name) ? "Unfollow" : "Follow")"
-                            asp-route-followedId="@cheep.Author.AuthorId" 
+                            asp-page-handler="@(follows ? "Unfollow" : "Follow")"
+                            asp-route-followedId="@cheep.Author.AuthorId"
                             asp-route-routeName="@Model.RouteName"
                             asp-route-pageNumber="@Model.CurrentPage">
-                                <button id="@((Model.UserFollowsAuthor(cheep.Author.Name)) ? "unfollow-button" : "follow-button")"
-                                type="submit">@(Model.UserFollowsAuthor(cheep.Author.Name) ? "Unfollow" : "Follow")</button>
+                                <button id="@(follows ? "unfollow-button" : "follow-button")"
+                                type="submit">@(follows ? "Unfollow" : "Follow")</button>
                             </form>
                         }
                     </div>
@@ -29,22 +30,23 @@
                         </div>
                         <div class="row">@cheep.Text</div>
                         <div class="row">
-                            @if (Model.IsUserAuthenticated() && !Model.LikesOwnCheep(cheep))
+                            @if (Model.IsUserAuthenticated() && !Model.LikesOwnCheep(cheep.CheepId))
                             {
+                                var liked = Model.UserLikesCheep(cheep.CheepId);
                                 <form method="post"
-                                    asp-page-handler="@((Model.UserLikesCheep(cheep)) ? "Unlike" : "Like")"
+                                    id="@(liked ? "like-button-liked" : "like-button-not-liked")"
+                                    asp-page-handler="@(liked ? "Unlike" : "Like")"
                                     asp-route-cheepId="@cheep.CheepId"
                                     asp-route-routeName="@Model.RouteName"
                                     asp-route-pageNumber="@Model.CurrentPage">
                                     <button type="submit"
-                                        id="@((Model.UserLikesCheep(cheep)) ? "like-button-liked" : "like-button-not-liked")"
-                                        class="like-button @(Model.UserLikesCheep(cheep) ? "liked" : "")">
-                                        <img class="heart" src="@(Model.UserLikesCheep(cheep) ? "/images/liked.png" : "/images/not-liked.png")">
+                                        class="like-button">
+                                        <img class="heart" src="@(liked ? "/images/liked.png" : "/images/not-liked.png")">
                                     </button>&nbsp;
                                 </form>
                             }
                             @{
-                                var cheepLikes = Model.GetLikeCount(cheep);
+                                var cheepLikes = Model.GetLikeCount(cheep.CheepId);
                             }
                             <p class="likes"><i>@cheepLikes.ToString() @(cheepLikes == 1 ? "person likes" : "people like") this.</i></p>
                         </div>

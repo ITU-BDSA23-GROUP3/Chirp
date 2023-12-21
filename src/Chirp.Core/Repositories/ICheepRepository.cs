@@ -9,41 +9,50 @@ public interface ICheepRepository
     /// Inserts given Cheep into the database.
     /// </summary>
     /// <param name="cheep"> The Cheep to insert into the database. </param>
-    public void StoreCheep(Cheep cheep);
+    void StoreCheep(Cheep cheep);
+        
+    IQueryable<Cheep> GetAllCheepsByAuthorIds(List<int> authorIds);
+    IQueryable<Cheep> GetAllCheeps();
+    IQueryable<Cheep> GetAllCheepsByAuthorId(int authorId);
 
     /// <summary>
-    /// Inserts given Cheeps into the database.
+    ///  Gets paginated part of cheeps by multiple Authors.
     /// </summary>
-    /// <param name="entities"> The collection of Cheeps to insert into the database. </param>
-    public void StoreCheeps(ICollection<Cheep> entities);
+    /// <param name="skip"> The amount of cheeps to skip. </param>
+    /// <param name="take"> The amount of cheeps to take. </param>
+    /// <param name="authorIds"> list of authors, to find cheeps they made. </param>
+    /// <returns> A subset of cheeps, formatted for pagination. </returns>
+    IEnumerable<Cheep> GetPaginatedCheepsByAuthorIds(List<int> authorIds, int skip, int take);
 
     /// <summary>
-    /// Deletes given Cheep from the database.
+    /// Gets paginated part of all cheeps.
     /// </summary>
-    /// <param name="cheep"> The Cheep to delete from the database. </param>
-    public void DeleteCheep(Cheep cheep);
+    /// <param name="skip"> The amount of cheeps to skip. </param>
+    /// <param name="take"> The amount of cheeps to take. </param>
+    /// <returns> A subset of cheeps, formatted for pagination. </returns>
+ 
+    IEnumerable<Cheep> GetPaginatedCheeps(int skip, int take);
+
+    /// <summary>
+    /// Gets paginated part of cheeps by an Author.
+    /// </summary>
+    /// <param name="skip"> The amount of cheeps to skip. </param>
+    /// <param name="take"> The amount of cheeps to take. </param>
+    /// <param name="authorId"> id of author, to find cheeps they made. </param>
+    /// <returns> A subset of cheeps, formatted for pagination. </returns>
+ 
+    IEnumerable<Cheep> GetPaginatedCheepsByAuthorId(int authorId, int skip, int take);
 
     /// <summary>
     /// Deletes all cheeps that match the given Author.
     /// </summary>
     /// <param name="author"> Author whose cheeps should be removed. </param>
-    public void DeleteAllCheepsByAuthor(Author author);
+    void DeleteAllCheepsByAuthorId(int authorId);
 
-    /// <summary>
-    /// Gets all cheeps from the database.
+     /// <summary>
+    /// Deletes given Cheep from the database.
     /// </summary>
-    /// <param name="author"> Optional parameter for only getting cheeps by the given author. </param>
-    /// <param name="isUser"> Optional parameter for also getting cheeps by followed authors. </param>
-    /// <returns> A queryable list of cheeps. </returns>
-    public IQueryable<Cheep> GetQueryableCheeps(Author? author = null, bool isUser = false);
-
-    /// <summary>
-    /// Gets a subset of the available cheeps for pagination use.
-    /// </summary>
-    /// <param name="skip"> The amount of cheeps to skip. </param>
-    /// <param name="take"> The amount of cheeps to take. </param>
-    /// <param name="cheepsToPaginate"> Optional parameter for a list of cheeps to paginate. </param>
-    /// <returns> A subset of cheeps, formatted for pagination. </returns>
-    public IEnumerable<Cheep> GetCheepsPaginated(int skip, int take, IQueryable<Cheep>? cheepsToPaginate = null);
-
+    /// <param name="cheep"> The Cheep to delete from the database. </param>
+    void DeleteCheep(int cheepId);
+    
 }

@@ -9,15 +9,8 @@ public interface IAuthorRepository
     /// Queries database to find all authors that match the given name.
     /// </summary>
     /// <param name="name"> The name to search for. </param>
-    /// <returns> An enumerable containing all authors that match the given name. </returns>
-    public IEnumerable<Author> FindAuthorsByName(string name);
-
-    /// <summary>
-    /// Queries database to find all authors that match the given email.
-    /// </summary>
-    /// <param name="email"> The email to search for. </param>
-    /// <returns> An enumerable containing all authors that match the given email. </returns>
-    public IEnumerable<Author> FindAuthorsByEmail(string email);
+    /// <returns> The Author that match the given name. </returns>
+    public Author? FindAuthorByName(string name);
 
     /// <summary>
     /// Queries database to find the first found author that matches the given id.
@@ -32,7 +25,7 @@ public interface IAuthorRepository
     /// </summary>
     /// <param name="authorIds"> The list of ids to search for. </param>
     /// <returns> A list containing all authors that match the given ids. </returns>
-    public List<Author> FindAuthorsByIds(List<int> authorIds);
+    public IEnumerable<Author> FindAuthorsByIds(List<int> authorIds);
 
     /// <summary>
     /// Inserts given Author into the database.
@@ -44,5 +37,5 @@ public interface IAuthorRepository
     /// Deletes given Author from the database.
     /// </summary>
     /// <param name="author"> The Author to delete from the database. </param>
-    public void DeleteAuthor(Author author);
+    public void DeleteAuthor(string authorName);
 }
