@@ -1,4 +1,6 @@
-namespace Chirp.Core;
+using Chirp.Core.Entities;
+
+namespace Chirp.Core.Repositories;
 
 /// <summary>
 /// Repository for database actions relating to follows.

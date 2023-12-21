@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Chirp.Core;
+namespace Chirp.Core.Entities;
 
 /// <summary>
 /// Represents an author in the Chirp application.
@@ -76,7 +76,7 @@ public class Cheep
     /// <returns> A string containing author name, cheep text, and timestamp. </returns>
     public override string ToString()
     {
-        return Author?.Name + " " + Text + " " + TimeStamp;
+        return Author?.Name + " " + Text + " " + GetSerializedTimeStamp();
     }
 }
 

@@ -1,4 +1,4 @@
-using Chirp.Core;
+using Chirp.Core.Entities;
 using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +21,7 @@ public class UserInformationModel : ChirpModel
     /// </summary>
     /// <returns> The cheeps authored by the authorized user. </returns>
     public IEnumerable<Cheep> GetCheepsByUser(){
-        return _repositoryManager.CheepRepository.GetQueryableCheeps(GetAuthor()).ToList();
+        return RepositoryManager.CheepRepository.GetQueryableCheeps(new List<int>(),GetAuthor()).ToList();
     }
 
     /// <summary>
@@ -30,8 +30,8 @@ public class UserInformationModel : ChirpModel
     /// <returns> The cheeps liked by the user. </returns>
     public IEnumerable<Cheep> GetLikedCheeps()
     {
-        var likes = _repositoryManager.LikeRepository.FindLikesByAuthor(GetAuthor());
-        return _repositoryManager.CheepRepository.GetQueryableCheeps().Where(c => likes.Any(l => l.CheepId == c.CheepId));
+        var likes = RepositoryManager.LikeRepository.FindLikesByAuthor(GetAuthor());
+        return RepositoryManager.CheepRepository.GetQueryableCheeps(new List<int>()).Where(c => likes.Any(l => l.CheepId == c.CheepId));
     }
 
     /// <summary>
@@ -43,11 +43,11 @@ public class UserInformationModel : ChirpModel
         var author = GetAuthor();
 
         // Delete all cheeps, likes, and follows
-        _repositoryManager.FollowRepository.DeleteAllFollowsByAuthor(author);
-        _repositoryManager.LikeRepository.DeleteAllLikesByAuthor(author);
-        _repositoryManager.LikeRepository.DeleteAllLikesOnCheepsByAuthor(author);
-        _repositoryManager.AuthorRepository.DeleteAuthor(author);
-        _repositoryManager.CheepRepository.DeleteAllCheepsByAuthor(author);
+        RepositoryManager.FollowRepository.DeleteAllFollowsByAuthor(author);
+        RepositoryManager.LikeRepository.DeleteAllLikesByAuthor(author);
+        RepositoryManager.LikeRepository.DeleteAllLikesOnCheepsByAuthor(author);
+        RepositoryManager.AuthorRepository.DeleteAuthor(author);
+        RepositoryManager.CheepRepository.DeleteAllCheepsByAuthor(author);
 
         // Logout
         Response.Cookies.Delete(".AspNetCore.Cookies");

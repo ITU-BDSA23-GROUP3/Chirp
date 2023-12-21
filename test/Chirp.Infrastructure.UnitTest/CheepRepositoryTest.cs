@@ -1,5 +1,6 @@
-﻿using Chirp.Core;
-using Chirp.Infrastructure;
+﻿using Chirp.Core.Entities;
+using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Microsoft.Data.Sqlite;
@@ -39,7 +40,7 @@ public class CheepRepositoryTest
     public void QueryCheepCountReturnsCorrectCount()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         context.AddRange(
@@ -48,7 +49,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        var count = chirpStorage.GetQueryableCheeps().Count();
+        var count = chirpStorage.GetQueryableCheeps(new List<int>()).Count();
 
         // Assert
         Assert.Equal(1, count);
@@ -58,7 +59,7 @@ public class CheepRepositoryTest
     public void StoreCheepSavesCheep()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var cheep = new Cheep {
@@ -80,7 +81,7 @@ public class CheepRepositoryTest
     public void StoreCheepsSavesCheeps()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var cheeps = new List<Cheep>
@@ -100,7 +101,7 @@ public class CheepRepositoryTest
     public void QueryCheepsReturnsCheepsByAuthor()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var author1 = new Author{ AuthorId=1, Email="example@mail.com", Name="Jens"};
@@ -115,7 +116,7 @@ public class CheepRepositoryTest
         context.SaveChanges();
 
         // Act
-        var cheeps = chirpStorage.GetQueryableCheeps(author1);
+        var cheeps = chirpStorage.GetQueryableCheeps(new List<int>(), author1);
 
         // Assert
         cheeps.Count().Should().Be(2);
@@ -125,7 +126,7 @@ public class CheepRepositoryTest
     public void DeleteCheepRemovesCheepFromDatabase()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var chirpStorage = new CheepRepository(context, followRepository);
+        var chirpStorage = new CheepRepository(context);
 
         // Arrange
         var cheep = new Cheep { AuthorId = 1, Text = "Cheep 1", TimeStamp = DateTime.Now };
@@ -143,7 +144,7 @@ public class CheepRepositoryTest
     public void DeleteAllCheepsByAuthorIdDeletesCheepsFromDatabase()
     {
         var context = new ChirpDBContext(_contextOptions);
-        var cheepRepository = new CheepRepository(context, followRepository);
+        var cheepRepository = new CheepRepository(context);
 
         var author = new Author { AuthorId = 1, Email = "example@mail.com", Name = "Eksempel" };
 

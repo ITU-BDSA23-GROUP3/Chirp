@@ -1,4 +1,4 @@
-using Chirp.Core;
+using Chirp.Core.Entities;
 using Chirp.Infrastructure;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,7 +12,7 @@ public class ChirpModel : PageModel
     /// <summary>
     /// The repository manager providing access to various repositories.
     /// </summary>
-    protected readonly IRepositoryManager _repositoryManager;
+    protected readonly IRepositoryManager RepositoryManager;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChirpModel"/> class.
@@ -20,7 +20,7 @@ public class ChirpModel : PageModel
     /// <param name="repositoryManager"> The repository manager providing access to various repositories. </param>
     public ChirpModel(IRepositoryManager repositoryManager)
     {
-        _repositoryManager = repositoryManager;
+        RepositoryManager = repositoryManager;
     }
 
     /// <summary>
@@ -42,8 +42,9 @@ public class ChirpModel : PageModel
         authorName ??= GetUserName();
         if (authorName == null) throw new Exception("User is not authenticated!");
 
-        var author = _repositoryManager.AuthorRepository.FindAuthorsByName(authorName).FirstOrDefault();
-        return author ?? throw new Exception("Author doesn't exist!");
+        var author = RepositoryManager.AuthorRepository.FindAuthorsByName(authorName);
+        var enumerable = author.ToList();
+        return !enumerable.Any() ? RepositoryManager.AuthorRepository.CreateAuthor(new Author{Email = "", Name = authorName}) : enumerable.First();
     }
 
     /// <summary>
@@ -61,8 +62,8 @@ public class ChirpModel : PageModel
     /// <returns> The collection of authors being followed by the current user. </returns>
     public IEnumerable<Author> GetFollowing()
     {
-        var following = _repositoryManager.FollowRepository.FindFollowingByAuthor(GetAuthor());
-        return _repositoryManager.AuthorRepository.FindAuthorsByIds(following.Select(f => f.FollowedId).ToList());
+        var following = RepositoryManager.FollowRepository.FindFollowingByAuthor(GetAuthor());
+        return RepositoryManager.AuthorRepository.FindAuthorsByIds(following.Select(f => f.FollowedId).ToList());
     }
 
     /// <summary>
@@ -71,7 +72,7 @@ public class ChirpModel : PageModel
     /// <returns> The collection of authors who are followers of the current user. </returns>
     public IEnumerable<Author> GetFollowers()
     {
-        var followers = _repositoryManager.FollowRepository.FindFollowersByAuthor(GetAuthor());
-        return _repositoryManager.AuthorRepository.FindAuthorsByIds(followers.Select(f => f.FollowerId).ToList());
+        var followers = RepositoryManager.FollowRepository.FindFollowersByAuthor(GetAuthor());
+        return RepositoryManager.AuthorRepository.FindAuthorsByIds(followers.Select(f => f.FollowerId).ToList());
     }
 }

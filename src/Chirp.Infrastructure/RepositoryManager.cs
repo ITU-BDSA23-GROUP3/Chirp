@@ -1,4 +1,5 @@
-using Chirp.Core;
+using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Repositories;
 
 namespace Chirp.Infrastructure;
 
@@ -31,8 +32,6 @@ public interface IRepositoryManager
 /// <inheritdoc cref="IRepositoryManager" />
 public class RepositoryManager : IRepositoryManager
 {
-    private readonly ChirpDBContext _db;
-
     public IAuthorRepository AuthorRepository { get; }
 
     public ICheepRepository CheepRepository { get; }
@@ -47,13 +46,12 @@ public class RepositoryManager : IRepositoryManager
     /// <param name="db">The Chirp database context.</param>
     public RepositoryManager(ChirpDBContext db)
     {
-        _db = db;
-        _db.Database.EnsureCreated();
+        db.Database.EnsureCreated();
 
         // Initialize repositories with the Chirp database context.
-        AuthorRepository ??= new AuthorRepository(_db);
-        FollowRepository ??= new FollowRepository(_db);
-        CheepRepository ??= new CheepRepository(_db, FollowRepository);
-        LikeRepository ??= new LikeRepository(_db);
+        AuthorRepository = new AuthorRepository(db);
+        FollowRepository = new FollowRepository(db);
+        CheepRepository = new CheepRepository(db);
+        LikeRepository = new LikeRepository(db);
     }
 }

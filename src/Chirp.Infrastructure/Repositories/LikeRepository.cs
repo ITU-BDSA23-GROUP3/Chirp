@@ -1,6 +1,8 @@
-using Chirp.Core;
+using Chirp.Core.Entities;
+using Chirp.Core.Exceptions;
+using Chirp.Core.Repositories;
 
-namespace Chirp.Infrastructure;
+namespace Chirp.Infrastructure.Repositories;
 
 /// <inheritdoc cref="ILikeRepository" />
 public class LikeRepository : ILikeRepository
@@ -25,13 +27,14 @@ public class LikeRepository : ILikeRepository
         // Check if like already exists
         if (LikeExists(like))
         {
-            throw new Exception("Cheep is already liked by author!");
+            // This is more resilient idempotency wise since we could get duplicate requests across the network
+            return;
         }
 
         // Check if cheep is owned by author
         if (LikesOwnCheep(like))
         {
-            throw new Exception("Liking your own cheeps is not allowed!");
+            throw new OwnCheepLikedException("Liking your own cheeps is not allowed!");
         }
 
         _db.Likes.Add(like);

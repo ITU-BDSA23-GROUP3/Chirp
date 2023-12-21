@@ -1,5 +1,5 @@
-using Chirp.Core;
-using Chirp.Infrastructure;
+using Chirp.Core.Entities;
+using Chirp.Infrastructure.Repositories;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
