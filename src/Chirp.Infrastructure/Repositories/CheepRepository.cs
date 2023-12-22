@@ -87,5 +87,4 @@ public class CheepRepository : ICheepRepository
         var cheepsToDelete = GetAllCheepsByAuthor(author);
         DeleteCheeps(cheepsToDelete);
     }
-
 }

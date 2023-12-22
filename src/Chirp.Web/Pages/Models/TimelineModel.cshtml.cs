@@ -238,7 +238,7 @@ public class TimelineModel : ChirpModel
         }
 
         CurrentPage = page;
-        Cheeps = _repositoryManager.CheepRepository.GetCheepsPaginated(page - 1, CheepsPerPage, cheeps).ToList();
+        Cheeps = _repositoryManager.CheepRepository.GetCheepsPaginated((page - 1) * CheepsPerPage, CheepsPerPage, cheeps).ToList();
         return Page();
     }
 }

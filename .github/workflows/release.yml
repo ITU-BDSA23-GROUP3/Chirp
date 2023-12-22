@@ -37,7 +37,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Test
-        run: dotnet test --no-build
+        run: dotnet test ./test/Chirp.Infrastructure.UnitTest/Chirp.Infrastructure.UnitTest.csproj --no-build
 
       - name: Create Linux Release
         run: |

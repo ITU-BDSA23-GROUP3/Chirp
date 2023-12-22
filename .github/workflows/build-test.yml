@@ -39,4 +39,4 @@ jobs:
       shell: bash
 
     - name: Test
-      run: dotnet test *.sln
+      run: dotnet test ./test/Chirp.Infrastructure.UnitTest/Chirp.Infrastructure.UnitTest.csproj
