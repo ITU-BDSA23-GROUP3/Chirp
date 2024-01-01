@@ -1,95 +1,114 @@
-# How to run and develop
-First install git and clone this repository
+## How to make _Chirp!_ work locally
+
+### Step One [Prerequisites]
+First install `Git` and clone this repository
 ```bash
 git clone https://github.com/ITU-BDSA23-GROUP3/Chirp
 ```
+**[Note: If you are on Windows we recommend using WSL]**
 
-To run the application you need the dotnet-runtime package, dotnet-sdk and aspnet-runtime. \
-***Remember to install dotnet 7 and not dotnet 8***
-On debian it is done with 
+### Step Two [Dependencies]
+To run the application you need the `dotnet-runtime` package, `dotnet-sdk` and `aspnet-runtime`. \
+**[Note: Remember to install `Dotnet 7` and not a different version]**
+
+On `Debian`-based systems this can be done `apt`: 
 ```bash
 sudo apt install dotnet-sdk-7.0
 ```
-You also need Entity Framework core which can be installed after with this command:
+You can also just download it via the [website](https://dotnet.microsoft.com/en-us/download).
+
+You also need Entity Framework Core:
 ```bash
-  dotnet tool install --global dotnet-ef --version 7.0.14
+dotnet tool install --global dotnet-ef --version 7.0.14
 ```
-You might need to add dotnet tools to your PATH
-Add this line to the bottom of your ~/.bashrc.
+You might need to add dotnet tools to your PATH. This can be done in bash by adding this line to the bottom of your `~/.bashrc`.
 ```bash
 export PATH="$PATH:$HOME/.dotnet/tools/"
 ```
-If you want the changes to take effect in the current terminal immedietly then you can run
+Afterwards restart your terminal.
+
+### Step Three [Github OAuth]
+Now we will create a [Github OAuth app](https://github.com/settings/developers)
+
+Click `New OAuth app` and fill in the details. The homepage URL should be: `http://localhost:1339` and the callback URL should be `http://localhost:1339/signin-github`.
+
+You should now take note of the `client ID`, you will need this in a second. This can be found on the apps page.
+
+Now you need to generate a secret, take note/copy of the `client secret` as well, this is done on the same page. 
+
+
+We need this such that we can set our [Development Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=linux).
+
+### Step Four [Secrets]
 ```bash
-source ~/.bashrc
+dotnet user-secrets --project src/Chirp.Web init 
 ```
-
-The next step is to create a [Github oauth app](https://github.com/settings/developers)
-
-Click new oauth app and fill in the details. 
-Homepage url should be: http://localhost:1339
-The callback url should be: http://localhost:1339/signin-github
-Client ID is specified on you apps page. And you need to generate a secret on the same page.
-You can generate a new secret if you lose it.
-Now you need to set your development secrets. 
-[user-secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=linux)
-
-Navigate to /src/Chirp.Web and init your user-secrets with
-```bash
-dotnet user-secrets init
-```
-
-this is the client id name
-development:authentication:github:clientId 
-
-this is the client secret name
-development:authentication:github:clientSecret
 
 Set secrets with these names
 ```bash
-dotnet user-secrets set "development:authentication:github:clientId" "<client id>"
-dotnet user-secrets set "development:authentication:github:clientSecret" "<secret id>"
+dotnet user-secrets --project src/Chirp.Web \ 
+    set "development:authentication:github:clientId" "<client id>"
+dotnet user-secrets --project src/Chirp.Web \
+    set "development:authentication:github:clientSecret" "<secret id>" 
 ```
 
-Now install docker, and run 
+### Step Five [Running it locally!]
+**[Note: Remember to replace <client id> and <secret id> with the respective values from the prior section]**
+    
+We have set it up to work with Docker which can be downloaded [here](https://www.docker.com/products/docker-desktop/).
+    
+If you are using a windows machine you can also choose to use SQL server, though you are going to have to change the connection string in `src/Chirp.Web/appsettings.Development.json`.
+
+If you still want to use Docker you have to do the following:
+
+Make sure you have installed `Docker`, opened Docker desktop, and run 
 ```bash
-docker pull mcr.microsoft.com/mssql/server:latest
+sudo docker pull mcr.microsoft.com/mssql/server:latest
 ```
-Remember sudo if you are on linux!
-Then you can start the container
-We recommend modifying this default password
+Now you are almost ready! You can run the MsSQL, using the following command:
 ```bash
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Adsa2023" -p 1433:1433  --name sqlpreview --hostname sqlpreview -d mcr.microsoft.com/mssql/server:2022-latest
+sudo docker run \
+    -e "ACCEPT_EULA=Y" \
+    -e "MSSQL_SA_PASSWORD=Adsa2023" \
+    -p 1433:1433 \
+    --name sqlpreview \
+    --hostname sqlpreview \
+    -d mcr.microsoft.com/mssql/server:2022-latest
+```
+**[Note: We recommend modifying this default password]**
+
+Make sure that you are in the root directory of Chirp and run
+```bash
+dotnet ef migrations add InitialMigrations \
+    --project src/Chirp.Infrastructure/ \
+    --startup-project src/Chirp.Web/
 ```
 
-Go into the src/ directory and run
+Now you can update the database and run the application:
 ```bash
-dotnet ef migrations add InitialMigrations --project Chirp.Infrastructure/ --startup-project Chirp.Web/
+dotnet ef database update --project src/Chirp.Web
+dotnet run --launch-profile Localhost --project src/Chirp.Web
 ```
 
-Now go into Chirp.Web/ directory and run
-```bash
-dotnet build
-dotnet ef database update
-dotnet run --launch-profile Localhost
-```
+**[Note: If you change the database structure, you might want to remove the database container, and follow the steps from step five again]**
 
-If you did everything correctly it *should work*
-If you change the structure of the database, you might want to remove the docker container and the migrations and redeploy it again - just follow the same steps in the same order and it should be good.
 
-### To run Selenium testcases
-We're using Selenium Grid to automate our testing. This makes headless development really easy across platforms. The only dependency needed to use this efficiently is docker, which you'd already need to have to succesfully run it anyways. Specifically you need to run:
+## How to run test suite locally
+You should be able to run all tests except the E2E-tests following the guide above. This section is specifying how to run our E2E-tests.
+    
+We are using Selenium Grid to automate our testing. This makes headless end-to-end testing really easy across platforms. Ensure that you have `docker` and run:
 ```bash
-sudo docker run --net="host" -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome
+sudo docker run --net="host" -d -p 4444:4444 \
+    -v /dev/shm:/dev/shm selenium/standalone-chrome
 ```
-[Note: You may need to run this without `sudo`, and that this might not work out of the gate on non-UNIX compliant systems]
+**[Note: This might not work on non-UNIX compliant systems]**
 
 Ensure that the application is running by doing:
 ```bash
 dotnet run --launch-profile Localhost
 ```
-
-Now navigate to the `test/Chirp.Infrastructure.UnitTest` directory, and run:
-```
+Now we can run 
+```bash
 dotnet test
 ```
+It is possible to utilize Virtual Network Computing (VNC) to see the tests running. These will by default be running on `http://localhost:7900/` using noVNC with the default password `secret`. 
