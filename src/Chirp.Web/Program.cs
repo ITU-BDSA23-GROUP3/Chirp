@@ -34,7 +34,7 @@ string connectionString;
 // Creates a secret client which connects to our azure key vault
 if (!builder.Environment.IsDevelopment())
 {
-    var client = new SecretClient(new Uri("https://chirpkeyvaultgroup3.vault.azure.net/"), new DefaultAzureCredential(),options);
+    var client = new SecretClient(new Uri("https://chirpkeyvault2.vault.azure.net/"), new DefaultAzureCredential(),options);
     clientId = client.GetSecret("clientId").Value.Value;
     clientSecret = client.GetSecret("clientSecret").Value.Value;
     connectionString = client.GetSecret("bdsagroup3-chirpdb").Value.Value;
