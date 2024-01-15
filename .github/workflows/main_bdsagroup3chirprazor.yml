@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3cchirprazor2
+name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup3chirprazor
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: './src/Chirp.Web'
@@ -15,10 +15,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
@@ -26,6 +26,9 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
+      - name: Add ef-core tool
+        run: dotnet tool install --global dotnet-ef --version 7.0.14
+      
       - name: Remove potential migrations
         run: rm -rf ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/Migrations
 
@@ -36,13 +39,13 @@ jobs:
         run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
@@ -50,7 +53,7 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: .net-app
 
@@ -58,7 +61,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'bdsagroup3cchirprazor2'
+          app-name: 'bdsagroup3chirprazor'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0A5417A69751471EBCC3082B83933D23 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A145192DF238498088476B988BDF3972 }}
           package: .
