@@ -26,12 +26,6 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
-      - name: Add ef-core tool
-        run: dotnet tool install --global dotnet-ef --version 7.0.14
-      
-      - name: Remove potential migrations
-        run: Remove-Item -R ${{ env.AZURE_INFRASTRUCTURE_PACKAGE_PATH }}/Migrations
-
       - name: Build with dotnet
         run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release
 
