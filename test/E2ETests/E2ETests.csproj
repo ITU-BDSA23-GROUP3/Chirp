@@ -15,7 +15,7 @@
         <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.13" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.13" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-        <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="119.0.6045.10500" />
+        <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="122.0.6261.5700" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
         <PackageReference Include="xunit" Version="2.6.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
